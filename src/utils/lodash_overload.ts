@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize = ((func: func, resolver: (...args: any[]) => string): _.type.func => {
+let memoize = ((func: _.type.func, resolver: (...args: any[]) => string): _.type.func => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
