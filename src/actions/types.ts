@@ -74,3 +74,8 @@ export const SET = {
 export const RESET = {
   COLOR: "RESET_COLOR"
 }
+
+export type action = {
+  type: string,
+  payload: any
+}
