@@ -1,9 +1,5 @@
 import lodash, { LoDashStatic } from "lodash"
 
-type func = {
-  (...args: any[]): any
-}
-
 function insertItem<T>(array: T[], index: number, item: T): T[] {
   return [
     ...array.slice(0, index),
@@ -36,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize = ((func: func, resolver: (...args: any[]) => string): func => {
+let memoize = ((func: func, resolver: (...args: any[]) => string): _.type.func => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -111,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: { [key: string]: any }, func: func) {
+function map(object: { [key: string]: any }, func: _.type.func) {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -127,8 +123,13 @@ declare module "lodash" {
     compareObjectAscendinBaseOnKey: typeof compareObjectAscendinBaseOnKey,
     hashText: typeof hashText,
     sleep: typeof sleep,
-    contrastColorFontAndBackground: typeof contrastColorFontAndBackground,
-    func: func
+    contrastColorFontAndBackground: typeof contrastColorFontAndBackground
+  }
+
+  namespace type {
+    type func = {
+      (...args: any[]): any
+    }
   }
 }
 
@@ -147,3 +148,5 @@ _.sleep = sleep;
 _.contrastColorFontAndBackground = contrastColorFontAndBackground
 _.map = map
 _.values = Object.values
+
+export { _ }
