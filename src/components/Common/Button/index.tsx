@@ -4,7 +4,7 @@ import { _ } from "utils"
 
 import "./icon_spin.css"
 
-interface ButtonProps {
+type ButtonProps = {
   icon?: string,
   label: string,
   btn?: string,

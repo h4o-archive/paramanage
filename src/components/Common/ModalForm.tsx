@@ -4,7 +4,7 @@ import { Modal } from 'semantic-ui-react'
 import { Button } from "./Button"
 import { _ } from "utils"
 
-interface FieldInputProps {
+type FieldInputProps = {
   input?: any,
   label?: string,
   meta: {
@@ -30,7 +30,7 @@ export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, la
   )
 }
 
-interface ModalFormProps {
+type ModalFormProps = {
   open: boolean,
   header?: string,
   children?: React.ReactChildren

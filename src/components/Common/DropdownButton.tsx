@@ -3,7 +3,7 @@ import { Dropdown } from 'semantic-ui-react'
 
 import { _ } from "utils"
 
-interface DropdownButtonProps {
+type DropdownButtonProps = {
   text?: string,
   icon?: string,
   button_style?: React.CSSProperties,
