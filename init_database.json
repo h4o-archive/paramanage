@@ -1,0 +1,28 @@
+{
+  "platforms": [],
+  "versions": [],
+  "environments": [
+    {
+      "id": "-548483879",
+      "order": "production",
+      "key": "Production"
+    },
+    {
+      "id": "2603186",
+      "order": "test",
+      "key": "Test"
+    }
+  ],
+  "configs": [],
+  "profiles": [],
+  "mutual_profiles": [],
+  "categorys": [
+    {
+      "id": "-1807037973",
+      "order": "sans category",
+      "key": "SANS CATEGORY",
+      "color": "#8d94a0"
+    }
+  ],
+  "parametres": []
+}
