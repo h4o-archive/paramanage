@@ -58,11 +58,13 @@ export const TOGGLE = {
 }
 
 export const START = {
-  LOADING: "START_LOADING"
+  LOADING: "START_LOADING",
+  REQUEST: "START_REQUEST"
 }
 
 export const END = {
-  LOADING: "END_LOADING"
+  LOADING: "END_LOADING",
+  REQUEST: "END_REQUEST"
 }
 
 export const SET = {
@@ -72,7 +74,8 @@ export const SET = {
 }
 
 export const RESET = {
-  COLOR: "RESET_COLOR"
+  COLOR: "RESET_COLOR",
+  REQUEST_STATUS: "RESET_REQUEST_STATUS"
 }
 
 export type action = {
