@@ -107,12 +107,20 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: { [key: string]: any }, func: _.type.func) {
+function map(object: _.type.Object, func: _.type.func) {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
   }
   return array
+}
+
+function omit(object: _.type.Object, keys: string[]): _.type.Object {
+  return Object.keys(object).reduce((new_object: _.type.Object, key: string) => {
+    if (keys.includes(key)) return new_object
+    new_object[key] = object[key]
+    return new_object
+  }, {})
 }
 
 declare module "lodash" {
@@ -130,11 +138,15 @@ declare module "lodash" {
     type func = {
       (...args: any[]): any
     }
+    type Object = {
+      [key: string]: any
+    }
   }
 }
 
-interface LoDashOverload extends Pick<LoDashStatic, Exclude<keyof LoDashStatic, "map">> {
-  map: typeof map
+interface LoDashOverload extends Pick<LoDashStatic, Exclude<keyof LoDashStatic, "map" | "omit">> {
+  map: typeof map,
+  omit: typeof omit
 }
 
 let _: LoDashOverload = lodash
@@ -147,6 +159,7 @@ _.hashText = _.memoize(hashText);
 _.sleep = sleep;
 _.contrastColorFontAndBackground = contrastColorFontAndBackground
 _.map = map
+_.omit = omit
 _.values = Object.values
 
 export { _ }
