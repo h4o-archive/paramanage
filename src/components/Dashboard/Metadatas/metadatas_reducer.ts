@@ -1,34 +1,23 @@
 import { FETCH, SELECT, START, END, SET, action } from "actions/types"
 
-type metadatas = {
+type data = {
   "id": string,
   "order": string,
   "key": string
 }
-type metadata_state = {
-  data: metadatas | {},
-  selected: string,
-  previous_selected: string
-}
-type metadatas_state = {
-  platforms: metadata_state,
-  versions: metadata_state,
-  environments: metadata_state,
-  loading: boolean
-}
-const init: metadatas_state = {
+const init = {
   platforms: {
-    data: {},
+    data: {} as data,
     selected: "0",
     previous_selected: "0"
   },
   versions: {
-    data: {},
+    data: {} as data,
     selected: "0",
     previous_selected: "0"
   },
   environments: {
-    data: {},
+    data: {} as data,
     selected: "0",
     previous_selected: "0"
   },

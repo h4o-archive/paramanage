@@ -1,7 +1,7 @@
 import { START, END, action, RESET } from "actions/types"
 
-type loader_reducer_state = { [key: string]: boolean } | {}
-const init: loader_reducer_state = {}
+type loader_reducer_state = { [key: string]: boolean }
+const init = {} as loader_reducer_state
 
 function loader_reducer(state = init, action: action): loader_reducer_state {
   switch (action.type) {
