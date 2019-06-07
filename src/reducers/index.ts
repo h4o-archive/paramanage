@@ -24,9 +24,9 @@ let all: { [key: string]: _.type.func } = {
   // edit_config_modal_reducer
 }
 
-let reducers_name: { [key: string]: string } = _.mapObject(all, (unfinish_reducers_name, key) => {
+let reducers_name: { [key: string]: string } = _.reduce(all, (unfinish_reducers_name, key) => {
   unfinish_reducers_name[key.toUpperCase()] = all[key].name
-})
+}, {})
 
 export const store = createStore(combineReducers(all), composeEnhancer(applyMiddleware(thunk)))
 export { reducers_name }

@@ -115,19 +115,16 @@ function map(object: _.type.Object, func: _.type.func): any[] {
   return array
 }
 
-function mapObject(object: _.type.Object, func: _.type.func): _.type.Object {
-  let o = {}
+function reduce(object: _.type.Object, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
   for (let key in object) {
-    func(o, key)
+    func(init, key)
   }
-  return o
+  return init
 }
 
 function omit(object: _.type.Object, keys: string[]): _.type.Object {
-  return Object.keys(object).reduce((new_object: _.type.Object, key: string) => {
-    if (keys.includes(key)) return new_object
-    new_object[key] = object[key]
-    return new_object
+  return reduce(object, (new_object: _.type.Object, key: string) => {
+    if (!keys.includes(key)) new_object[key] = object[key]
   }, {})
 }
 
@@ -140,7 +137,6 @@ declare module "lodash" {
     hashText: typeof hashText,
     sleep: typeof sleep,
     contrastColorFontAndBackground: typeof contrastColorFontAndBackground,
-    mapObject: typeof mapObject
   }
 
   namespace type {
@@ -153,8 +149,9 @@ declare module "lodash" {
   }
 }
 
-interface LoDashOverload extends Pick<LoDashStatic, Exclude<keyof LoDashStatic, "map" | "omit">> {
+interface LoDashOverload extends Pick<LoDashStatic, Exclude<keyof LoDashStatic, "map" | "reduce" | "omit">> {
   map: typeof map,
+  reduce: typeof reduce
   omit: typeof omit
 }
 
@@ -168,7 +165,7 @@ _.hashText = _.memoize(hashText);
 _.sleep = sleep;
 _.contrastColorFontAndBackground = contrastColorFontAndBackground
 _.map = map
-_.mapObject = mapObject
+_.reduce = reduce
 _.omit = omit
 _.values = Object.values
 
