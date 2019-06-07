@@ -58,13 +58,15 @@ export const TOGGLE = {
 }
 
 export const START = {
-  LOADING: "START_LOADING",
   REQUEST: "START_REQUEST"
 }
 
-export const END = {
-  LOADING: "END_LOADING",
-  REQUEST: "END_REQUEST"
+export const FULLFILL = {
+  REQUEST: "FULLFILL_REQUEST"
+}
+
+export const REJECT = {
+  REQUEST: "REJECT_REQUEST"
 }
 
 export const SET = {
@@ -75,7 +77,12 @@ export const SET = {
 
 export const RESET = {
   COLOR: "RESET_COLOR",
-  REQUEST_STATUS: "RESET_REQUEST_STATUS"
+  REQUEST_STATUS: "RESET_REQUEST_STATUS",
+  OUTDATED_REQUEST: "RESET_OUTDATED_REQUEST"
+}
+
+export const QUEUE = {
+  OUTDATED_REQUEST: "QUEUE_OUTDATED_REQUEST"
 }
 
 export type action = {
