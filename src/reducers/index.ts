@@ -6,6 +6,7 @@ import { composeWithDevTools as composeEnhancer } from 'redux-devtools-extension
 
 import { _ } from "utils"
 import { metadatas_reducer } from "components/Dashboard/Metadatas/metadatas_reducer"
+import { loader_reducer } from "components/Common/Loader/loader_reducer"
 // import { configs_reducer } from "components/Dashboard/Configs/configs_reducer"
 // import { dashboard_add_modal_reducer } from "components/Dashboard/Add/dashboard_add_modal_reducer"
 // import { parametres_reducer } from "components/Profile/Parametres/parametres_reducer"
@@ -15,6 +16,7 @@ import { metadatas_reducer } from "components/Dashboard/Metadatas/metadatas_redu
 let all: { [key: string]: _.type.func } = {
   form,
   metadatas_reducer,
+  loader_reducer,
   // configs_reducer,
   // dashboard_add_modal_reducer,
   // parametres_reducer,
@@ -22,10 +24,12 @@ let all: { [key: string]: _.type.func } = {
   // edit_config_modal_reducer
 }
 
-let reducers_name: { [key: string]: string } = {}
-for (let key in all) {
-  reducers_name[all[key].name.toUpperCase()] = all[key].name
-}
+let reducers_name: { [key: string]: string } = _.mapObject(all, (unfinish_reducers_name, key) => {
+  unfinish_reducers_name[key.toUpperCase()] = all[key].name
+})
 
 export const store = createStore(combineReducers(all), composeEnhancer(applyMiddleware(thunk)))
 export { reducers_name }
+export type state = {
+  [key: string]: any
+}

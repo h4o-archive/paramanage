@@ -14,7 +14,7 @@ type loader_reducer_state = {
 }
 const init = { requests: {}, outdated_requests: {} } as loader_reducer_state
 
-function loader_reducer(state = init, action: action): loader_reducer_state {
+export function loader_reducer(state = init, action: action): loader_reducer_state {
   switch (action.type) {
     case START.REQUEST:
       return { ...state, requests: { ...state.requests, ...{ [action.payload.id]: { status: "START", params: action.payload.params } } } }
