@@ -1,4 +1,4 @@
-import { FETCH, SELECT, START, END, SET, action } from "actions/types"
+import { FETCH, SELECT, SET, action } from "actions/types"
 
 type data = {
   "id": string,
@@ -20,8 +20,7 @@ const init = {
     data: {} as data,
     selected: "0",
     previous_selected: "0"
-  },
-  loading: false
+  }
 }
 
 export function metadatas_reducer(state = init, action: action) {
@@ -38,10 +37,6 @@ export function metadatas_reducer(state = init, action: action) {
       return { ...state, environments: { ...state.environments, data: action.payload, selected: "0" } }
     case SELECT.ENVIRONMENT:
       return { ...state, environments: { ...state.environments, selected: action.payload } }
-    case START.LOADING:
-      return { ...state, loading: true }
-    case END.LOADING:
-      return { ...state, loading: false }
     case SET.PREVIOUS_SELECTED:
       return {
         ...state,

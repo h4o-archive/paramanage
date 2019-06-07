@@ -69,7 +69,7 @@ function createApiInstance() {
   }
 
   type api = { [method: string]: _.type.func }
-  let api = Object.keys(call.platform).reduce((unfinish_api: api, method): api => {
+  let api: api = Object.keys(call.platform).reduce((unfinish_api: api, method) => {
     unfinish_api[method] = async (url: string, json: {}, api_call_id?: string): Promise<any[] | {}> => {
 
       handleCache(method, url)
@@ -86,7 +86,7 @@ function createApiInstance() {
       }
     }
     return unfinish_api
-  }, {} as api)
+  }, {})
 
   return api
 }
