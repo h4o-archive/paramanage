@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 import { _ } from "utils"
-import { store } from "reducers"
+import { store, state } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE } from "actions/types"
 
 function createApiInstance() {
@@ -31,7 +31,7 @@ function createApiInstance() {
     }
   }
 
-  function notifyStartRequest(method: string, url: string, json: {}, api_call_id?: string): string {
+  function notifyStartRequest(method: string, url: string, json: state, api_call_id?: string): string {
     api_call_id = api_call_id || `${Math.random()}`
     store.dispatch({
       type: START.REQUEST,
@@ -70,7 +70,7 @@ function createApiInstance() {
 
   type api = { [method: string]: _.type.func }
   let api: api = _.reduce(call.platform, (unfinish_api: api, method) => {
-    unfinish_api[method] = async (url: string, json: {}, api_call_id?: string): Promise<any[] | {}> => {
+    unfinish_api[method] = async (url: string, json: state, api_call_id?: string): Promise<_.type.readonlyObject[] | string[] | _.type.readonlyObject> => {
 
       handleCache(method, url)
       api_call_id = notifyStartRequest(method, url, json, api_call_id)
@@ -82,7 +82,7 @@ function createApiInstance() {
         return result
       } catch (error) {
         notifyRejectRequest(api_call_id)
-        return {}
+        return []
       }
     }
   }, {})

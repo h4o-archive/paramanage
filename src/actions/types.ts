@@ -86,6 +86,6 @@ export const QUEUE = {
 }
 
 export type action = {
-  type: string,
-  payload: any
+  readonly type: string,
+  readonly payload: any
 }

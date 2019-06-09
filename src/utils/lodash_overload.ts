@@ -13,7 +13,7 @@ function removeItem<T>(array: T[], index: number): T[] {
 }
 
 interface ComparableObject<T> {
-  [key: string]: T
+  readonly [key: string]: T
 }
 
 function compareObjectDescendinBaseOnKey<T>(key: string): (a: ComparableObject<T>, b: ComparableObject<T>) => number {
@@ -70,7 +70,7 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-type RGB = { r: number, g: number, b: number }
+type RGB = { readonly r: number, readonly g: number, readonly b: number }
 
 function __hexToRgb__(hex: string): RGB {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: _.type.Object, func: _.type.func): any[] {
+function map(object: _.type.readonlyObject, func: _.type.func): any[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -115,15 +115,15 @@ function map(object: _.type.Object, func: _.type.func): any[] {
   return array
 }
 
-function reduce(object: _.type.Object, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
+function reduce(object: _.type.readonlyObject, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
   for (let key in object) {
     func(init, key)
   }
   return init
 }
 
-function omit(object: _.type.Object, keys: string[]): _.type.Object {
-  return reduce(object, (new_object: _.type.Object, key: string) => {
+function omit(object: _.type.readonlyObject, keys: string[]): _.type.Object {
+  return reduce(object, (new_object, key) => {
     if (!keys.includes(key)) new_object[key] = object[key]
   }, {})
 }
@@ -145,6 +145,9 @@ declare module "lodash" {
     }
     type Object = {
       [key: string]: any
+    }
+    type readonlyObject = {
+      readonly [key: string]: any
     }
   }
 }
@@ -170,3 +173,5 @@ _.omit = omit
 _.values = Object.values
 
 export { _ }
+
+// TODO continue recheck readonly

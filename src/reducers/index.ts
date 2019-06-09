@@ -13,7 +13,7 @@ import { loader_reducer } from "components/Common/Loader/loader_reducer"
 // import { parametres_modal_reducer } from "components/Profile/Menu/ParametresModal/parametres_modal_reducer"
 // import { edit_config_modal_reducer } from "components/Dashboard/Configs/EditConfigModal/edit_config_modal_reducer"
 
-let all: { [key: string]: _.type.func } = {
+let all: { readonly [key: string]: _.type.func } = {
   form,
   metadatas_reducer,
   loader_reducer,
@@ -24,12 +24,12 @@ let all: { [key: string]: _.type.func } = {
   // edit_config_modal_reducer
 }
 
-let reducers_name: { [key: string]: string } = _.reduce(all, (unfinish_reducers_name, key) => {
+let reducers_name: { readonly [key: string]: string } = _.reduce(all, (unfinish_reducers_name, key) => {
   unfinish_reducers_name[key.toUpperCase()] = all[key].name
 }, {})
 
 export const store = createStore(combineReducers(all), composeEnhancer(applyMiddleware(thunk)))
 export { reducers_name }
 export type state = {
-  [key: string]: any
+  readonly [key: string]: _.type.readonlyObject & string
 }

@@ -4,13 +4,13 @@ import { Dropdown } from 'semantic-ui-react'
 import { _ } from "utils"
 
 type DropdownButtonProps = {
-  text?: string,
-  icon?: string,
-  button_style?: React.CSSProperties,
-  dropdown_style?: React.CSSProperties,
-  button_items: any[],
-  shouldItemDisplay: _.type.func,
-  onClickOnItem?: _.type.func
+  readonly text?: string,
+  readonly icon?: string,
+  readonly button_style?: React.CSSProperties,
+  readonly dropdown_style?: React.CSSProperties,
+  readonly button_items: any[],
+  readonly shouldItemDisplay: _.type.func,
+  readonly onClickOnItem?: _.type.func
 }
 export const DropdownButton: React.FunctionComponent<DropdownButtonProps> = ({ text, icon, button_style, dropdown_style, button_items = [], shouldItemDisplay = () => true, onClickOnItem }) => {
 

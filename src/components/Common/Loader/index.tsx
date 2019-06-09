@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import { connect, ConnectedComponentClass } from "react-redux"
 import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 
@@ -7,7 +6,7 @@ import { reducers_name, state } from "reducers"
 const { LOADER_REDUCER } = reducers_name
 
 type LoaderProps = {
-  active: boolean
+  readonly active: boolean
 }
 let Loader: React.FunctionComponent<LoaderProps> = (props) => {
   return (
@@ -18,11 +17,8 @@ let Loader: React.FunctionComponent<LoaderProps> = (props) => {
     </Segment>
   )
 }
-Loader.propTypes = {
-  active: PropTypes.bool.isRequired
-}
 
-function mapStateToProps(state: state) {
+function mapStateToProps(state: state): LoaderProps {
   return {
     active: state[LOADER_REDUCER].loading
   }

@@ -1,11 +1,28 @@
 import { FETCH, SELECT, SET, action } from "actions/types"
 
 type data = {
-  "id": string,
-  "order": string,
-  "key": string
+  readonly "id": string,
+  readonly "order": string,
+  readonly "key": string
 }
-const init = {
+type metadatas_state = {
+  readonly platforms: {
+    readonly data: data,
+    readonly selected: string,
+    readonly previous_selected: string
+  },
+  readonly versions: {
+    readonly data: data,
+    readonly selected: string,
+    readonly previous_selected: string
+  },
+  readonly environments: {
+    readonly data: data,
+    readonly selected: string,
+    readonly previous_selected: string
+  }
+}
+const init: metadatas_state = {
   platforms: {
     data: {} as data,
     selected: "0",
@@ -23,7 +40,7 @@ const init = {
   }
 }
 
-export function metadatas_reducer(state = init, action: action) {
+export function metadatas_reducer(state = init, action: action): metadatas_state {
   switch (action.type) {
     case FETCH.PLATFORMS:
       return { ...state, platforms: { ...state.platforms, data: action.payload, selected: "0" } }

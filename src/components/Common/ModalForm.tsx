@@ -5,11 +5,11 @@ import { Button } from "./Button"
 import { _ } from "utils"
 
 type FieldInputProps = {
-  input?: any,
-  label?: string,
-  meta: {
-    error?: any,
-    touched?: boolean
+  readonly input?: any,
+  readonly label?: string,
+  readonly meta: {
+    readonly error?: any,
+    readonly touched?: boolean
   }
 }
 /**
@@ -31,12 +31,12 @@ export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, la
 }
 
 type ModalFormProps = {
-  open: boolean,
-  header?: string,
-  children?: React.ReactChildren
-  onClickDiscard?: _.type.func,
-  onSubmit?: _.type.func,
-  handleSubmit?: _.type.func
+  readonly open: boolean,
+  readonly header?: string,
+  readonly children?: React.ReactChildren
+  readonly onClickDiscard?: _.type.func,
+  readonly onSubmit?: _.type.func,
+  readonly handleSubmit?: _.type.func
 }
 /**
  *
