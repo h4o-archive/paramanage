@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize = ((func: _.type.Func, resolver: (...args: any[]) => string): _.type.Func => {
+let memoize: LoDashStatic["memoize"] = ((func: _.type.Func, resolver: (...args: any[]) => string): _.type.Func => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }

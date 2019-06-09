@@ -68,10 +68,12 @@ function createApiInstance() {
     parametre: createAxiosInstance()
   }
 
-  type API = { [method: string]: _.type.Func }
-  let api: API = _.reduce(call.platform, (unfinish_api: API, method) => {
-    unfinish_api[method] = async (url: string, json: State, api_call_id?: string): Promise<_.type.ReadonlyObject[] | string[] | _.type.ReadonlyObject> => {
-
+  type API = {
+    get: (url: string, json?: State, api_call_id?: string) => Promise<{ data: _.type.ReadonlyObject[] | string[] | _.type.ReadonlyObject, [keys: string]: any }>
+    [methods: string]: (url: string, json: State, api_call_id?: string) => Promise<any>
+  }
+  let api: API = _.reduce(call.platform, (unfinish_api, method) => {
+    unfinish_api[method] = async (url: string, json: State, api_call_id?: string): Promise<any> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest(method, url, json, api_call_id)
 
@@ -82,10 +84,10 @@ function createApiInstance() {
         return result
       } catch (error) {
         notifyRejectRequest(api_call_id)
-        return []
+        return { data: [] }
       }
     }
-  }, {})
+  }, {}) as API
 
   return api
 }
