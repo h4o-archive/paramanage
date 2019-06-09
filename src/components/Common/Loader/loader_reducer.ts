@@ -1,7 +1,7 @@
-import { START, FULLFILL, REJECT, RESET, QUEUE, action } from "actions/types"
+import { START, FULLFILL, REJECT, RESET, QUEUE, Action } from "actions/types"
 import { _ } from "utils"
 
-type loader_reducer_state = {
+type LoaderState = {
   readonly requests: {
     readonly [key: string]: {
       readonly status: "START" | "REJECT",
@@ -12,9 +12,9 @@ type loader_reducer_state = {
     readonly [key: string]: string
   }
 }
-const init: loader_reducer_state = { requests: {}, outdated_requests: {} }
+const init: LoaderState = { requests: {}, outdated_requests: {} }
 
-export function loader_reducer(state = init, action: action): loader_reducer_state {
+export function loader_reducer(state = init, action: Action): LoaderState {
   switch (action.type) {
     case START.REQUEST:
       return { ...state, requests: { ...state.requests, ...{ [action.payload.id]: { status: "START", params: action.payload.params } } } }

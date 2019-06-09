@@ -2,7 +2,7 @@ import React from "react"
 import { connect, ConnectedComponentClass } from "react-redux"
 import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 
-import { reducers_name, state } from "reducers"
+import { reducers_name, State } from "reducers"
 const { LOADER_REDUCER } = reducers_name
 
 type LoaderProps = {
@@ -18,7 +18,7 @@ let Loader: React.FunctionComponent<LoaderProps> = (props) => {
   )
 }
 
-function mapStateToProps(state: state): LoaderProps {
+function mapStateToProps(state: State): LoaderProps {
   return {
     active: state[LOADER_REDUCER].loading
   }

@@ -1,3 +1,8 @@
+import { AnyAction } from "redux"
+import { ThunkAction } from "redux-thunk"
+
+import { State } from "reducers"
+
 export const ADD = {
   VERSION: "ADD_VERSION",
   PLATFORM: "ADD_PLATFORM",
@@ -85,7 +90,9 @@ export const QUEUE = {
   OUTDATED_REQUEST: "QUEUE_OUTDATED_REQUEST"
 }
 
-export type action = {
+export type Action = {
   readonly type: string,
   readonly payload: any
 }
+
+export type ReduxThunk = ThunkAction<void, State, any, AnyAction>

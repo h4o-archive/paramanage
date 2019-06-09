@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 import { _ } from "utils"
-import { store, state } from "reducers"
+import { store, State } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE } from "actions/types"
 
 function createApiInstance() {
@@ -31,7 +31,7 @@ function createApiInstance() {
     }
   }
 
-  function notifyStartRequest(method: string, url: string, json: state, api_call_id?: string): string {
+  function notifyStartRequest(method: string, url: string, json: State, api_call_id?: string): string {
     api_call_id = api_call_id || `${Math.random()}`
     store.dispatch({
       type: START.REQUEST,
@@ -58,7 +58,7 @@ function createApiInstance() {
     })
   }
 
-  const call: { [key: string]: AxiosInstance } = {
+  const call: { readonly [key: string]: AxiosInstance } = {
     platform: createAxiosInstance(),
     version: createAxiosInstance(),
     environment: createAxiosInstance(),
@@ -68,9 +68,9 @@ function createApiInstance() {
     parametre: createAxiosInstance()
   }
 
-  type api = { [method: string]: _.type.func }
-  let api: api = _.reduce(call.platform, (unfinish_api: api, method) => {
-    unfinish_api[method] = async (url: string, json: state, api_call_id?: string): Promise<_.type.readonlyObject[] | string[] | _.type.readonlyObject> => {
+  type API = { [method: string]: _.type.Func }
+  let api: API = _.reduce(call.platform, (unfinish_api: API, method) => {
+    unfinish_api[method] = async (url: string, json: State, api_call_id?: string): Promise<_.type.ReadonlyObject[] | string[] | _.type.ReadonlyObject> => {
 
       handleCache(method, url)
       api_call_id = notifyStartRequest(method, url, json, api_call_id)

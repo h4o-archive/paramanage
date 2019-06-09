@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize = ((func: _.type.func, resolver: (...args: any[]) => string): _.type.func => {
+let memoize = ((func: _.type.Func, resolver: (...args: any[]) => string): _.type.Func => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: _.type.readonlyObject, func: _.type.func): any[] {
+function map(object: _.type.ReadonlyObject, func: _.type.Func): any[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -115,14 +115,14 @@ function map(object: _.type.readonlyObject, func: _.type.func): any[] {
   return array
 }
 
-function reduce(object: _.type.readonlyObject, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
+function reduce(object: _.type.ReadonlyObject, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
   for (let key in object) {
     func(init, key)
   }
   return init
 }
 
-function omit(object: _.type.readonlyObject, keys: string[]): _.type.Object {
+function omit(object: _.type.ReadonlyObject, keys: string[]): _.type.Object {
   return reduce(object, (new_object, key) => {
     if (!keys.includes(key)) new_object[key] = object[key]
   }, {})
@@ -140,13 +140,13 @@ declare module "lodash" {
   }
 
   namespace type {
-    type func = {
+    type Func = {
       (...args: any[]): any
     }
     type Object = {
       [key: string]: any
     }
-    type readonlyObject = {
+    type ReadonlyObject = {
       readonly [key: string]: any
     }
   }

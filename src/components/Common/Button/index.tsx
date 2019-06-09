@@ -10,7 +10,7 @@ type ButtonProps = {
   readonly btn?: string,
   readonly transparent?: boolean,
   readonly style?: React.CSSProperties,
-  readonly onClick?: _.type.func
+  readonly onClick?: _.type.Func
 }
 export const Button: React.FunctionComponent<ButtonProps> = ({ icon, label = "Button", btn, transparent, style, onClick }) => {
 
