@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize: LoDashStatic["memoize"] = ((func: Function, resolver: (...args: any[]) => string): Function => {
+let memoize: LoDashStatic["memoize"] = ((func: _.type.Function, resolver: (...args: any[]) => string): _.type.Function => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: Readonly<_.type.Object>, func: Function): any[] {
+function map(object: Readonly<_.type.Object>, func: _.type.Function): any[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -142,6 +142,9 @@ declare module "lodash" {
   namespace type {
     type Object<T = any> = {
       [key: string]: T
+    }
+    type Function = {
+      (...args: any): any
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from "react"
-import { connect, ConnectedComponentClass } from "react-redux"
+import { connect } from "react-redux"
 import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 
 import { reducers_name, State } from "reducers"
@@ -20,7 +20,7 @@ let Loader: React.FunctionComponent<LoaderProps> = (props) => {
 
 function mapStateToProps(state: State): LoaderProps {
   return {
-    active: state[LOADER_REDUCER].loading
+    active: false
   }
 }
 

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 import { _ } from "utils"
-import { store, State } from "reducers"
+import { store } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE } from "actions/types"
 
 function createApiInstance() {
@@ -31,7 +31,7 @@ function createApiInstance() {
     }
   }
 
-  function notifyStartRequest(method: string, url: string, json: State, api_call_id?: string): string {
+  function notifyStartRequest(method: string, url: string, json: Readonly<_.type.Object>, api_call_id?: string): string {
     api_call_id = api_call_id || `${Math.random()}`
     store.dispatch({
       type: START.REQUEST,
@@ -68,12 +68,8 @@ function createApiInstance() {
     parametre: createAxiosInstance()
   }
 
-  type API = {
-    get: (url: string, json?: State, api_call_id?: string) => Promise<{ data: _.type.ReadonlyObject[] | string[] | _.type.ReadonlyObject, [keys: string]: any }>
-    [methods: string]: (url: string, json: State, api_call_id?: string) => Promise<any>
-  }
-  let api: API = _.reduce(call.platform, (unfinish_api, method) => {
-    unfinish_api[method] = async (url: string, json: State, api_call_id?: string): Promise<any> => {
+  let api: Readonly<API> = _.reduce(call.platform, (unfinish_api, method) => {
+    unfinish_api[method] = async <I>({ url, id, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : _.type.Object> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest(method, url, json, api_call_id)
 
@@ -87,9 +83,38 @@ function createApiInstance() {
         return { data: [] }
       }
     }
-  }, {}) as API
+  }, {} as API)
 
   return api
 }
 
 export const api = createApiInstance()
+
+export type PlatformDB = {
+  readonly id: string
+  readonly order: string,
+  readonly key: string
+}
+export type VersionDB = {
+  readonly id: string
+  readonly order: string,
+  readonly key: string,
+  readonly platformId: string
+}
+export type EnvironmentDB = PlatformDB
+type DataAPI = PlatformDB | VersionDB | EnvironmentDB
+export type ResponseAPI<I = null> = {
+  readonly data: I extends number ? DataAPI : DataAPI[],
+  readonly [keys: string]: any
+}
+type APIparams<I = undefined> = {
+  readonly url: string,
+  readonly id?: I,
+  readonly json?: Readonly<_.type.Object>,
+  readonly api_call_id?: string
+}
+type API = {
+  [methods in keyof AxiosInstance]: ({ url, id, json, api_call_id }: APIparams) => Promise<any>
+} & {
+  get: <I>({ url, id, json, api_call_id }: APIparams<I>) => Promise<ResponseAPI<I>>
+}

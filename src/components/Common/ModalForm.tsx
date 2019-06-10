@@ -34,9 +34,9 @@ type ModalFormProps = {
   readonly open: boolean,
   readonly header?: string,
   readonly children?: React.ReactChildren
-  readonly onClickDiscard?: _.type.Func,
-  readonly onSubmit?: _.type.Func,
-  readonly handleSubmit?: _.type.Func
+  readonly onClickDiscard?: _.type.Function,
+  readonly onSubmit?: _.type.Function,
+  readonly handleSubmit?: _.type.Function
 }
 /**
  *
