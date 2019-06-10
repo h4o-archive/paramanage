@@ -125,7 +125,7 @@ function reduce<O, T>(object: Readonly<O>, func: (o: T, key: keyof O) => void, i
 function omit<T, K extends keyof T>(object: Readonly<T>, keys: K[]) {
   return reduce(object, (new_object, key) => {
     if (!(keys as string[]).includes(key as string)) (new_object as _.type.Object)[key as string] = object[key as keyof T]
-  }, {} as Pick<T, Exclude<keyof T, keyof K>>)
+  }, {} as Pick<T, Exclude<keyof T, K>>)
 }
 
 declare module "lodash" {
