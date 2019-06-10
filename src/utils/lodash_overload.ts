@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize: LoDashStatic["memoize"] = ((func: _.type.Func, resolver: (...args: any[]) => string): _.type.Func => {
+let memoize: LoDashStatic["memoize"] = ((func: Function, resolver: (...args: any[]) => string): Function => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map(object: _.type.ReadonlyObject, func: _.type.Func): any[] {
+function map(object: Readonly<_.type.Object>, func: Function): any[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -115,17 +115,17 @@ function map(object: _.type.ReadonlyObject, func: _.type.Func): any[] {
   return array
 }
 
-function reduce(object: _.type.ReadonlyObject, func: (o: _.type.Object, key: string) => void, init: _.type.Object): _.type.Object {
+function reduce<O, T>(object: Readonly<O>, func: (o: T, key: keyof O) => void, init: T): T {
   for (let key in object) {
     func(init, key)
   }
   return init
 }
 
-function omit(object: _.type.ReadonlyObject, keys: string[]): _.type.Object {
+function omit<T, K extends keyof T>(object: Readonly<T>, keys: K[]) {
   return reduce(object, (new_object, key) => {
-    if (!keys.includes(key)) new_object[key] = object[key]
-  }, {})
+    if (!(keys as string[]).includes(key as string)) (new_object as _.type.Object)[key as string] = object[key as keyof T]
+  }, {} as Pick<T, Exclude<keyof T, keyof K>>)
 }
 
 declare module "lodash" {
@@ -140,14 +140,8 @@ declare module "lodash" {
   }
 
   namespace type {
-    type Func = {
-      (...args: any[]): any
-    }
     type Object = {
       [key: string]: any
-    }
-    type ReadonlyObject = {
-      readonly [key: string]: any
     }
   }
 }
@@ -173,5 +167,3 @@ _.omit = omit
 _.values = Object.values
 
 export { _ }
-
-// TODO continue recheck readonly
