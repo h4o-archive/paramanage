@@ -11,7 +11,7 @@ function action (param1, param2, ...)
 # OTHERS
 /**
 *
-* Passing arguments as object with key
+* Passing arguments as object with key if agrs > 2
 *
 **/
 function other ({key1: param1, key2: param2,...})
@@ -25,15 +25,21 @@ function other (dispatch, getState, {key1: param1, key2: param2,...})
 
 /**
 *
-* 1 argument as normal
+* args <= 2 as normal
 *
 **/
-function other (param1)
+function other (param1, param2)
 function other (dispatch, getState, param1)
 
-### CHECK
+### REFACTOR CRITERIA
 1/ Refactor component
 2/ Comment code
 3/ Function parameters
 4/ Default/Fallback Syntax
 5/ Variable names
+
+### WHERE TO DECLARE TYPE
+# export type
+At the end
+# type
+line above where it is used
