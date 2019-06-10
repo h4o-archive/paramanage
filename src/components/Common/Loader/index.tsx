@@ -2,8 +2,7 @@ import React from "react"
 import { connect } from "react-redux"
 import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 
-import { reducers_name, State } from "reducers"
-const { LOADER_REDUCER } = reducers_name
+import { State } from "reducers"
 
 type LoaderProps = {
   readonly active: boolean
