@@ -140,8 +140,8 @@ declare module "lodash" {
   }
 
   namespace type {
-    type Object = {
-      [key: string]: any
+    type Object<T = any> = {
+      [key: string]: T
     }
   }
 }
