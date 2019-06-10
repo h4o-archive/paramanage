@@ -95,26 +95,32 @@ export type PlatformDB = {
   readonly order: string,
   readonly key: string
 }
+
 export type VersionDB = {
   readonly id: string
   readonly order: string,
   readonly key: string,
   readonly platformId: string
 }
+
 export type EnvironmentDB = PlatformDB
+
 type DataAPI = PlatformDB | VersionDB | EnvironmentDB
+
 export type ResponseAPI<I = null> = {
-  readonly data: I extends number ? DataAPI : DataAPI[],
+  readonly data: I extends string ? DataAPI : DataAPI[],
   readonly [keys: string]: any
 }
+
 type APIparams<I = undefined> = {
   readonly url: string,
   readonly id?: I,
   readonly json?: Readonly<_.type.Object>,
   readonly api_call_id?: string
 }
+
 type API = {
-  [methods in keyof AxiosInstance]: ({ url, id, json, api_call_id }: APIparams) => Promise<any>
+  [methods in Exclude<keyof AxiosInstance, "get">]: ({ url, id, json, api_call_id }: APIparams) => Promise<any>
 } & {
   get: <I>({ url, id, json, api_call_id }: APIparams<I>) => Promise<ResponseAPI<I>>
 }
