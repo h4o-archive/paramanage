@@ -12,6 +12,7 @@ type DropdownButtonProps = {
   readonly shouldItemDisplay: _.type.Function,
   readonly onClickOnItem?: _.type.Function
 }
+
 export const DropdownButton: React.FunctionComponent<DropdownButtonProps> = ({ text, icon, button_style, dropdown_style, button_items = [], shouldItemDisplay = () => true, onClickOnItem }) => {
 
   /**

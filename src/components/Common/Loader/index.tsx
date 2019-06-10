@@ -7,6 +7,7 @@ import { State } from "reducers"
 type LoaderProps = {
   readonly active: boolean
 }
+
 let Loader: React.FunctionComponent<LoaderProps> = (props) => {
   return (
     <Segment hidden={!props.active}>

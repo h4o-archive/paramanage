@@ -5,6 +5,7 @@ type Data = {
   readonly "order": string,
   readonly "key": string
 }
+
 type MetadatasState = {
   readonly platforms: {
     readonly data: Data,
@@ -22,6 +23,7 @@ type MetadatasState = {
     readonly previous_selected: string
   }
 }
+
 const init: MetadatasState = {
   platforms: {
     data: {} as Data,

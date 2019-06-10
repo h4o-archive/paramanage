@@ -12,6 +12,7 @@ type LoaderState = {
     readonly [key: string]: string
   }
 }
+
 const init: LoaderState = { requests: {}, outdated_requests: {} }
 
 export function loader_reducer(state = init, action: Action): LoaderState {
