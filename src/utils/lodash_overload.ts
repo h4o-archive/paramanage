@@ -115,6 +115,7 @@ function map<O, T>(object: Readonly<O>, func: (item: O[keyof O]) => T): T[] {
   return array
 }
 
+// Only use for array or object
 function reduce<O, T>(object: Readonly<O>, func: (o: T, key: keyof O) => void, init: T): T {
   for (let key in object) {
     func(init, key)

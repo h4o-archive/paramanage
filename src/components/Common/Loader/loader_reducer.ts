@@ -16,13 +16,13 @@ const init = {
 export function loader_reducer(state = init, action: Action): typeof init {
   switch (action.type) {
     case START.REQUEST:
-      return { ...state, requests: { ...state.requests, ...{ [action.payload.id]: { status: "START", params: action.payload.params } } } }
+      return { ...state, requests: { ...state.requests, ...{ [action.payload.api_call_id]: { status: "START", params: action.payload.params } } } }
     case FULLFILL.REQUEST:
       return { ...state, requests: _.omit(state.requests, [action.payload]) }
     case REJECT.REQUEST:
       return { ...state, requests: { ...state.requests, [action.payload]: { ...state.requests[action.payload], status: "REJECT" } } }
     case QUEUE.OUTDATED_REQUEST:
-      return { ...state, outdated_requests: { ...state.outdated_requests, ...action.payload } }
+      return { ...state, outdated_requests: { ...state.outdated_requests, [action.payload]: true } }
     case RESET.OUTDATED_REQUEST:
       return { ...state, outdated_requests: {} }
     case RESET.REQUEST_STATUS:

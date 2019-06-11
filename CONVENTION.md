@@ -55,3 +55,7 @@ use with type assertion object index signature REQUIRE Readonly<>
 KNOWN ISSUE: https://github.com/microsoft/TypeScript/issues/31856
 # reducer
 ALWAYS use "as const"
+
+### WHEN TO EXTRACT FUNCTION ?
+when the parameter passed in is needed for both this function and the extracting function.
+if the parameter passed is required only because of the extracting function, that function should be a local function
