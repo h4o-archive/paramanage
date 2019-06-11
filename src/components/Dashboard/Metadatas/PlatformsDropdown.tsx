@@ -7,9 +7,9 @@ import { fetchPlatforms, fetchVersions } from "./actions"
 import { dispatchAction } from "components/actions"
 import { _ } from "utils"
 import { State } from 'reducers';
-import { PlatformDB } from 'apis';
+import { PlatformState } from './metadatas_reducer';
 
-type PlatformProp = PlatformDB & { value: string, text: string }
+type PlatformProp = PlatformState & { value: string, text: string }
 
 type PlatformsDropdownProps = {
   platforms: PlatformProp[],

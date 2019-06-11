@@ -2,7 +2,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 
 import { FETCH, SELECT, ReduxThunk } from "actions/types"
-import { api } from "apis"
+import { api, VersionDB } from "apis"
 import { _ } from "utils";
 import { State } from "reducers"
 
@@ -73,7 +73,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
     await dispatch(
       {
         type: FETCH.VERSIONS,
-        payload: _.keyBy(versions, "id")
+        payload: _.keyBy(_.map(versions, (item: VersionDB) => _.omit(item, ["platformId"])), "id")
       }
     )
     dispatch({

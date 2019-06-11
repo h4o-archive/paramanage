@@ -11,7 +11,7 @@ type MetadatasState = {
   },
   readonly versions: {
     readonly data: {
-      [keys: string]: VersionDB
+      [keys: string]: Pick<VersionDB, Exclude<keyof VersionDB, "platformId">>
     },
     readonly selected: string,
     readonly previous_selected: string
@@ -68,3 +68,7 @@ export function metadatas_reducer(state = init, action: Action): MetadatasState 
       return state;
   }
 }
+
+export type PlatformState = PlatformDB
+export type VersionState = Pick<VersionDB, Exclude<keyof VersionDB, "platformId">>
+export type EnvironmentState = EnvironmentDB
