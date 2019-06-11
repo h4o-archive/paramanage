@@ -73,7 +73,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
     await dispatch(
       {
         type: FETCH.VERSIONS,
-        payload: _.keyBy(_.map(versions, (item: VersionDB) => _.omit(item, ["platformId"])), "id")
+        payload: _.keyBy((versions as VersionDB[]).map(item => _.omit(item, ["platformId"]), "id"))
       }
     )
     dispatch({

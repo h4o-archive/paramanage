@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, DropdownItemProps } from 'semantic-ui-react'
 
 import { _ } from "utils"
 
@@ -9,8 +9,8 @@ type DropdownButtonProps = {
   readonly button_style?: React.CSSProperties,
   readonly dropdown_style?: React.CSSProperties,
   readonly button_items: any[],
-  readonly shouldItemDisplay: _.type.Function,
-  readonly onClickOnItem?: _.type.Function
+  readonly shouldItemDisplay: (button_item: any) => boolean,
+  readonly onClickOnItem?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, data: DropdownItemProps) => void
 }
 
 export const DropdownButton: React.FunctionComponent<DropdownButtonProps> = ({ text, icon, button_style, dropdown_style, button_items = [], shouldItemDisplay = () => true, onClickOnItem }) => {

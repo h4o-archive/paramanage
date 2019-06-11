@@ -1,5 +1,5 @@
-import React, { Children } from 'react'
-import { Modal } from 'semantic-ui-react'
+import React from 'react'
+import { Modal, ModalProps } from 'semantic-ui-react'
 
 import { Button } from "./Button"
 import { _ } from "utils"
@@ -34,9 +34,9 @@ type ModalFormProps = {
   readonly open: boolean,
   readonly header?: string,
   readonly children?: React.ReactChildren
-  readonly onClickDiscard?: _.type.Function,
-  readonly onSubmit?: _.type.Function,
-  readonly handleSubmit?: _.type.Function
+  readonly onClickDiscard?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+  readonly onSubmit?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+  readonly handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
 }
 /**
  *

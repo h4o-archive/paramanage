@@ -20,7 +20,7 @@ type VersionsDropdownProps = {
  */
 let VersionsDropdown: React.FunctionComponent<VersionsDropdownProps> = (props) => {
 
-  function onChangeVersion(event: React.SyntheticEvent, { value }: DropdownProps) {
+  function onChangeVersion(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) {
     props.dispatchAction(SELECT.VERSION, value);
   }
 

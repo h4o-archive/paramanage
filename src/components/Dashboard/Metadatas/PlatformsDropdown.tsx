@@ -36,7 +36,7 @@ let PlatformsDropdown = class extends React.Component<PlatformsDropdownProps, {}
     this.props.dispatchAction(SET.PREVIOUS_SELECTED)
   }
 
-  onChangePlatform(event: React.SyntheticEvent, { value }: DropdownProps) {
+  onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) {
     this.props.dispatchAction(SELECT.PLATFORM, value);
     this.props.fetchVersions();
   }
