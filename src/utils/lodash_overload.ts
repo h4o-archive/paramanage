@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map<T>(object: Readonly<_.type.Object>, func: (item: any) => T): T[] {
+function map<O, T>(object: Readonly<O>, func: (item: O[keyof O]) => T): T[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
