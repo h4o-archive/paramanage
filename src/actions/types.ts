@@ -95,4 +95,4 @@ export type Action = {
   readonly payload: any
 }
 
-export type ReduxThunk = ThunkAction<void, State, any, AnyAction>
+export type ReduxThunk = ThunkAction<any, State, any, AnyAction>
