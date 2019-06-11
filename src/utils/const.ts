@@ -2,22 +2,22 @@ export const PARAMETRES_MODAL_STATE = {
   ADD: "add",
   EDIT: "edit",
   DELETE: "delete"
-}
+} as const
 
 export const DASHBOARD_ADD_MODAL_STATE = {
   PLATFORM: "platform",
   VERSION: "version",
   ENVIRONMENT: "environment"
-}
+} as const
 
 export const FORM_NAME = {
   DASHBOARD_ADD_MODAL: "DASBOARD_ADD",
   PARAMETRES_MODAL: "PARAMETRES"
-}
+} as const
 
 export const COLOR = {
   GREY: "#8d94a0"
-}
+} as const
 
 export const STATUS = {
   ACC: {
@@ -38,6 +38,6 @@ export const STATUS = {
     text: "OBS",
     color: "red"
   }
-}
+} as const
 
-export const SLEEP_TIME = 100
+export const SLEEP_TIME = 100 as const
