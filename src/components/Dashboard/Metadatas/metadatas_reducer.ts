@@ -1,24 +1,25 @@
 import { FETCH, SELECT, SET, Action } from "actions/types"
-
-type Data = {
-  readonly "id": string,
-  readonly "order": string,
-  readonly "key": string
-}
+import { PlatformDB, VersionDB, EnvironmentDB } from "apis";
 
 type MetadatasState = {
   readonly platforms: {
-    readonly data: Data,
+    readonly data: {
+      [keys: string]: PlatformDB
+    },
     readonly selected: string,
     readonly previous_selected: string
   },
   readonly versions: {
-    readonly data: Data,
+    readonly data: {
+      [keys: string]: VersionDB
+    },
     readonly selected: string,
     readonly previous_selected: string
   },
   readonly environments: {
-    readonly data: Data,
+    readonly data: {
+      [keys: string]: EnvironmentDB
+    },
     readonly selected: string,
     readonly previous_selected: string
   }
@@ -26,17 +27,17 @@ type MetadatasState = {
 
 const init: MetadatasState = {
   platforms: {
-    data: {} as Data,
+    data: {},
     selected: "0",
     previous_selected: "0"
   },
   versions: {
-    data: {} as Data,
+    data: {},
     selected: "0",
     previous_selected: "0"
   },
   environments: {
-    data: {} as Data,
+    data: {},
     selected: "0",
     previous_selected: "0"
   }
