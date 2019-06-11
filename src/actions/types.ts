@@ -92,9 +92,9 @@ export const QUEUE = {
   OUTDATED_REQUEST: "QUEUE_OUTDATED_REQUEST"
 } as const
 
-export type Action = {
-  readonly type: string,
-  readonly payload: any
-}
+export type Action = Readonly<{
+  type: string,
+  payload: any
+}>
 
 export type ReduxThunk = ThunkAction<any, State, any, AnyAction>

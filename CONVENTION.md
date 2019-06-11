@@ -43,3 +43,15 @@ function other (dispatch, getState, param1)
 At the end
 # type
 line above where it is used
+
+### TYPESCRIPT SYNTAX
+# Readonly<> if property >= 2 otherwise readonly modifier
+ONLY CHOICE when define type / no need for object initialization, REQUIRE Readonly<> for nested object / index signature
+POSSIBLE for object initialization using typeof with 1 level of property
+# as const
+NOT POSSIBLE when no need for object initialization
+MUST when object has nested object
+use with type assertion object index signature REQUIRE Readonly<>
+KNOWN ISSUE: https://github.com/microsoft/TypeScript/issues/31856
+# reducer
+ALWAYS use "as const"

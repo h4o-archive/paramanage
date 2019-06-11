@@ -4,14 +4,14 @@ import { Modal, ModalProps } from 'semantic-ui-react'
 import { Button } from "./Button"
 import { _ } from "utils"
 
-type FieldInputProps = {
-  readonly input?: any,
-  readonly label?: string,
-  readonly meta: {
-    readonly error?: any,
-    readonly touched?: boolean
-  }
-}
+type FieldInputProps = Readonly<{
+  input?: any,
+  label?: string,
+  meta: Readonly<{
+    error?: any,
+    touched?: boolean
+  }>
+}>
 /**
  *
  * @description input for Redux Field

@@ -1,49 +1,31 @@
 import { FETCH, SELECT, SET, Action } from "actions/types"
 import { PlatformDB, VersionDB, EnvironmentDB } from "apis";
 
-type MetadatasState = {
-  readonly platforms: {
-    readonly data: {
-      [keys: string]: PlatformDB
-    },
-    readonly selected: string,
-    readonly previous_selected: string
-  },
-  readonly versions: {
-    readonly data: {
-      [keys: string]: Pick<VersionDB, Exclude<keyof VersionDB, "platformId">>
-    },
-    readonly selected: string,
-    readonly previous_selected: string
-  },
-  readonly environments: {
-    readonly data: {
-      [keys: string]: EnvironmentDB
-    },
-    readonly selected: string,
-    readonly previous_selected: string
-  }
-}
-
-const init: MetadatasState = {
+const init = {
   platforms: {
-    data: {},
-    selected: "0",
-    previous_selected: "0"
+    data: {} as {
+      readonly [keys: string]: PlatformState
+    },
+    selected: "0" as string,
+    previous_selected: "0" as string
   },
   versions: {
-    data: {},
-    selected: "0",
-    previous_selected: "0"
+    data: {} as {
+      readonly [keys: string]: VersionState
+    },
+    selected: "0" as string,
+    previous_selected: "0" as string
   },
   environments: {
-    data: {},
-    selected: "0",
-    previous_selected: "0"
+    data: {} as {
+      readonly [keys: string]: EnvironmentState
+    },
+    selected: "0" as string,
+    previous_selected: "0" as string
   }
-}
+} as const
 
-export function metadatas_reducer(state = init, action: Action): MetadatasState {
+export function metadatas_reducer(state = init, action: Action): typeof init {
   switch (action.type) {
     case FETCH.PLATFORMS:
       return { ...state, platforms: { ...state.platforms, data: action.payload, selected: "0" } }

@@ -70,7 +70,7 @@ function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-type RGB = { readonly r: number, readonly g: number, readonly b: number }
+type RGB = Readonly<{ r: number, g: number, b: number }>
 
 function __hexToRgb__(hex: string): RGB {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -169,4 +169,5 @@ _.reduce = reduce
 _.omit = omit
 _.values = Object.values
 
-export { _ }
+const ___: Readonly<LoDashOverload> = _
+export { ___ as _ }

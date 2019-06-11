@@ -9,13 +9,13 @@ import { _ } from "utils"
 import { EnvironmentState } from './metadatas_reducer';
 import { State } from 'reducers';
 
-type EnvironmentProp = EnvironmentState & { value: string, text: string }
+type EnvironmentProp = EnvironmentState & Readonly<{ value: string, text: string }>
 
-type EnvironmentsDashboardProps = {
+type EnvironmentsDashboardProps = Readonly<{
   environments: EnvironmentProp[],
   selected_environment: string,
   dispatchAction: typeof dispatchAction
-}
+}>
 /**
  * @description React Component - Environment Menu on Home Page
  */

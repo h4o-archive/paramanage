@@ -8,13 +8,13 @@ import { SELECT } from "actions/types"
 import { State } from 'reducers';
 import { VersionState } from './metadatas_reducer';
 
-type VersionProp = VersionState & { value: string, text: string }
+type VersionProp = VersionState & Readonly<{ value: string, text: string }>
 
-type VersionsDropdownProps = {
+type VersionsDropdownProps = Readonly<{
   versions: VersionProp[],
   selected_version: string,
   dispatchAction: typeof dispatchAction,
-}
+}>
 /**
  * @description React Component - Version Dropdown Selection Field on Home Page
  */

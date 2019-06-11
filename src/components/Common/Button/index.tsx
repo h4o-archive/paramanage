@@ -4,14 +4,14 @@ import { _ } from "utils"
 
 import "./icon_spin.css"
 
-type ButtonProps = {
-  readonly icon?: string,
-  readonly label: string,
-  readonly btn?: string,
-  readonly transparent?: boolean,
-  readonly style?: React.CSSProperties,
-  readonly onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-}
+type ButtonProps = Readonly<{
+  icon?: string,
+  label: string,
+  btn?: string,
+  transparent?: boolean,
+  style?: React.CSSProperties,
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+}>
 
 export const Button: React.FunctionComponent<ButtonProps> = ({ icon, label = "Button", btn, transparent, style, onClick }) => {
 

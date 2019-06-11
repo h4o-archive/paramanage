@@ -90,34 +90,34 @@ function createApiInstance() {
 
 export const api = createApiInstance()
 
-export type PlatformDB = {
-  readonly id: string
-  readonly order: string,
-  readonly key: string
-}
+export type PlatformDB = Readonly<{
+  id: string
+  order: string,
+  key: string
+}>
 
-export type VersionDB = {
-  readonly id: string
-  readonly order: string,
-  readonly key: string,
-  readonly platformId: string
-}
+export type VersionDB = Readonly<{
+  id: string
+  order: string,
+  key: string,
+  platformId: string
+}>
 
 export type EnvironmentDB = PlatformDB
 
 type DataAPI = PlatformDB | VersionDB | EnvironmentDB
 
-export type ResponseAPI<I = null> = {
-  readonly data: I extends string ? DataAPI : DataAPI[],
-  readonly [keys: string]: any
-}
+export type ResponseAPI<I = null> = Readonly<{
+  data: I extends string ? DataAPI : DataAPI[],
+  [keys: string]: any
+}>
 
-type APIparams<I = undefined> = {
-  readonly url: string,
-  readonly id?: I,
-  readonly json?: Readonly<_.type.Object>,
-  readonly api_call_id?: string
-}
+type APIparams<I = undefined> = Readonly<{
+  url: string,
+  id?: I,
+  json?: Readonly<_.type.Object>,
+  api_call_id?: string
+}>
 
 type API = {
   [methods in Exclude<keyof AxiosInstance, "get">]: ({ url, id, json, api_call_id }: APIparams) => Promise<any>

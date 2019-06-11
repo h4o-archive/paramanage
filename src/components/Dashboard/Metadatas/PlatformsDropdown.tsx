@@ -9,15 +9,15 @@ import { _ } from "utils"
 import { State } from 'reducers';
 import { PlatformState } from './metadatas_reducer';
 
-type PlatformProp = PlatformState & { value: string, text: string }
+type PlatformProp = PlatformState & Readonly<{ value: string, text: string }>
 
-type PlatformsDropdownProps = {
+type PlatformsDropdownProps = Readonly<{
   platforms: PlatformProp[],
   selected_platform: string,
   fetchPlatforms: typeof fetchPlatforms,
   dispatchAction: typeof dispatchAction,
   fetchVersions: typeof fetchVersions
-}
+}>
 /**
  * 
  * @description Platform Dropdown Selection Field on Home Page
