@@ -1,63 +1,50 @@
 import { _ } from "utils";
 import { api } from "apis"
 import { fetchVersions, fetchPlatforms, fetchEnvironments } from "components/Dashboard/Metadatas/actions"
-import { wrapLoading } from "utils"
-import { DASHBOARD_ADD_MODAL_STATE, SLEEP_TIME } from "tools/const"
-
+import { SLEEP_TIME } from "utils/const"
+import { ReduxThunk } from "actions/types";
+import { modal_state } from "./dashboard_add_modal_reducer";
 
 /**
  *
  *
  * @description call internal action base on type
- * @param {Object} params
- * @param {string} params.type
- * @param {string} params.data
- * @returns {function} redux-thunk
  */
-export function add({ type, data }) {
-  return (dispatch) => {
-    switch (type) {
-      case DASHBOARD_ADD_MODAL_STATE.VERSION:
-        dispatch(addVersion(data))
-        break
-      case DASHBOARD_ADD_MODAL_STATE.PLATFORM:
-        dispatch(addPlatform(data))
-        break
-      case DASHBOARD_ADD_MODAL_STATE.ENVIRONMENT:
-        dispatch(addEnvironment(data))
-        break
-      default:
-        break
-    }
+export function add(type: modal_state, data: string): ReduxThunk {
+  switch (type) {
+    case "version":
+      return addVersion(data)
+    case "platform":
+      return addPlatform(data)
+    case "environment":
+      return addEnvironment(data)
   }
 }
 
 /**
  *
  *
- * @description wrapLoading => get latest versions => __deprecateOldLatestVersion__ => __addNewVersionToServer__ => __getAllConfigs__ => __addBulkConfigs__ => fetchVersions()
+ * @description get latest versions => __deprecateOldLatestVersion__ => __addNewVersionToServer__ => __getAllConfigs__ => __addBulkConfigs__ => fetchVersions()
  * @param {string} version_text version as string, ex: 1.2.0 || 1.02.0
  * @returns {function} redux-thunk
  */
-function addVersion(version_text) {
+function addVersion(version_text: string): ReduxThunk {
   let standarlized_base_version_order = __parseStandarlizeVersionOrder__(version_text)
   let range_version = __generateRangeOfVersion__(standarlized_base_version_order)
 
   return async (dispatch, getState) => {
-    await wrapLoading(dispatch, async () => {
-      let selected_platform = getState()[METADATAS_REDUCER].platforms.selected
-      let environments = getState()[METADATAS_REDUCER].environments.data
-      try {
-        let { data: latest_versions } = await api.get(`/versions?latest=true`)
-        await __deprecateOldLatestVersion__(latest_versions)
-        let new_version_id = await __addNewVersionToServer__({ selected_platform, version_text, standarlized_base_version_order })
-        let all_configs = await __getAllConfigs__({ latest_versions, selected_platform })
-        await __addBulkConfigs__({ all_configs, range_version, selected_platform, new_version_id, environments })
-      } catch (e) {
-        console.error("ERROR: ADD NEW VERSION")
-        console.error(e)
-      }
-    }, api.get)()
+    let selected_platform = getState().metadatas_reducer.platforms.selected
+    let environments = getState().metadatas_reducer.environments.data
+    try {
+      let { data: latest_versions } = await api.get(`/versions?latest=true`)
+      await __deprecateOldLatestVersion__(latest_versions)
+      let new_version_id = await __addNewVersionToServer__({ selected_platform, version_text, standarlized_base_version_order })
+      let all_configs = await __getAllConfigs__({ latest_versions, selected_platform })
+      await __addBulkConfigs__({ all_configs, range_version, selected_platform, new_version_id, environments })
+    } catch (e) {
+      console.error("ERROR: ADD NEW VERSION")
+      console.error(e)
+    }
     dispatch(fetchVersions())
   }
 }
@@ -68,7 +55,7 @@ function addVersion(version_text) {
  * @param {string} version_text
  * @returns {string} version as normalized number, ex: 10200
  */
-export function __parseStandarlizeVersionOrder__(version_text) {
+export function __parseStandarlizeVersionOrder__(version_text: string): string {
   let parts = version_text.split(".");
   for (let i = 1; i < parts.length; i++) {
     if (parts[i].length === 1) {

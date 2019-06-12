@@ -22,7 +22,7 @@ const init = {
       shouldDisplay: undefined
     }
   },
-  modal_state: "version" as "version" | "environment" | "platform"
+  modal_state: "version" as modal_state
 } as const
 
 export function dashboard_add_modal_reducer(state = init, action: Action): typeof init {
@@ -35,3 +35,5 @@ export function dashboard_add_modal_reducer(state = init, action: Action): typeo
       return state;
   }
 }
+
+export type modal_state = "version" | "environment" | "platform"

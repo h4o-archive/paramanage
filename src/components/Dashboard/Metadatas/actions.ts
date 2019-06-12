@@ -10,7 +10,7 @@ import { State } from "reducers"
  * @description fetch platforms => select one platform to display => trigger fetch versions of selected platform
  */
 export function fetchPlatforms(): ReduxThunk {
-  return async (dispatch, getState) => {
+  return async (dispatch, getState): Promise<void> => {
     try {
       let { data: platforms } = await api.get({ url: `/platforms` })
       await dispatch(
@@ -36,7 +36,7 @@ export function fetchPlatforms(): ReduxThunk {
  * @desciption get selected platform from state => trigger fetch versions of selected platform
  */
 export function fetchVersions(): ReduxThunk {
-  return async (dispatch, getState) => {
+  return async (dispatch, getState): Promise<void> => {
     let selected_platform = getState().metadatas_reducer.platforms.selected;
     await __fetchVersions__(dispatch, getState, selected_platform)
   }
@@ -46,7 +46,7 @@ export function fetchVersions(): ReduxThunk {
  * @description fetch environments => select one environment to display by calling __detectCurrentSelected__
  */
 export function fetchEnvironments(): ReduxThunk {
-  return async (dispatch, getState) => {
+  return async (dispatch, getState): Promise<void> => {
     try {
       let { data: environments } = await api.get({ url: `/environments` })
       await dispatch(
@@ -67,7 +67,7 @@ export function fetchEnvironments(): ReduxThunk {
 /**
  * @description fetch versions => select one version to display
  */
-async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>, getState: () => State, selected_platform: string) {
+async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>, getState: () => State, selected_platform: string): Promise<void> {
   try {
     let { data: versions } = await api.get({ url: `/platforms/${selected_platform}/versions` })
     await dispatch(

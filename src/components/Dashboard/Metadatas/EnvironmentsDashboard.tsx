@@ -21,11 +21,11 @@ type EnvironmentsDashboardProps = Readonly<{
  */
 let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardProps> = ({ environments, selected_environment, ...props }) => {
 
-  function onClickEnvironment(event: React.SyntheticEvent<HTMLAnchorElement, MouseEvent>, { encodedvalue }: MenuItemProps) {
+  function onClickEnvironment(event: React.SyntheticEvent<HTMLAnchorElement, MouseEvent>, { encodedvalue }: MenuItemProps): void {
     props.dispatchAction(SELECT.ENVIRONMENT, encodedvalue)
   }
 
-  function onChangeEnvironment(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) {
+  function onChangeEnvironment(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
     props.dispatchAction(SELECT.ENVIRONMENT, value);
   }
 
