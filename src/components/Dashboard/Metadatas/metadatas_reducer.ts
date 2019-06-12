@@ -3,23 +3,17 @@ import { PlatformDB, VersionDB, EnvironmentDB } from "apis";
 
 const init = {
   platforms: {
-    data: {} as {
-      readonly [keys: string]: PlatformState
-    },
+    data: {} as Readonly<_.type.Object<PlatformState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   },
   versions: {
-    data: {} as {
-      readonly [keys: string]: VersionState
-    },
+    data: {} as Readonly<_.type.Object<VersionState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   },
   environments: {
-    data: {} as {
-      readonly [keys: string]: EnvironmentState
-    },
+    data: {} as Readonly<_.type.Object<EnvironmentState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   }
@@ -52,5 +46,5 @@ export function metadatas_reducer(state = init, action: Action): typeof init {
 }
 
 export type PlatformState = PlatformDB
-export type VersionState = Pick<VersionDB, Exclude<keyof VersionDB, "platformId">>
+export type VersionState = Pick<VersionDB, Exclude<keyof VersionDB, "platformId" | "latest">>
 export type EnvironmentState = EnvironmentDB

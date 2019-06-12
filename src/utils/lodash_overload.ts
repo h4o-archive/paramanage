@@ -32,7 +32,7 @@ function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>
   }
 }
 
-let memoize: LoDashStatic["memoize"] = ((func: _.type.Function, resolver: (...args: any[]) => string): _.type.Function => {
+let memoize = ((func: _.type.Function, resolver: (...args: any[]) => string): _.type.Function => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -129,6 +129,15 @@ function omit<T, K extends keyof T>(object: Readonly<T>, keys: K[]) {
   }, {} as Pick<T, Exclude<keyof T, K>>)
 }
 
+function createDependencyInjector<T>() {
+  let __dependency__ = {
+    data: {} as Readonly<T>,
+    declare: (data: Readonly<T>) => { __dependency__ = { ...__dependency__, data: { ...__dependency__.data, ...data } } },
+    inject: () => __dependency__.data
+  }
+  return __dependency__ as Readonly<typeof __dependency__>
+}
+
 declare module "lodash" {
   interface LoDashStatic {
     insertItem: typeof insertItem,
@@ -138,6 +147,7 @@ declare module "lodash" {
     hashText: typeof hashText,
     sleep: typeof sleep,
     contrastColorFontAndBackground: typeof contrastColorFontAndBackground,
+    createDependencyInjector: typeof createDependencyInjector
   }
 
   namespace type {
@@ -169,6 +179,7 @@ _.map = map
 _.reduce = reduce
 _.omit = omit
 _.values = Object.values
+_.createDependencyInjector = createDependencyInjector
 
 const ___: Readonly<LoDashOverload> = _
 export { ___ as _ }

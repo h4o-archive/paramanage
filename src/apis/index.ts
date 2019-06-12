@@ -122,12 +122,32 @@ export type VersionDB = Readonly<{
   id: string
   order: string,
   key: string,
-  platformId: string
+  platformId: string,
+  latest: boolean
 }>
 
 export type EnvironmentDB = PlatformDB
 
-type DataAPI = PlatformDB | VersionDB | EnvironmentDB
+export type ConfigDB = Readonly<{
+  platformId: string,
+  versionId: string,
+  environmentId: string,
+  order: string,
+  status: string,
+  version: string,
+  mutual_profileId: string,
+  profileId: string,
+  id: string
+}>
+
+export type ProfileDB = Readonly<{
+  id: string,
+  key: string
+}>
+
+export type MutualProfileDB = ProfileDB
+
+type DataAPI = PlatformDB | VersionDB | EnvironmentDB | ConfigDB | ProfileDB | MutualProfileDB
 
 export type ResponseAPI<I = null> = Readonly<{
   data: I extends string ? DataAPI : DataAPI[],
@@ -137,13 +157,13 @@ export type ResponseAPI<I = null> = Readonly<{
 type APIparams<I = undefined> = Readonly<{
   url: string,
   id?: I,
-  params?: _.type.Object<string>
+  params?: _.type.Object<string | number | boolean>
   json?: Readonly<_.type.Object>,
   api_call_id?: string
 }>
 
 type API = {
-  [methods in Exclude<keyof AxiosInstance, "get">]: ({ url, id, json, api_call_id }: APIparams) => Promise<any>
+  [methods in Exclude<keyof AxiosInstance, "get">]: <I>({ url, id, json, api_call_id }: APIparams<I>) => Promise<any>
 } & {
   get: <I>({ url, id, json, api_call_id }: APIparams<I>) => Promise<ResponseAPI<I>>
 }

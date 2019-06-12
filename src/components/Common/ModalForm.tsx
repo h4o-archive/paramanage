@@ -33,7 +33,6 @@ export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, la
 type ModalFormProps = Readonly<{
   open: boolean,
   header?: string,
-  children?: React.ReactChildren
   onClickDiscard?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
   onSubmit?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
   handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void

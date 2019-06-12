@@ -1,16 +1,26 @@
 import { _ } from "utils";
-import { api } from "apis"
+import { api, VersionDB, ConfigDB, MutualProfileDB, ProfileDB, PlatformDB } from "apis"
 import { fetchVersions, fetchPlatforms, fetchEnvironments } from "components/Dashboard/Metadatas/actions"
 import { SLEEP_TIME } from "utils/const"
 import { ReduxThunk } from "actions/types";
-import { modal_state } from "./dashboard_add_modal_reducer";
+import { ModalState } from "./dashboard_add_modal_reducer";
+import { EnvironmentState } from "../Metadatas/metadatas_reducer";
+
+/**
+ * NAME CONVENTION
+ * @var version_text version with dot, ex: 1.2.0 || 1.02.0
+ * @var standarlized_base_version_order version as normalized number, ex: 10200
+ * @var range_version array of all minor versions ex [{1.1.1}, {1.1.2}...]
+ * @var all_configs all of configs of the latest versions for a selected platform
+ * @var hash_range_version hash of array range_version
+ */
 
 /**
  *
  *
  * @description call internal action base on type
  */
-export function add(type: modal_state, data: string): ReduxThunk {
+export function add(type: ModalState, data: string): ReduxThunk {
   switch (type) {
     case "version":
       return addVersion(data)
@@ -21,151 +31,195 @@ export function add(type: modal_state, data: string): ReduxThunk {
   }
 }
 
+type __addBulkConfigs__dependencies = Readonly<{
+  range_version: RangeVersion,
+  selected_platform: string,
+  new_version_id: string,
+  environments: Readonly<_.type.Object<EnvironmentState>>
+}>
+
+let __addBulkConfigs__dependency_injector = _.createDependencyInjector<__addBulkConfigs__dependencies>()
+
 /**
  *
  *
  * @description get latest versions => __deprecateOldLatestVersion__ => __addNewVersionToServer__ => __getAllConfigs__ => __addBulkConfigs__ => fetchVersions()
- * @param {string} version_text version as string, ex: 1.2.0 || 1.02.0
- * @returns {function} redux-thunk
  */
 function addVersion(version_text: string): ReduxThunk {
-  let standarlized_base_version_order = __parseStandarlizeVersionOrder__(version_text)
-  let range_version = __generateRangeOfVersion__(standarlized_base_version_order)
 
-  return async (dispatch, getState) => {
+  return async (dispatch, getState): Promise<void> => {
+
     let selected_platform = getState().metadatas_reducer.platforms.selected
-    let environments = getState().metadatas_reducer.environments.data
+
     try {
-      let { data: latest_versions } = await api.get(`/versions?latest=true`)
-      await __deprecateOldLatestVersion__(latest_versions)
-      let new_version_id = await __addNewVersionToServer__({ selected_platform, version_text, standarlized_base_version_order })
-      let all_configs = await __getAllConfigs__({ latest_versions, selected_platform })
-      await __addBulkConfigs__({ all_configs, range_version, selected_platform, new_version_id, environments })
+
+      let { data: latest_versions } = await api.get({
+        url: `/versions`,
+        params: { latest: true }
+      })
+      await __deprecateOldLatestVersion__(latest_versions as VersionDB[])
+
+      __addBulkConfigs__dependency_injector.declare({
+        range_version: __generateRangeOfVersion__(__parseStandarlizeVersionOrder__(version_text)),
+        selected_platform,
+        new_version_id: await __addNewVersionToServer__(selected_platform, version_text),
+        environments: getState().metadatas_reducer.environments.data
+      })
+
+      await __addBulkConfigs__(await __getAllConfigs__(latest_versions as VersionDB[], selected_platform))
+
     } catch (e) {
       console.error("ERROR: ADD NEW VERSION")
       console.error(e)
     }
+
     dispatch(fetchVersions())
   }
 }
 
 /**
- *
- *
- * @param {string} version_text
- * @returns {string} version as normalized number, ex: 10200
+ * 
+ * @returns version as normalized number, ex: 10200
  */
-export function __parseStandarlizeVersionOrder__(version_text: string): string {
+function ____parseStandarlizeVersionOrder____(version_text: string): string {
+
   let parts = version_text.split(".");
+
   for (let i = 1; i < parts.length; i++) {
     if (parts[i].length === 1) {
       parts[i] = `0${parts[i]}`
     }
   }
+
   return `${parts[0]}${parts[1]}${parts[2]}`
 }
 
-/**
- *
- *
- * @param {string} version_text version with dot, ex: 1.2.0 || 1.02.0 or version as normalized number, ex: 10200
- * @returns {string} version as normalized text, ex: 1.2.1
- */
-function __parseStandarlizeVersionText__(version_text) {
-  let parts = []
-  if (version_text.includes(".")) {
-    parts = version_text.split(".");
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i].length === 2 && parts[i][0] === "0") {
-        parts[i] = parts[i][1]
-      }
-    }
-  } else {
-    parts[2] = version_text.slice(-2);
-    parts[1] = version_text.slice(-4, -2);
-    parts[0] = version_text.slice(0, -4);
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i].length === 2 && parts[i][0] === "0") {
-        parts[i] = parts[i][1]
-      }
-    }
-  }
-  return `${parts[0]}.${parts[1]}.${parts[2]}`
-}
+export const __parseStandarlizeVersionOrder__ = _.memoize(____parseStandarlizeVersionOrder____)
 
 /**
  *
- * @typedef {Object} version_in_range
- * @property {string} text
- * @property {string} order
+ *
+ * @param version_name version with dot, ex: 1.2.0 || 1.02.0 or version as normalized number, ex: 10200
+ * @returns version as normalized text, ex: 1.2.1
  */
-/**
- * 
- * 
- * @param {string} standarlized_base_version_order
- * @returns {version_in_range[]} array of all minor versions ex [{1.1.1}, {1.1.2}...]
- */
-function __generateRangeOfVersion__(standarlized_base_version_order) {
+function ____parseStandarlizeVersionText____(version_name: string): string {
+
+  let parts = []
+
+  if (version_name.includes(".")) {
+
+    parts = version_name.split(".");
+
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].length === 2 && parts[i][0] === "0") {
+        parts[i] = parts[i][1]
+      }
+    }
+
+  } else {
+
+    parts[2] = version_name.slice(-2);
+    parts[1] = version_name.slice(-4, -2);
+    parts[0] = version_name.slice(0, -4);
+
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i].length === 2 && parts[i][0] === "0") {
+        parts[i] = parts[i][1]
+      }
+    }
+
+  }
+
+  return `${parts[0]}.${parts[1]}.${parts[2]}`
+}
+
+const __parseStandarlizeVersionText__ = _.memoize(____parseStandarlizeVersionText____)
+
+type RangeVersion = Readonly<{ "text": string, "order": string }>[]
+
+function ____generateRangeOfVersion____(standarlized_base_version_order: string): RangeVersion {
+
   let range_version = []
+
   for (let i = parseInt(standarlized_base_version_order), end_version = i + 20; i < end_version; i++) {
     range_version.push({ "text": __parseStandarlizeVersionText__(`${i}`), "order": `${i}` })
   }
+
   return range_version
 }
+
+const __generateRangeOfVersion__ = _.memoize(____generateRangeOfVersion____)
 
 /**
  *
  *
  * @description patch db of latest versions with latest = false
  */
-async function __deprecateOldLatestVersion__(latest_versions) {
+async function __deprecateOldLatestVersion__(latest_versions: VersionDB[]): Promise<void> {
+
   for (let i = 0; i < latest_versions.length; i++) {
-    await api.patch(`/versions/${latest_versions[i].id}`, { latest: false })
+    await api.patch({
+      url: `/versions`,
+      id: latest_versions[i].id,
+      json: { latest: false }
+    })
     await _.sleep(SLEEP_TIME)
   }
+
 }
 
 /**
  *
  *
  * @description add new created version to db with latest = true
- * @returns {Promise<string>} id of new added version
+ * @returns id of new created version
  */
-async function __addNewVersionToServer__({ selected_platform, version_text, standarlized_base_version_order }) {
+async function __addNewVersionToServer__(selected_platform: string, version_text: string): Promise<string> {
+
+  let standarlized_base_version_order = __parseStandarlizeVersionOrder__(version_text)
   let id = `${selected_platform}${standarlized_base_version_order}`
-  let new_version = {
+  let new_version: VersionDB = {
     "platformId": selected_platform,
     id,
     "order": standarlized_base_version_order,
     "key": __parseStandarlizeVersionText__(version_text),
     latest: true
   }
+
   try {
-    await api.post("/versions", new_version)
+    await api.post({ url: "/versions", json: new_version })
   } catch (e) {
     console.error("ERROR __addNewVersionToServer__")
     throw e
   }
+
   return id
 }
 
-/**
- *
- *
- * @returns {Promise<Array>} all of configs of the latest versions for a selected platform
- */
-async function __getAllConfigs__({ latest_versions, selected_platform }) {
-  let all_configs = [];
+async function __getAllConfigs__(latest_versions: VersionDB[], selected_platform: string): Promise<ConfigDB[]> {
+
+  let all_configs: ConfigDB[] = [];
+
   for (let i = 0; i < latest_versions.length; i++) {
     try {
-      var { data: configs } = await api.get(`/configs?versionId=${latest_versions[i].id}&platformId=${selected_platform}`)
+
+      var { data: configs } = await api.get({
+        url: "/configs",
+        params: {
+          versionId: latest_versions[i].id,
+          platformId: selected_platform
+        }
+      })
+
       await _.sleep(SLEEP_TIME)
     } catch (e) {
       console.error("ERROR __getAllConfigs__")
       throw e
     }
-    if (!_.isEmpty(configs)) all_configs = [...all_configs, ...configs]
+
+    if (!_.isEmpty(configs)) all_configs = [...all_configs, ...(configs as ConfigDB[])]
   }
+
   return all_configs
 }
 
@@ -173,46 +227,51 @@ async function __getAllConfigs__({ latest_versions, selected_platform }) {
  *
  * @description decision base on all config existing
  */
-async function __addBulkConfigs__({ all_configs, range_version, selected_platform, new_version_id, environments }) {
+async function __addBulkConfigs__(all_configs: ConfigDB[]): Promise<void> {
   if (all_configs.length > 0) {
-    await __addBulkConfigsIfExisted__({ all_configs, range_version, new_version_id, environments })
+    await __addBulkConfigsIfExisted__(all_configs)
   } else {
-    await __initBulkConfigs__({ range_version, selected_platform, new_version_id, environments })
+    await __initBulkConfigs__()
   }
 }
-
 
 /**
  *
  * @description add new bulk configs based on existed configs
  */
-async function __addBulkConfigsIfExisted__({ all_configs, range_version, new_version_id, environments }) {
-  let accepted_found = {}
-  for (let key in environments) {
-    accepted_found[environments[key].id] = false
-  }
+async function __addBulkConfigsIfExisted__(all_configs: ConfigDB[]): Promise<void> {
+
+  let { environments } = __addBulkConfigs__dependency_injector.inject()
+  let accepted_found = _.reduce(environments, (accepted_found, key) => { accepted_found[environments[key].id] = false }, {} as _.type.Object<boolean>)
+
   for (let i = 0; i < all_configs.length; i++) {
-    await __addExistedBulkConfigsWithVersionReplace__({ config: all_configs[i], new_version_id })
+
+    await __addExistedBulkConfigsWithVersionReplace__(all_configs[i])
+
     if (all_configs[i].status === "ACC" && !accepted_found[all_configs[i].environmentId]) {
       accepted_found[all_configs[i].environmentId] = true;
-      await __addNewBulkConfigs__({ config: all_configs[i], range_version, new_version_id })
+      await __addNewBulkConfigs__(all_configs[i])
     }
+
   }
+
 }
 
 /**
  *
  * @description replace the versionId thus id in existing config, then update db
  */
-async function __addExistedBulkConfigsWithVersionReplace__({ config, new_version_id }) {
-  config.versionId = new_version_id
-  config = {
+async function __addExistedBulkConfigsWithVersionReplace__(config: ConfigDB): Promise<void> {
+
+  let { new_version_id } = __addBulkConfigs__dependency_injector.inject()
+  let new_config = {
     ...config,
     versionId: new_version_id
   }
-  config.id = `${config.platformId}${config.versionId}${config.environmentId}${config.key}`
+  new_config.id = `${new_config.platformId}${new_config.versionId}${new_config.environmentId}${new_config.order}`
+
   try {
-    await api.post("/configs", config)
+    await api.post({ url: "/configs", json: new_config })
     await _.sleep(SLEEP_TIME)
   } catch (e) {
     console.error("ERROR __addExistedBulkConfigsWithVersionReplace__");
@@ -225,8 +284,12 @@ async function __addExistedBulkConfigsWithVersionReplace__({ config, new_version
  *
  * @description add configs for new minor versions
  */
-async function __addNewBulkConfigs__({ config, range_version, new_version_id }) {
+async function __addNewBulkConfigs__(config: ConfigDB): Promise<void> {
+
+  let { range_version, new_version_id } = __addBulkConfigs__dependency_injector.inject()
+
   for (let i = 0; i < range_version.length; i++) {
+
     let new_config = {
       ...config,
       versionId: new_version_id,
@@ -234,8 +297,9 @@ async function __addNewBulkConfigs__({ config, range_version, new_version_id }) 
       version: range_version[i].text
     }
     new_config.id = `${new_config.platformId}${new_config.versionId}${new_config.environmentId}${new_config.order}`
+
     try {
-      await api.post("/configs", new_config)
+      await api.post({ url: "/configs", json: new_config })
       await _.sleep(SLEEP_TIME)
     } catch (e) {
       console.error("ERROR __addNewBulkConfigs__");
@@ -249,13 +313,21 @@ async function __addNewBulkConfigs__({ config, range_version, new_version_id }) 
  *
  * @description init configs for first version
  */
-async function __initBulkConfigs__({ range_version, selected_platform, new_version_id, environments }) {
+async function __initBulkConfigs__(): Promise<void> {
+
+  let { range_version, selected_platform, new_version_id, environments } = __addBulkConfigs__dependency_injector.inject()
   let hash_range_version = _.hashText(JSON.stringify(_.keyBy(range_version, "key")))
+
   try {
-    let { data: mutual_profiles } = await api.get("/mutual_profiles")
-    let new_mutual_profile = await __addNewMutualProfileToServerIfNecessary__({ mutual_profiles, hash_range_version })
-    let new_profile = await __addNewProfile__({ hash_range_version, selected_platform })
+
+    let { data: mutual_profiles } = await api.get({ url: "/mutual_profiles" })
+
+    let new_mutual_profile = await __addNewMutualProfileToServerIfNecessary__(hash_range_version, mutual_profiles as MutualProfileDB[])
+
+    let new_profile = await __addNewProfile__(hash_range_version, selected_platform)
+
     await __initNewBulkConfigs__({ range_version, selected_platform, new_version_id, environments, new_mutual_profile, new_profile })
+
   } catch (e) {
     console.error("ERROR __initBulkConfigs__")
     throw e
@@ -265,41 +337,41 @@ async function __initBulkConfigs__({ range_version, selected_platform, new_versi
 /**
  *
  *
- * @returns {Promise<Object>} new mutual profile if nothing exist otherwise return existed mutual profile
+ * @returns new mutual profile if nothing exist otherwise return existed mutual profile
  */
-async function __addNewMutualProfileToServerIfNecessary__({ mutual_profiles, hash_range_version }) {
-  let new_mutual_profile = mutual_profiles[0]
+async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: string, mutual_profiles: MutualProfileDB[]): Promise<Readonly<MutualProfileDB>> {
+
   if (_.isEmpty(mutual_profiles)) {
-    new_mutual_profile = {
+
+    let new_mutual_profile: MutualProfileDB = {
       id: _.hashText(`__MUTUAL PROFILE INIT__${hash_range_version}`),
       key: `__MUTUAL PROFILE INIT__${hash_range_version}`
     }
+
     try {
-      await api.post("/profiles", new_mutual_profile)
-      await api.post("/mutual_profiles", new_mutual_profile)
+      await api.post({ url: "/profiles", json: new_mutual_profile })
+      await api.post({ url: "/mutual_profiles", json: new_mutual_profile })
     } catch (e) {
       console.error("ERROR __addNewMutualProfileToServerIfNecessary__")
       throw e
     }
+
+    return new_mutual_profile
+
+  } else {
+    return mutual_profiles[0]
   }
-  return new_mutual_profile
 }
 
 /**
  *
  *
- * @returns {Promise<Object>} new profile
+ * @returns new profile
  */
-async function __addNewProfile__({ hash_range_version, selected_platform }) {
-  let number_name = `${hash_range_version}${selected_platform}`
-  let hash_number_name = _.hashText(number_name)
-  let { id, key } = await __checkIfProfileExisted__(hash_number_name)
-  let new_profile = {
-    id,
-    key
-  }
+async function __addNewProfile__(hash_range_version: string, selected_platform: string): Promise<Readonly<ProfileDB>> {
+  let new_profile = await __checkIfProfileExisted__(_.hashText(`${hash_range_version}${selected_platform}`))
   try {
-    await api.post("/profiles", new_profile)
+    await api.post({ url: "/profiles", json: new_profile })
   } catch (e) {
     console.error("ERROR __addNewProfile__")
     throw e
@@ -311,32 +383,48 @@ async function __addNewProfile__({ hash_range_version, selected_platform }) {
 /**
  *
  *
- * @returns {Promise<{id: string, key: string}>} id and key of profile that name did not exist
+ * @returns new profile that did not exist
  */
-async function __checkIfProfileExisted__(hash_number_name) {
+async function __checkIfProfileExisted__(hash_number_name: string): Promise<Readonly<ProfileDB>> {
+
   let id = `${hash_number_name}`
   let key = ""
   let profile = {}
+
   do {
     key = `__PROFILE INIT__${id}`
     id = _.hashText(key);
+
     try {
-      ({ data: profile } = await api.get(`/profiles/${id}`))
+      ({ data: profile } = await api.get({ url: `/profiles`, id }))
     } catch (e) {
       profile = {}
     }
+
   } while (!_.isEmpty(profile));
+
   return { id, key }
 }
 
+type __initNewBulkConfigs__params = Readonly<{
+  range_version: RangeVersion,
+  selected_platform: string,
+  new_version_id: string,
+  environments: Readonly<_.type.Object<EnvironmentState>>,
+  new_mutual_profile: Readonly<MutualProfileDB>,
+  new_profile: Readonly<ProfileDB>
+}>
 /**
  *
  *
  * @description update configs for each minor version and each environment in db
  */
-async function __initNewBulkConfigs__({ range_version, selected_platform, new_version_id, environments, new_mutual_profile, new_profile }) {
+async function __initNewBulkConfigs__({ range_version, selected_platform, new_version_id, environments, new_mutual_profile, new_profile }: __initNewBulkConfigs__params): Promise<void> {
+
   for (let i = 0; i < range_version.length; i++) {
+
     for (let key in environments) {
+
       let new_config = {
         platformId: selected_platform,
         versionId: new_version_id,
@@ -345,44 +433,48 @@ async function __initNewBulkConfigs__({ range_version, selected_platform, new_ve
         status: "ACC",
         version: range_version[i].text,
         mutual_profileId: new_mutual_profile.id,
-        profileId: new_profile.id
+        profileId: new_profile.id,
+        id: ""
       }
       new_config.id = `${new_config.platformId}${new_config.versionId}${new_config.environmentId}${new_config.order}`
 
       try {
-        await api.post("/configs", new_config)
+        await api.post({ url: "/configs", json: new_config })
         await _.sleep(SLEEP_TIME)
       } catch (e) {
         console.error("ERROR __initNewBulkConfigs__");
         throw e
       }
     }
-
   }
 }
 
 /**
  *
  *
- * @description wrapLoading => add platform to db => fetchPlatforms()
- * @param {string} platform name
- * @returns {function} redux-thunk
+ * @description add platform to db => fetchPlatforms()
  */
-function addPlatform(platform) {
+function addPlatform(platform: string): ReduxThunk {
+
   let hash_platform = _.hashText(platform)
+
   return async (dispatch) => {
-    await wrapLoading(dispatch, async () => {
-      try {
-        await api.post("/platforms", {
+
+    try {
+
+      await api.post({
+        url: "/platforms",
+        json: {
           id: hash_platform,
           order: platform.toLowerCase(),
           key: platform
-        })
-      } catch (e) {
-        console.error("ERROR: ADD NEW PLATFORM")
-        console.error(e)
-      }
-    }, api.get)()
+        } as PlatformDB
+      })
+
+    } catch (e) {
+      console.error("ERROR: ADD NEW PLATFORM")
+      console.error(e)
+    }
     dispatch(fetchPlatforms())
   }
 }
@@ -390,23 +482,29 @@ function addPlatform(platform) {
 /**
  *
  *
- * @description wrapLoading => __addNewEnvironmentToServer__ => __addExistedBulkConfigsWithEnvironmentReplace__ => fetchEnvironments()
- * @param {string} environment name
- * @returns {function} redux-thunk
+ * @description __addNewEnvironmentToServer__ => __addExistedBulkConfigsWithEnvironmentReplace__ => fetchEnvironments()
  */
-function addEnvironment(environment) {
-  let hash_environment = _.hashText(environment)
+function addEnvironment(environment: string): ReduxThunk {
+
   return async (dispatch) => {
-    await wrapLoading(dispatch, async () => {
-      try {
-        await __addNewEnvironmentToServer__({ hash_environment, environment })
-        let { data: configs } = await api.get(`/configs?environmentId=${_.hashText("Production")}`)
-        await __addExistedBulkConfigsWithEnvironmentReplace__({ configs, hash_environment })
-      } catch (e) {
-        console.error("ERROR: ADD ENVIRONMENT")
-        console.error(e)
-      }
-    }, api.get)()
+
+    try {
+
+      await __addNewEnvironmentToServer__(environment)
+
+      let { data: configs } = await api.get({
+        url: `/configs`,
+        params: {
+          environmentId: _.hashText("Production")
+        }
+      })
+
+      await __addExistedBulkConfigsWithEnvironmentReplace__(configs as ConfigDB[], _.hashText(environment))
+
+    } catch (e) {
+      console.error("ERROR: ADD ENVIRONMENT")
+      console.error(e)
+    }
     dispatch(fetchEnvironments())
   }
 }
@@ -414,18 +512,17 @@ function addEnvironment(environment) {
 /**
  *
  * @description add new environment to db
- * @param {Object} params
- * @param {string} params.hash_environment
- * @param {string} params.environment
  */
-async function __addNewEnvironmentToServer__({ hash_environment, environment }) {
+async function __addNewEnvironmentToServer__(environment: string) {
+
   let new_environment = {
-    id: hash_environment,
+    id: _.hashText(environment),
     order: environment.toLowerCase(),
     key: environment
   }
+
   try {
-    await api.post("/environments", new_environment)
+    await api.post({ url: "/environments", json: new_environment })
   } catch (e) {
     console.error("ERROR __addNewEnvironmentToServer__")
     throw e
@@ -437,12 +534,15 @@ async function __addNewEnvironmentToServer__({ hash_environment, environment }) 
  *
  * @description with each config, replace with environment then add to db
  */
-async function __addExistedBulkConfigsWithEnvironmentReplace__({ configs, hash_environment }) {
+async function __addExistedBulkConfigsWithEnvironmentReplace__(configs: ConfigDB[], hash_environment: string) {
+
   for (let i = 0; i < configs.length; i++) {
+
     let new_config = { ...configs[i], environmentId: hash_environment }
     new_config.id = `${new_config.platformId}${new_config.versionId}${new_config.environmentId}${new_config.order}`
+
     try {
-      await api.post("/configs", new_config)
+      await api.post({ url: "/configs", json: new_config })
       await _.sleep(SLEEP_TIME)
     } catch (e) {
       console.error("ERROR __addExistedBulkConfigsWithEnvironmentReplace__");

@@ -19,7 +19,7 @@ export function fetchPlatforms(): ReduxThunk {
           payload: _.keyBy(platforms, "id")
         }
       )
-      let selected_platform = __detectCurrentSelected__({ current_selected: getState().metadatas_reducer.platforms.previous_selected, data: platforms })
+      let selected_platform = __detectCurrentSelected__(getState().metadatas_reducer.platforms.previous_selected, platforms)
       await dispatch({
         type: SELECT.PLATFORM,
         payload: selected_platform
@@ -57,7 +57,7 @@ export function fetchEnvironments(): ReduxThunk {
       )
       dispatch({
         type: SELECT.ENVIRONMENT,
-        payload: __detectCurrentSelected__({ current_selected: getState().metadatas_reducer.environments.previous_selected, data: environments })
+        payload: __detectCurrentSelected__(getState().metadatas_reducer.environments.previous_selected, environments)
       })
     } catch (e) {
       console.error(e)
@@ -78,7 +78,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
     )
     dispatch({
       type: SELECT.VERSION,
-      payload: __detectCurrentSelected__({ current_selected: getState().metadatas_reducer.versions.previous_selected, data: versions })
+      payload: __detectCurrentSelected__(getState().metadatas_reducer.versions.previous_selected, versions)
     })
   } catch (e) {
     console.error(e)
@@ -88,7 +88,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
 /**
  * @description check if current selected still exist in the new set of data, if so return current selected
  */
-function __detectCurrentSelected__({ current_selected, data }: { current_selected: string, data: (_.type.Object & { id: string })[] }): string {
+function __detectCurrentSelected__(current_selected: string, data: (_.type.Object & { id: string })[]): string {
   if (data.length === 0) {
     return "0"
   }
