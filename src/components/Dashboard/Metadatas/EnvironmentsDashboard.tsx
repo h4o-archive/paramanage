@@ -97,7 +97,7 @@ let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardProps> =
   )
 }
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: State): Pick<EnvironmentsDashboardProps, "environments" | "selected_environment"> {
   let { data, selected } = state.metadatas_reducer.environments
   return {
     environments: _.map(data, item => ({ ...item, value: item.id, text: item.key })).sort(_.compareObjectAscendinBaseOnKey("order")),

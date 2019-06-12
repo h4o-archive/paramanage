@@ -20,7 +20,7 @@ type VersionsDropdownProps = Readonly<{
  */
 let VersionsDropdown: React.FunctionComponent<VersionsDropdownProps> = (props) => {
 
-  function onChangeVersion(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) {
+  function onChangeVersion(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
     props.dispatchAction(SELECT.VERSION, value);
   }
 
@@ -36,7 +36,7 @@ let VersionsDropdown: React.FunctionComponent<VersionsDropdownProps> = (props) =
   )
 }
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: State): Pick<VersionsDropdownProps, "versions" | "selected_version"> {
   let { data, selected } = state.metadatas_reducer.versions
   return {
     versions: _.map(data, item => _.pick({ ...item, value: item.id, text: item.key }, ["id", "key", "order", "value", "text"])).sort(_.compareObjectAscendinBaseOnKey("order")),

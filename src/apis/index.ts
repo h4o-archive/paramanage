@@ -4,7 +4,7 @@ import { _ } from "utils"
 import { store } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE, RESET } from "actions/types"
 
-function createApiInstance() {
+function createApiInstance(): Readonly<API> {
 
   function createAxiosInstance(): AxiosInstance {
     let axios_instance = axios.create({

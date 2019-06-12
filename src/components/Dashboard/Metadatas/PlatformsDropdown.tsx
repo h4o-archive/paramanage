@@ -36,7 +36,7 @@ let PlatformsDropdown = class extends React.Component<PlatformsDropdownProps, {}
     this.props.dispatchAction(SET.PREVIOUS_SELECTED)
   }
 
-  onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps) {
+  onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
     this.props.dispatchAction(SELECT.PLATFORM, value);
     this.props.fetchVersions();
   }
@@ -55,7 +55,7 @@ let PlatformsDropdown = class extends React.Component<PlatformsDropdownProps, {}
   }
 }
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: State): Pick<PlatformsDropdownProps, "platforms" | "selected_platform"> {
   let { data, selected } = state.metadatas_reducer.platforms
   return {
     platforms: _.map(data, item => ({ ...item, value: item.id, text: item.key }) as PlatformProp).sort(_.compareObjectAscendinBaseOnKey("order")),

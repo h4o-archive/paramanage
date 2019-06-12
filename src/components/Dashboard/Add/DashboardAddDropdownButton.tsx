@@ -24,11 +24,11 @@ type DashboardAddDropdownButtonProps = Readonly<{
  */
 let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButtonProps> = ({ button_items, platforms_is_empty, ...props }) => {
 
-  function shouldItemDisplay(item: ButtonItem) {
+  function shouldItemDisplay(item: ButtonItem): boolean {
     return item.shouldDisplay ? item.shouldDisplay(platforms_is_empty) : true
   }
 
-  function onClickOnItem(event: React.MouseEvent<HTMLDivElement, MouseEvent>, { value }: DropdownItemProps) {
+  function onClickOnItem(event: React.MouseEvent<HTMLDivElement, MouseEvent>, { value }: DropdownItemProps): void {
     props.dispatchAction(SHOW.MODAL.DASHBOARD_ADDING, value)
   }
 
@@ -43,7 +43,7 @@ let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButt
   )
 }
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonProps, "button_items" | "platforms_is_empty"> {
   let __button_items_in_state__ = state.dashboard_add_modal_reducer.data
   let button_items = _.map(__button_items_in_state__, button_item => (
     {
