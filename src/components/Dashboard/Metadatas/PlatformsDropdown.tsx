@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Dropdown as SemanticDropdown, DropdownProps } from 'semantic-ui-react'
 import { connect } from "react-redux"
 
@@ -22,37 +22,31 @@ type PlatformsDropdownProps = Readonly<{
  * 
  * @description Platform Dropdown Selection Field on Home Page
  */
-let PlatformsDropdown = class extends React.Component<PlatformsDropdownProps, {}> {
-  constructor(props: PlatformsDropdownProps) {
-    super(props);
-    this.onChangePlatform = this.onChangePlatform.bind(this);
+let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownProps> = ({ platforms, selected_platform, ...props }) => {
+
+  useEffect(() => {
+    props.fetchPlatforms()
+
+    return function cleanUp() {
+      props.dispatchAction(SET.PREVIOUS_SELECTED)
+    }
+  }, [])
+
+  function onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
+    props.dispatchAction(SELECT.PLATFORM, value);
+    props.fetchVersions();
   }
 
-  componentDidMount() {
-    this.props.fetchPlatforms();
-  }
-
-  componentWillUnmount() {
-    this.props.dispatchAction(SET.PREVIOUS_SELECTED)
-  }
-
-  onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
-    this.props.dispatchAction(SELECT.PLATFORM, value);
-    this.props.fetchVersions();
-  }
-
-  render() {
-    return (
-      <SemanticDropdown
-        fluid
-        search
-        selection
-        options={this.props.platforms}
-        onChange={this.onChangePlatform}
-        value={this.props.selected_platform}
-      />
-    )
-  }
+  return (
+    <SemanticDropdown
+      fluid
+      search
+      selection
+      options={platforms}
+      value={selected_platform}
+      onChange={onChangePlatform}
+    />
+  )
 }
 
 function mapStateToProps(state: State): Pick<PlatformsDropdownProps, "platforms" | "selected_platform"> {
