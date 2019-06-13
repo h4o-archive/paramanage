@@ -12,20 +12,16 @@ function removeItem<T>(array: T[], index: number): T[] {
   return [...array.slice(0, index), ...array.slice(index + 1)]
 }
 
-type ComparableObject<T> = {
-  readonly [key: string]: T
-}
-
-function compareObjectDescendinBaseOnKey<T>(key: string): (a: ComparableObject<T>, b: ComparableObject<T>) => number {
-  return (a: ComparableObject<T>, b: ComparableObject<T>): number => {
+function compareObjectDescendinBaseOnKey<T, K extends keyof T>(key: K): ((a: T, b: T) => number) {
+  return (a: T, b: T): number => {
     if (a[key] > b[key]) return -1;
     if (a[key] < b[key]) return 1;
     return 0;
   }
 }
 
-function compareObjectAscendinBaseOnKey<T>(key: string): (a: ComparableObject<T>, b: ComparableObject<T>) => number {
-  return (a: ComparableObject<T>, b: ComparableObject<T>): number => {
+function compareObjectAscendinBaseOnKey<T, K extends keyof T>(key: K): ((a: T, b: T) => number) {
+  return (a: T, b: T): number => {
     if (a[key] < b[key]) return -1;
     if (a[key] > b[key]) return 1;
     return 0;
