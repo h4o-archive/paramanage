@@ -1,5 +1,4 @@
 import React, { useContext } from "react"
-import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import { Dropdown } from "semantic-ui-react"
@@ -9,14 +8,18 @@ import { fetchConfigs } from "./actions"
 import { dispatchAction } from "components/actions"
 import { SHOW } from "actions/types"
 import { Button } from "components/Common/Button"
-import { STATUS } from "utils/const"
+import { CONFIG_STATUS } from "utils/const"
 import { ConfigContext } from "./ConfigContext"
+import { ConfigState } from "./configs_reducer";
 
-
+type ConfigProps = Readonly<{
+  config: ConfigState,
+  onEditClick: _.type.Function
+}>
 /**
- * @description React Component - 1 line of config information
+ * @description 1 line of config information
  */
-function Config({ config, onEditClick, children: version }) {
+const Config: React.FunctionComponent<ConfigProps> = ({ config, onEditClick, children: ConfigVersion }) => {
 
   function EditButton() {
     return (
@@ -32,7 +35,7 @@ function Config({ config, onEditClick, children: version }) {
     return (
       <div className="middle aligned column" style={{ color: "white" }}>
         <ConfigContext.Provider value={{ config }}>
-          {version}
+          {ConfigVersion}
         </ConfigContext.Provider>
       </div>
     )
@@ -41,20 +44,16 @@ function Config({ config, onEditClick, children: version }) {
   function Status() {
     return (
       <div className="middle aligned column" >
-        <p style={{ textAlign: "left", color: STATUS[config.status].color }}>{config.status}</p>
+        <p style={{ textAlign: "left", color: CONFIG_STATUS[config.status as keyof typeof CONFIG_STATUS].color }}>{config.status}</p>
       </div>
     )
   }
 
-  function ProfileName(props) {
-    let profile_style = { textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", lineClamp: 2, lineHeight: "1em", maxHeight: "2em" }
+  function ProfileName(props: { to: string, profile: string }) {
+    let profile_style: React.CSSProperties = { textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", lineClamp: 2, lineHeight: "1em", maxHeight: "2em" }
     return (
       <Link className="middle aligned column" to={`/profile/${props.to}`} style={profile_style}>{props.profile}</Link>
     )
-  }
-  ProfileName.propTypes = {
-    to: PropTypes.string.isRequired,
-    profile: PropTypes.string.isRequired
   }
 
   return (
@@ -67,16 +66,15 @@ function Config({ config, onEditClick, children: version }) {
     </div>
   )
 }
-Config.propTypes = {
-  config: PropTypes.object.isRequired,
-  onEditClick: PropTypes.func.isRequired,
-  children: PropTypes.element.isRequired
-}
 
+type ConfigVersionProps = Readonly<{
+  version_style: React.CSSProperties,
+  expand: Readonly<_.type.Object<boolean>>
+}>
 /**
  * @description React Component - the version information of config
  */
-function ConfigVersion({ version_style, expand, ...props }) {
+const ConfigVersion: React.FunctionComponent<ConfigVersionProps> = ({ version_style, expand, ...props }) => {
   let { config } = useContext(ConfigContext)
 
   function VersionIndicator({ text }) {

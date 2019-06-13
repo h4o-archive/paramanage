@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux';
 import { connect } from "react-redux"
-import { Field, reduxForm, formValueSelector, getFormSyncErrors, reset, InjectedFormProps } from "redux-form"
+import { Field, reduxForm, formValueSelector, getFormSyncErrors, reset, InjectedFormProps, FormErrors as ReduxFormErrors } from "redux-form"
 
 import { dispatchAction } from "components/actions"
 import { HIDE } from "actions/types"
@@ -14,30 +14,31 @@ import { State } from 'reducers';
 import { _ } from "utils"
 import { DASHBOARD_ADD_MODAL_STATE, FORM_NAME } from "utils/const"
 
-type Errors = {
+// NOT READ-ONLY because of modification errors object in validate function
+type FormValues = {
   [keys in ModalState]: string
 }
 
-type FormValues = Errors
+type FormErrors = ReduxFormErrors<FormValues, string>
 
 type DashboardAddModalProps = Readonly<{
   open: boolean,
   modal_state: ModalState,
   modal_info: _.type.Object,
-  form_values: string,
-  errors: Readonly<Errors>,
+  form_value: string,
+  errors: Readonly<FormErrors>,
   selected_platform: string,
   add: typeof add,
   dispatchAction: typeof dispatchAction,
 }>
 /**
- * @description React Component - Modal when click on Add on Home Page
+ * @description Modal when click on Add on Home Page
  */
-let DashboardAddModal: React.FunctionComponent<DashboardAddModalProps & InjectedFormProps<FormValues, DashboardAddModalProps>> = ({ open, modal_state, modal_info, form_values, errors, ...props }) => {
+let DashboardAddModal: React.FunctionComponent<DashboardAddModalProps & InjectedFormProps<FormValues, DashboardAddModalProps>> = ({ open, modal_state, modal_info, form_value, errors, ...props }) => {
 
   function onSubmit() {
     if (_.isEmpty(errors)) {
-      props.add(modal_state, form_values)
+      props.add(modal_state, form_value)
       onClickDiscard()
     }
   }
@@ -63,8 +64,8 @@ let DashboardAddModal: React.FunctionComponent<DashboardAddModalProps & Injected
   )
 }
 
-function validate(form_values: Readonly<FormValues>): Errors {
-  let errors = {} as Errors
+function validate(form_values: Readonly<FormValues>): Readonly<FormErrors> {
+  let errors = {} as FormErrors
 
   if (form_values.version && ! /^[0-9]{1,2}.[0-9]{1,2}.0{1,2}$/.test(form_values.version)) {
     errors.version = "ERROR: FORMAT ERROR, please type the version as XX.XX.00 ! NOTE: Only the creation of a major version is supported at the moment"
@@ -97,14 +98,13 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 }
 
 
-function mapStateToProps(state: State): DashboardAddModalProps {
+function mapStateToProps(state: State): _.type.Omit<DashboardAddModalProps, "add" | "dispatchAction"> {
   let { open, modal_state, data } = state.dashboard_add_modal_reducer
   return {
     open,
     modal_state,
     modal_info: data[modal_state],
-    form_values: formValueSelector(FORM_NAME.DASHBOARD_ADD_MODAL)(state, data[modal_state].key),
-    // TODO fix type error
+    form_value: formValueSelector(FORM_NAME.DASHBOARD_ADD_MODAL)(state, data[modal_state].key),
     errors: getFormSyncErrors(FORM_NAME.DASHBOARD_ADD_MODAL)(state),
     selected_platform: state.metadatas_reducer.platforms.selected
   }

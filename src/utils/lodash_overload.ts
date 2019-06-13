@@ -157,6 +157,7 @@ declare module "lodash" {
     type Function = {
       (...args: any): any
     }
+    type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
   }
 }
 

@@ -19,7 +19,7 @@ export const COLOR = {
   GREY: "#8d94a0"
 } as const
 
-export const STATUS = {
+export const CONFIG_STATUS = {
   ACC: {
     key: "ACC",
     value: "ACC",
