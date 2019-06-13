@@ -41,14 +41,14 @@ type ModalFormProps = Readonly<{
  *
  * @description modal with Form
  */
-export const ModalForm: React.FunctionComponent<ModalFormProps> = ({ open = false, header, children, onClickDiscard, onSubmit, handleSubmit }) => {
+export const ModalForm: React.FunctionComponent<ModalFormProps> = ({ open = false, header, children: Form, onClickDiscard, onSubmit, handleSubmit }) => {
   return (
     <Modal open={open} onClose={onClickDiscard}>
       <Modal.Header>{header}</Modal.Header>
       <Modal.Content>
         <Modal.Description>
           <form className="ui form error" onSubmit={handleSubmit} >
-            {children}
+            {Form}
           </form>
         </Modal.Description>
       </Modal.Content>

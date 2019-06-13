@@ -34,6 +34,8 @@ line above where it is used
 
 # Readonly<> if property >= 2 otherwise readonly modifier
 
+* USE by default for type definition, otherwise MUST comment to explain why it should not be Readonly
+* LIMITLY overload Readonly<> with existing type, use with CAUTION
 * ONLY CHOICE when define type / no need for object initialization, REQUIRE Readonly<> for nested object / index signature
 * POSSIBLE for object initialization using typeof with 1 level of property
 
@@ -48,6 +50,10 @@ line above where it is used
 
 * ALWAYS use "as const"
 
+# Generic Type
+
+* not use Readonly explicitly
+
 ####### WHEN TO EXTRACT FUNCTION ?
 when the parameter passed in is needed for both this function and the extracting function.
-if the parameter passed is required only by the extracting function, that function should be a local function
+if the parameter passed is required only by the extracting function, should you DependencyInjection

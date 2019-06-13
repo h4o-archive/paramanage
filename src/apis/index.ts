@@ -162,6 +162,7 @@ type APIparams<I = undefined> = Readonly<{
   api_call_id?: string
 }>
 
+// NOT READONLY because of initializing in creation phase above
 type API = {
   [methods in Exclude<keyof AxiosInstance, "get">]: <I>({ url, id, json, api_call_id }: APIparams<I>) => Promise<any>
 } & {

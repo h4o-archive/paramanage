@@ -339,7 +339,7 @@ async function __initBulkConfigs__(): Promise<void> {
  *
  * @returns new mutual profile if nothing exist otherwise return existed mutual profile
  */
-async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: string, mutual_profiles: MutualProfileDB[]): Promise<Readonly<MutualProfileDB>> {
+async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: string, mutual_profiles: MutualProfileDB[]): Promise<MutualProfileDB> {
 
   if (_.isEmpty(mutual_profiles)) {
 
@@ -368,7 +368,7 @@ async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: st
  *
  * @returns new profile
  */
-async function __addNewProfile__(hash_range_version: string, selected_platform: string): Promise<Readonly<ProfileDB>> {
+async function __addNewProfile__(hash_range_version: string, selected_platform: string): Promise<ProfileDB> {
   let new_profile = await __checkIfProfileExisted__(_.hashText(`${hash_range_version}${selected_platform}`))
   try {
     await api.post({ url: "/profiles", json: new_profile })
@@ -385,7 +385,7 @@ async function __addNewProfile__(hash_range_version: string, selected_platform: 
  *
  * @returns new profile that did not exist
  */
-async function __checkIfProfileExisted__(hash_number_name: string): Promise<Readonly<ProfileDB>> {
+async function __checkIfProfileExisted__(hash_number_name: string): Promise<ProfileDB> {
 
   let id = `${hash_number_name}`
   let key = ""
@@ -411,8 +411,8 @@ type __initNewBulkConfigs__params = Readonly<{
   selected_platform: string,
   new_version_id: string,
   environments: Readonly<_.type.Object<EnvironmentState>>,
-  new_mutual_profile: Readonly<MutualProfileDB>,
-  new_profile: Readonly<ProfileDB>
+  new_mutual_profile: MutualProfileDB,
+  new_profile: ProfileDB
 }>
 /**
  *
@@ -513,7 +513,7 @@ function addEnvironment(environment: string): ReduxThunk {
  *
  * @description add new environment to db
  */
-async function __addNewEnvironmentToServer__(environment: string) {
+async function __addNewEnvironmentToServer__(environment: string): Promise<void> {
 
   let new_environment = {
     id: _.hashText(environment),
@@ -534,7 +534,7 @@ async function __addNewEnvironmentToServer__(environment: string) {
  *
  * @description with each config, replace with environment then add to db
  */
-async function __addExistedBulkConfigsWithEnvironmentReplace__(configs: ConfigDB[], hash_environment: string) {
+async function __addExistedBulkConfigsWithEnvironmentReplace__(configs: ConfigDB[], hash_environment: string): Promise<void> {
 
   for (let i = 0; i < configs.length; i++) {
 

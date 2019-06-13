@@ -63,7 +63,7 @@ let DashboardAddModal: React.FunctionComponent<DashboardAddModalProps & Injected
   )
 }
 
-function validate(form_values: Readonly<FormValues>) {
+function validate(form_values: Readonly<FormValues>): Errors {
   let errors = {} as Errors
 
   if (form_values.version && ! /^[0-9]{1,2}.[0-9]{1,2}.0{1,2}$/.test(form_values.version)) {
@@ -73,7 +73,7 @@ function validate(form_values: Readonly<FormValues>) {
   return errors;
 }
 
-function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { modal_state, selected_platform }: DashboardAddModalProps) {
+function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { modal_state, selected_platform }: Readonly<DashboardAddModalProps>): Promise<any> {
   if (form_values) {
 
     let id = _.hashText(form_values[modal_state])
@@ -97,13 +97,14 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 }
 
 
-function mapStateToProps(state: State) {
+function mapStateToProps(state: State): DashboardAddModalProps {
   let { open, modal_state, data } = state.dashboard_add_modal_reducer
   return {
     open,
     modal_state,
     modal_info: data[modal_state],
     form_values: formValueSelector(FORM_NAME.DASHBOARD_ADD_MODAL)(state, data[modal_state].key),
+    // TODO fix type error
     errors: getFormSyncErrors(FORM_NAME.DASHBOARD_ADD_MODAL)(state),
     selected_platform: state.metadatas_reducer.platforms.selected
   }

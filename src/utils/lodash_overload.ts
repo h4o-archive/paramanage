@@ -12,7 +12,7 @@ function removeItem<T>(array: T[], index: number): T[] {
   return [...array.slice(0, index), ...array.slice(index + 1)]
 }
 
-interface ComparableObject<T> {
+type ComparableObject<T> = {
   readonly [key: string]: T
 }
 
@@ -107,7 +107,7 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map<O, T>(object: Readonly<O>, func: (item: O[keyof O]) => T): T[] {
+function map<O, T>(object: O, func: (item: O[keyof O]) => T): T[] {
   let array = []
   for (let key in object) {
     array.push(func(object[key]))
@@ -116,23 +116,23 @@ function map<O, T>(object: Readonly<O>, func: (item: O[keyof O]) => T): T[] {
 }
 
 // Only use for array or object
-function reduce<O, T>(object: Readonly<O>, func: (o: T, key: keyof O) => void, init: T): T {
+function reduce<O, T>(object: O, func: (o: T, key: keyof O) => void, init: T): T {
   for (let key in object) {
     func(init, key)
   }
   return init
 }
 
-function omit<T, K extends keyof T>(object: Readonly<T>, keys: K[]) {
+function omit<T, K extends keyof T>(object: T, keys: K[]) {
   return reduce(object, (new_object, key) => {
-    if (!(keys as string[]).includes(key as string)) (new_object as _.type.Object)[key as string] = object[key as keyof T]
+    if (!keys.includes(key as K)) (new_object as _.type.Object)[key as string] = object[key]
   }, {} as Pick<T, Exclude<keyof T, K>>)
 }
 
 function createDependencyInjector<T>() {
   let __dependency__ = {
-    data: {} as Readonly<T>,
-    declare: (data: Readonly<T>) => { __dependency__ = { ...__dependency__, data: { ...__dependency__.data, ...data } } },
+    data: {} as T,
+    declare: (data: T) => { __dependency__ = { ...__dependency__, data: { ...__dependency__.data, ...data } } },
     inject: () => __dependency__.data
   }
   return __dependency__ as Readonly<typeof __dependency__>

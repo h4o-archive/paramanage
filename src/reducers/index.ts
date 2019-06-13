@@ -22,7 +22,7 @@ const combinedReducer = combineReducers({
   // parametres_reducer,
   // parametres_modal_reducer,
   // edit_config_modal_reducer
-} as const)
+})
 
 export const store = createStore(combinedReducer, composeEnhancer(applyMiddleware(thunk)))
-export type State = ReturnType<typeof combinedReducer>
+export type State = Readonly<ReturnType<typeof combinedReducer>>
