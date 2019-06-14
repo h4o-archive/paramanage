@@ -13,6 +13,7 @@ import { ModalState } from './dashboard_add_modal_reducer';
 import { State } from 'reducers';
 import { _ } from "utils"
 import { DASHBOARD_ADD_MODAL_STATE, FORM_NAME } from "utils/const"
+import * as Types from "utils/Types"
 
 // NOT READ-ONLY because of modification errors object in validate function
 type FormValues = {
@@ -24,7 +25,7 @@ type FormErrors = ReduxFormErrors<FormValues, string>
 type DashboardAddModalProps = Readonly<{
   open: boolean,
   modal_state: ModalState,
-  modal_info: _.type.Object,
+  modal_info: Types.OverloadObject,
   form_value: string,
   errors: Readonly<FormErrors>,
   selected_platform: string,
@@ -98,7 +99,7 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 }
 
 
-function mapStateToProps(state: State): _.type.Omit<DashboardAddModalProps, "add" | "dispatchAction"> {
+function mapStateToProps(state: State): Types.OverloadOmit<DashboardAddModalProps, "add" | "dispatchAction"> {
   let { open, modal_state, data } = state.dashboard_add_modal_reducer
   return {
     open,

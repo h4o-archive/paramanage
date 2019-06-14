@@ -1,4 +1,5 @@
 import lodash, { LoDashStatic } from "lodash"
+import * as Types from "./Types"
 
 function insertItem<T>(array: T[], index: number, item: T): T[] {
   return [
@@ -28,7 +29,7 @@ function compareObjectAscendinBaseOnKey<T, K extends keyof T>(key: K): ((a: T, b
   }
 }
 
-let memoize = ((func: _.type.Function, resolver: (...args: any[]) => string): _.type.Function => {
+let memoize = ((func: Types.Function, resolver: (...args: any[]) => string): Types.Function => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -121,7 +122,7 @@ function reduce<O, T>(object: O, func: (o: T, key: keyof O) => void, init: T): T
 
 function omit<T, K extends keyof T>(object: T, keys: K[]) {
   return reduce(object, (new_object, key) => {
-    if (!keys.includes(key as K)) (new_object as _.type.Object)[key as string] = object[key]
+    if (!keys.includes(key as K)) (new_object as Types.OverloadObject)[key as string] = object[key]
   }, {} as Pick<T, Exclude<keyof T, K>>)
 }
 
@@ -134,6 +135,14 @@ function createDependencyInjector<T>() {
   return __dependency__ as Readonly<typeof __dependency__>
 }
 
+let createUniqueID = Object.assign(
+  () => {
+    createUniqueID.unique_id++
+    return createUniqueID.unique_id
+  },
+  { unique_id: 0 }
+)
+
 declare module "lodash" {
   interface LoDashStatic {
     insertItem: typeof insertItem,
@@ -144,17 +153,9 @@ declare module "lodash" {
     sleep: typeof sleep,
     contrastColorFontAndBackground: typeof contrastColorFontAndBackground,
     createDependencyInjector: typeof createDependencyInjector
+    createUniqueID: typeof createUniqueID
   }
 
-  namespace type {
-    type Object<T = any> = {
-      [key: string]: T
-    }
-    type Function = {
-      (...args: any): any
-    }
-    type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-  }
 }
 
 interface LoDashOverload extends Pick<LoDashStatic, Exclude<keyof LoDashStatic, "map" | "reduce" | "omit">> {
@@ -177,6 +178,7 @@ _.reduce = reduce
 _.omit = omit
 _.values = Object.values
 _.createDependencyInjector = createDependencyInjector
+_.createUniqueID = createUniqueID
 
 const ___: Readonly<LoDashOverload> = _
 export { ___ as _ }

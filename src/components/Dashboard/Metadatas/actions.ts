@@ -5,6 +5,7 @@ import { FETCH, SELECT, ReduxThunk } from "actions/types"
 import { api, VersionDB } from "apis"
 import { _ } from "utils";
 import { State } from "reducers"
+import * as Types from "utils/Types"
 
 /**
  * @description fetch platforms => select one platform to display => trigger fetch versions of selected platform
@@ -88,7 +89,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
 /**
  * @description check if current selected still exist in the new set of data, if so return current selected
  */
-function __detectCurrentSelected__(current_selected: string, data: (_.type.Object & { id: string })[]): string {
+function __detectCurrentSelected__(current_selected: string, data: (Types.OverloadObject & { id: string })[]): string {
   if (data.length === 0) {
     return "0"
   }

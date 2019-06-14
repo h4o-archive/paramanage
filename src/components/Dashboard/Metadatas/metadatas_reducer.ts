@@ -1,19 +1,20 @@
 import { FETCH, SELECT, SET, Action } from "actions/types"
 import { PlatformDB, VersionDB, EnvironmentDB } from "apis";
+import * as Types from "utils/Types"
 
 const init = {
   platforms: {
-    data: {} as Readonly<_.type.Object<PlatformState>>,
+    data: {} as Readonly<Types.OverloadObject<PlatformState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   },
   versions: {
-    data: {} as Readonly<_.type.Object<VersionState>>,
+    data: {} as Readonly<Types.OverloadObject<VersionState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   },
   environments: {
-    data: {} as Readonly<_.type.Object<EnvironmentState>>,
+    data: {} as Readonly<Types.OverloadObject<EnvironmentState>>,
     selected: "0" as string,
     previous_selected: "0" as string
   }

@@ -1,8 +1,9 @@
 import { FETCH, ADD, Action } from "actions/types"
 import { ConfigDB } from "apis";
+import * as Types from "utils/Types";
 
 const init = {
-  configs: {} as ConfigState
+  configs: {} as Readonly<Types.OverloadObject<ConfigState>>
 } as const
 
 export function configs_reducer(state = init, action: Action): typeof init {

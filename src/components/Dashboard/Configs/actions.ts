@@ -7,16 +7,16 @@ import { FETCH, ReduxThunk } from "actions/types"
  *
  * @description fetch configs for such metadatas from db
  */
-export function fetchConfigs(platformId: string, versionId: string, environmentId: string): ReduxThunk {
+export function fetchConfigs(selected_platform: string, selected_version: string, selected_environment: string): ReduxThunk {
   return async (dispatch) => {
     try {
 
       let { data: configs } = await api.get({
         url: `/configs`,
         params: {
-          platformId,
-          versionId,
-          environmentId
+          platformId: selected_platform,
+          versionId: selected_version,
+          environmentId: selected_environment
         }
       })
 

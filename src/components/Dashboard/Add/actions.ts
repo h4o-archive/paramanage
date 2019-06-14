@@ -5,6 +5,7 @@ import { SLEEP_TIME } from "utils/const"
 import { ReduxThunk } from "actions/types";
 import { ModalState } from "./dashboard_add_modal_reducer";
 import { EnvironmentState } from "../Metadatas/metadatas_reducer";
+import * as Types from "utils/Types"
 
 /**
  * NAME CONVENTION
@@ -35,7 +36,7 @@ type __addBulkConfigs__dependencies = Readonly<{
   range_version: RangeVersion,
   selected_platform: string,
   new_version_id: string,
-  environments: Readonly<_.type.Object<EnvironmentState>>
+  environments: Readonly<Types.OverloadObject<EnvironmentState>>
 }>
 
 let __addBulkConfigs__dependency_injector = _.createDependencyInjector<__addBulkConfigs__dependencies>()
@@ -242,7 +243,7 @@ async function __addBulkConfigs__(all_configs: ConfigDB[]): Promise<void> {
 async function __addBulkConfigsIfExisted__(all_configs: ConfigDB[]): Promise<void> {
 
   let { environments } = __addBulkConfigs__dependency_injector.inject()
-  let accepted_found = _.reduce(environments, (accepted_found, key) => { accepted_found[environments[key].id] = false }, {} as _.type.Object<boolean>)
+  let accepted_found = _.reduce(environments, (accepted_found, key) => { accepted_found[environments[key].id] = false }, {} as Types.OverloadObject<boolean>)
 
   for (let i = 0; i < all_configs.length; i++) {
 
@@ -410,7 +411,7 @@ type __initNewBulkConfigs__params = Readonly<{
   range_version: RangeVersion,
   selected_platform: string,
   new_version_id: string,
-  environments: Readonly<_.type.Object<EnvironmentState>>,
+  environments: Readonly<Types.OverloadObject<EnvironmentState>>,
   new_mutual_profile: MutualProfileDB,
   new_profile: ProfileDB
 }>

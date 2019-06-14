@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from "axios";
 import { _ } from "utils"
 import { store } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE, RESET } from "actions/types"
+import * as Types from "utils/Types"
 
 function createApiInstance(): Readonly<API> {
 
@@ -38,7 +39,7 @@ function createApiInstance(): Readonly<API> {
   }
 
   function notifyStartRequest<I>({ method, url, id, params, json, api_call_id }: { method: string } & APIparams<I>): string {
-    api_call_id = api_call_id || `${Math.random()}`
+    api_call_id = api_call_id || `${_.createUniqueID()}`
     store.dispatch({
       type: START.REQUEST,
       payload: {
@@ -90,7 +91,7 @@ function createApiInstance(): Readonly<API> {
   }
 
   let api: Readonly<API> = _.reduce(call.platform, (unfinish_api, method) => {
-    unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : _.type.Object> => {
+    unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : Types.OverloadObject> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id })
 
@@ -133,7 +134,7 @@ export type ConfigDB = Readonly<{
   versionId: string,
   environmentId: string,
   order: string,
-  status: string,
+  status: "ACC" | "WAR" | "OBS",
   version: string,
   mutual_profileId: string,
   profileId: string,
@@ -157,8 +158,8 @@ export type ResponseAPI<I = null> = Readonly<{
 type APIparams<I = undefined> = Readonly<{
   url: string,
   id?: I,
-  params?: _.type.Object<string | number | boolean>
-  json?: Readonly<_.type.Object>,
+  params?: Types.OverloadObject<string | number | boolean>
+  json?: Readonly<Types.OverloadObject>,
   api_call_id?: string
 }>
 
