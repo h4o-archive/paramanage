@@ -14,15 +14,18 @@ type ButtonItem = Readonly<{
   shouldDisplay: ((condition: boolean) => boolean) | undefined
 }>
 
-type DashboardAddDropdownButtonProps = Readonly<{
+type DashboardAddDropdownButtonMapProps = Readonly<{
   button_items: ButtonItem[],
-  platforms_is_empty: boolean,
+  platforms_is_empty: boolean
+}>
+
+type DashboardAddDropdownButtonMapActions = Readonly<{
   dispatchAction: typeof dispatchAction
 }>
 /**
  * @description Add Button Dropdown on Home Page
  */
-let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButtonProps> = ({ button_items, platforms_is_empty, ...props }) => {
+let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButtonMapProps & DashboardAddDropdownButtonMapActions> = ({ button_items, platforms_is_empty, ...props }) => {
 
   function shouldItemDisplay(item: ButtonItem): boolean {
     return item.shouldDisplay ? item.shouldDisplay(platforms_is_empty) : true
@@ -43,7 +46,7 @@ let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButt
   )
 }
 
-function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonProps, "button_items" | "platforms_is_empty"> {
+function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonMapProps, "button_items" | "platforms_is_empty"> {
   let __button_items_in_state__ = state.dashboard_add_modal_reducer.data
   let button_items = _.map(__button_items_in_state__, button_item => (
     {
@@ -58,5 +61,5 @@ function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonProps, "b
   }
 }
 
-DashboardAddDropdownButton = connect(mapStateToProps, { dispatchAction })(DashboardAddDropdownButton) as any
-export { DashboardAddDropdownButton }
+let ConnectedDashboardAddDropdownButton = connect<DashboardAddDropdownButtonMapProps, DashboardAddDropdownButtonMapActions, {}, State>(mapStateToProps, { dispatchAction })(DashboardAddDropdownButton) as any
+export { ConnectedDashboardAddDropdownButton as DashboardAddDropdownButton }

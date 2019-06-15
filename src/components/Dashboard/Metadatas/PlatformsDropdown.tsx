@@ -11,9 +11,12 @@ import { PlatformState } from './metadatas_reducer';
 
 type PlatformProp = PlatformState & Readonly<{ value: string, text: string }>
 
-type PlatformsDropdownProps = Readonly<{
+type PlatformsDropdownMapProps = Readonly<{
   platforms: PlatformProp[],
-  selected_platform: string,
+  selected_platform: string
+}>
+
+type PlatformsDropdownMapActions = Readonly<{
   fetchPlatforms: typeof fetchPlatforms,
   dispatchAction: typeof dispatchAction,
   fetchVersions: typeof fetchVersions
@@ -22,7 +25,7 @@ type PlatformsDropdownProps = Readonly<{
  * 
  * @description Platform Dropdown Selection Field on Home Page
  */
-let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownProps> = ({ platforms, selected_platform, ...props }) => {
+let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownMapProps & PlatformsDropdownMapActions> = ({ platforms, selected_platform, ...props }) => {
 
   useEffect(() => {
     props.fetchPlatforms()
@@ -49,7 +52,7 @@ let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownProps> = ({ plat
   )
 }
 
-function mapStateToProps(state: State): Pick<PlatformsDropdownProps, "platforms" | "selected_platform"> {
+function mapStateToProps(state: State): PlatformsDropdownMapProps {
   let { data, selected } = state.metadatas_reducer.platforms
   return {
     platforms: _.map(data, item => ({ ...item, value: item.id, text: item.key }) as PlatformProp).sort(_.compareObjectAscendinBaseOnKey("order")),
@@ -57,5 +60,5 @@ function mapStateToProps(state: State): Pick<PlatformsDropdownProps, "platforms"
   }
 }
 
-PlatformsDropdown = connect(mapStateToProps, { fetchPlatforms, fetchVersions, dispatchAction })(PlatformsDropdown) as any
-export { PlatformsDropdown }
+let ConnectedPlatformsDropdown = connect<PlatformsDropdownMapProps, PlatformsDropdownMapActions, {}, State>(mapStateToProps, { fetchPlatforms, fetchVersions, dispatchAction })(PlatformsDropdown) as any
+export { ConnectedPlatformsDropdown as PlatformsDropdown }

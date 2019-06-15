@@ -10,15 +10,16 @@ import { VersionState } from './metadatas_reducer';
 
 type VersionProp = VersionState & Readonly<{ value: string, text: string }>
 
-type VersionsDropdownProps = Readonly<{
+type VersionsDropdownMapProps = Readonly<{
   versions: VersionProp[],
-  selected_version: string,
-  dispatchAction: typeof dispatchAction,
+  selected_version: string
 }>
+
+type VersionsDropdownMapActions = Readonly<{ dispatchAction: typeof dispatchAction }>
 /**
  * @description React Component - Version Dropdown Selection Field on Home Page
  */
-let VersionsDropdown: React.FunctionComponent<VersionsDropdownProps> = (props) => {
+let VersionsDropdown: React.FunctionComponent<VersionsDropdownMapProps & VersionsDropdownMapActions> = (props) => {
 
   function onChangeVersion(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
     props.dispatchAction(SELECT.VERSION, value);
@@ -36,7 +37,7 @@ let VersionsDropdown: React.FunctionComponent<VersionsDropdownProps> = (props) =
   )
 }
 
-function mapStateToProps(state: State): Pick<VersionsDropdownProps, "versions" | "selected_version"> {
+function mapStateToProps(state: State): VersionsDropdownMapProps {
   let { data, selected } = state.metadatas_reducer.versions
   return {
     versions: _.map(data, item => _.pick({ ...item, value: item.id, text: item.key }, ["id", "key", "order", "value", "text"])).sort(_.compareObjectAscendinBaseOnKey("order")),
@@ -44,5 +45,5 @@ function mapStateToProps(state: State): Pick<VersionsDropdownProps, "versions" |
   }
 }
 
-VersionsDropdown = connect(mapStateToProps, { dispatchAction })(VersionsDropdown) as any
-export { VersionsDropdown }
+let ConnectedVersionsDropdown = connect<VersionsDropdownMapProps, VersionsDropdownMapActions, {}, State>(mapStateToProps, { dispatchAction })(VersionsDropdown)
+export { ConnectedVersionsDropdown as VersionsDropdown }
