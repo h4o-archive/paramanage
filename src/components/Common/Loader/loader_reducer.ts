@@ -1,11 +1,17 @@
 import { START, FULLFILL, REJECT, RESET, QUEUE, Action } from "actions/types"
 import { _ } from "utils"
+import * as Types from "utils/Types"
 
 const init = {
   requests: {} as {
     readonly [key: string]: Readonly<{
       status: "START" | "REJECT",
-      params: string[]
+      method: string,
+      url: string,
+      id: string,
+      params: Readonly<Types.OverloadObject<string>>,
+      json: Readonly<Types.OverloadObject<string>>,
+      api_call_id: string
     }>
   },
   outdated_requests: {} as {
@@ -16,7 +22,7 @@ const init = {
 export function loader_reducer(state = init, action: Action): typeof init {
   switch (action.type) {
     case START.REQUEST:
-      return { ...state, requests: { ...state.requests, ...{ [action.payload.api_call_id]: { status: "START", params: action.payload.params } } } }
+      return { ...state, requests: { ...state.requests, ...{ [action.payload.api_call_id]: { status: "START", ...action.payload } } } }
     case FULLFILL.REQUEST:
       return { ...state, requests: _.omit(state.requests, [action.payload]) }
     case REJECT.REQUEST:
