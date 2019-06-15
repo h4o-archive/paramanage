@@ -11,31 +11,29 @@ import { State } from 'reducers';
 
 type EnvironmentProp = EnvironmentState & Readonly<{ value: string, text: string }>
 
-type EnvironmentsDashboardMapProps = Readonly<{
-  environments: EnvironmentProp[],
+type EnvironmentMenuMapProps = {
+  readonly environments: EnvironmentProp[],
   selected_environment: string
-}>
+}
 
-type EnvironmentsDashboardMapActions = {
+type EnvironmentMenuMapActions = {
   readonly dispatchAction: typeof dispatchAction
 }
-/**
- * @description React Component - Environment Menu on Home Page
- */
-let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardMapProps & EnvironmentsDashboardMapActions> = ({ environments, selected_environment, ...props }) => {
+
+const EnvironmentMenu: React.FunctionComponent<EnvironmentMenuMapActions & EnvironmentMenuMapProps> = ({ environments, selected_environment, ...props }) => {
 
   function onClickEnvironment(event: React.SyntheticEvent<HTMLAnchorElement, MouseEvent>, { encodedvalue }: MenuItemProps): void {
     props.dispatchAction(SELECT.ENVIRONMENT, encodedvalue)
   }
 
   function onChangeEnvironment(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
-    props.dispatchAction(SELECT.ENVIRONMENT, value);
+    props.dispatchAction(SELECT.ENVIRONMENT, value)
   }
 
   /**
    * @description Environment Menu on mobile
    */
-  let MobileMenu: React.FunctionComponent<{}> = () => {
+  const MobileMenu: React.FunctionComponent<{}> = () => {
     return (
       <Menu.Item>
         <SemanticDropdown
@@ -52,7 +50,7 @@ let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardMapProps
   /**
  * @description Environment Menu on computer
  */
-  let ComputerMenu: React.FunctionComponent<{}> = () => {
+  const ComputerMenu: React.FunctionComponent<{}> = () => {
     return (
       <React.Fragment>
         {environments.map(item => {
@@ -73,11 +71,37 @@ let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardMapProps
 
   return (
     <React.Fragment>
+      <Responsive {...Responsive.onlyMobile} as={MobileMenu} />
+      <Responsive {...Responsive.onlyComputer} as={ComputerMenu} />
+    </React.Fragment>
+  )
+}
+
+function mapStateToProps(state: State): EnvironmentMenuMapProps {
+  let { data, selected } = state.metadatas_reducer.environments
+  return {
+    environments: _.map(data, item => ({ ...item, value: item.id, text: item.key })).sort(_.compareObjectAscendinBaseOnKey("order")),
+    selected_environment: selected
+  }
+}
+
+const ConnectedEnvironmentMenu = connect<EnvironmentMenuMapProps, EnvironmentMenuMapActions, {}, State>(mapStateToProps, { dispatchAction })(EnvironmentMenu)
+
+type EnvironmentsDashboardOwnProps = Readonly<{
+  EnvironmentMenu: React.ReactNode,
+  DashboardItems: React.ReactNode
+}>
+/**
+ * @description Environment Dashboard on Home Page
+ */
+const EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardOwnProps> = ({ EnvironmentMenu, DashboardItems }) => {
+
+  return (
+    <React.Fragment>
 
       <Menu attached='top' tabular>
 
-        <Responsive {...Responsive.onlyMobile} as={MobileMenu} />
-        <Responsive {...Responsive.onlyComputer} as={ComputerMenu} />
+        {EnvironmentMenu}
 
         <Menu.Menu position='right' style={{ overflow: "auto" }}>
           <Menu.Item position='right'>
@@ -93,20 +117,19 @@ let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardMapProps
       </Menu>
 
       <div className="ui bottom attached segment">
-        {props.children}
+        {DashboardItems}
       </div>
 
     </React.Fragment>
   )
 }
 
-function mapStateToProps(state: State): EnvironmentsDashboardMapProps {
-  let { data, selected } = state.metadatas_reducer.environments
-  return {
-    environments: _.map(data, item => ({ ...item, value: item.id, text: item.key })).sort(_.compareObjectAscendinBaseOnKey("order")),
-    selected_environment: selected
-  }
+const EnvironmentsDashboardWrapper: React.FunctionComponent = (props) => {
+  return (
+    <EnvironmentsDashboard
+      EnvironmentMenu={<ConnectedEnvironmentMenu />}
+      DashboardItems={props.children}
+    />
+  )
 }
-
-let ConnectedEnvironmentsDashboard = connect<EnvironmentsDashboardMapProps, EnvironmentsDashboardMapActions, {}, State>(mapStateToProps, { dispatchAction })(EnvironmentsDashboard)
-export { ConnectedEnvironmentsDashboard as EnvironmentsDashboard }
+export { EnvironmentsDashboardWrapper as EnvironmentsDashboard }
