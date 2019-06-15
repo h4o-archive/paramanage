@@ -38,7 +38,7 @@ type DashboardAddModalMapActions = Readonly<{
 /**
  * @description Modal when click on Add on Home Page
  */
-let DashboardAddModal: React.FunctionComponent<DashboardAddModalMapProps & DashboardAddModalMapActions & InjectedFormProps<FormValues, DashboardAddModalMapProps & DashboardAddModalMapActions>> = ({ open, modal_state, modal_info, form_value, errors, ...props }) => {
+const DashboardAddModal: React.FunctionComponent<DashboardAddModalMapProps & DashboardAddModalMapActions & InjectedFormProps<FormValues, DashboardAddModalMapProps & DashboardAddModalMapActions>> = ({ open, modal_state, modal_info, form_value, errors, ...props }) => {
 
   function onSubmit() {
     if (_.isEmpty(errors)) {
@@ -113,7 +113,7 @@ function mapStateToProps(state: State): DashboardAddModalMapProps {
   }
 }
 
-let ConnectedDashboardAddModal = connect<DashboardAddModalMapProps, DashboardAddModalMapActions, {}, State>(mapStateToProps, { dispatchAction, add })(
+const ConnectedDashboardAddModal = connect<DashboardAddModalMapProps, DashboardAddModalMapActions, {}, State>(mapStateToProps, { dispatchAction, add })(
   reduxForm<FormValues, DashboardAddModalMapProps & DashboardAddModalMapActions>({
     form: FORM_NAME.DASHBOARD_ADD_MODAL,
     validate,

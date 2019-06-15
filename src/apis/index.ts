@@ -30,7 +30,7 @@ function createApiInstance(): Readonly<API> {
       let outdated_requests = store.getState().loader_reducer.outdated_requests
       for (let key in outdated_requests) {
         // @ts-ignore
-        call[key].get.clearCache()
+        sub_api[key].get.clearCache()
       }
       store.dispatch({
         type: RESET.OUTDATED_REQUEST
@@ -80,7 +80,7 @@ function createApiInstance(): Readonly<API> {
     return constructed_url
   }
 
-  const call: { readonly [key: string]: AxiosInstance } = {
+  const sub_api: { readonly [key: string]: AxiosInstance } = {
     platform: createAxiosInstance(),
     version: createAxiosInstance(),
     environment: createAxiosInstance(),
@@ -90,7 +90,7 @@ function createApiInstance(): Readonly<API> {
     parametre: createAxiosInstance()
   }
 
-  let api: Readonly<API> = _.reduce(call.platform, (unfinish_api, method) => {
+  let api: Readonly<API> = _.reduce(sub_api.platform, (unfinish_api, method) => {
     unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : Types.OverloadObject> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id })
@@ -98,7 +98,7 @@ function createApiInstance(): Readonly<API> {
       try {
         let constructed_url = constructURL({ method, url, id, params })
         // @ts-ignore
-        let result = call[parseUrlToSubAPI(url)][method](constructed_url, json)
+        let result = sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
         notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {

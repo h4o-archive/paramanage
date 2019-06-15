@@ -4,11 +4,11 @@ import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 
 import { State } from "reducers"
 
-type LoaderProps = {
+type LoaderMapProps = {
   readonly active: boolean
 }
 
-let Loader: React.FunctionComponent<LoaderProps> = (props) => {
+const Loader: React.FunctionComponent<LoaderMapProps> = (props) => {
   return (
     <Segment hidden={!props.active}>
       <Dimmer active={props.active} style={{ position: "fixed", height: "100vh", width: "100vw" }}>
@@ -18,11 +18,11 @@ let Loader: React.FunctionComponent<LoaderProps> = (props) => {
   )
 }
 
-function mapStateToProps(state: State): LoaderProps {
+function mapStateToProps(state: State): LoaderMapProps {
   return {
     active: false
   }
 }
 
-Loader = connect(mapStateToProps)(Loader) as any
-export { Loader }
+const ConnectedLoader = connect<LoaderMapProps, {}, {}, State>(mapStateToProps)(Loader)
+export { ConnectedLoader as Loader }

@@ -25,7 +25,7 @@ type DashboardAddDropdownButtonMapActions = Readonly<{
 /**
  * @description Add Button Dropdown on Home Page
  */
-let DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButtonMapProps & DashboardAddDropdownButtonMapActions> = ({ button_items, platforms_is_empty, ...props }) => {
+const DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownButtonMapProps & DashboardAddDropdownButtonMapActions> = ({ button_items, platforms_is_empty, ...props }) => {
 
   function shouldItemDisplay(item: ButtonItem): boolean {
     return item.shouldDisplay ? item.shouldDisplay(platforms_is_empty) : true
@@ -61,5 +61,5 @@ function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonMapProps,
   }
 }
 
-let ConnectedDashboardAddDropdownButton = connect<DashboardAddDropdownButtonMapProps, DashboardAddDropdownButtonMapActions, {}, State>(mapStateToProps, { dispatchAction })(DashboardAddDropdownButton) as any
+const ConnectedDashboardAddDropdownButton = connect<DashboardAddDropdownButtonMapProps, DashboardAddDropdownButtonMapActions, {}, State>(mapStateToProps, { dispatchAction })(DashboardAddDropdownButton) as any
 export { ConnectedDashboardAddDropdownButton as DashboardAddDropdownButton }

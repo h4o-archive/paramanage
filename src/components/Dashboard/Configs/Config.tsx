@@ -23,7 +23,7 @@ type ConfigOwnProps = {
 /**
  * @description 1 line of config information
  */
-let Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ config, ...props }) => {
+const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ config, ...props }) => {
 
   let [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
 
@@ -87,5 +87,5 @@ let Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ conf
   )
 }
 
-let ConnectedConfig = connect<{}, ConfigMapActions, ConfigOwnProps, State>(null, { dispatchAction })(Config)
+const ConnectedConfig = connect<{}, ConfigMapActions, ConfigOwnProps, State>(null, { dispatchAction })(Config)
 export { ConnectedConfig as Config }

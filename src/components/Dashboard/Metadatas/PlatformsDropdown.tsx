@@ -25,7 +25,7 @@ type PlatformsDropdownMapActions = Readonly<{
  * 
  * @description Platform Dropdown Selection Field on Home Page
  */
-let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownMapProps & PlatformsDropdownMapActions> = ({ platforms, selected_platform, ...props }) => {
+const PlatformsDropdown: React.FunctionComponent<PlatformsDropdownMapProps & PlatformsDropdownMapActions> = ({ platforms, selected_platform, ...props }) => {
 
   useEffect(() => {
     props.fetchPlatforms()
@@ -61,5 +61,5 @@ function mapStateToProps(state: State): PlatformsDropdownMapProps {
   }
 }
 
-let ConnectedPlatformsDropdown = connect<PlatformsDropdownMapProps, PlatformsDropdownMapActions, {}, State>(mapStateToProps, { fetchPlatforms, fetchVersions, dispatchAction })(PlatformsDropdown) as any
+const ConnectedPlatformsDropdown = connect<PlatformsDropdownMapProps, PlatformsDropdownMapActions, {}, State>(mapStateToProps, { fetchPlatforms, fetchVersions, dispatchAction })(PlatformsDropdown) as any
 export { ConnectedPlatformsDropdown as PlatformsDropdown }

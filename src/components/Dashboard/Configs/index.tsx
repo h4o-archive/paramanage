@@ -23,7 +23,7 @@ type ConfigsMapActions = {
 /**
  * @description table of configs
  */
-let Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({ config_array, selected, ...props }) => {
+const Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({ config_array, selected, ...props }) => {
 
   let { version: selected_version, platform: selected_platform, environment: selected_environment } = selected
   useEffect(() => {
@@ -95,6 +95,6 @@ function mapStateToProps(state: State): ConfigsMapProps {
   }
 }
 
-let ConnectedConfigs = connect<ConfigsMapProps, ConfigsMapActions, {}, State>(mapStateToProps, { fetchConfigs })(Configs)
+const ConnectedConfigs = connect<ConfigsMapProps, ConfigsMapActions, {}, State>(mapStateToProps, { fetchConfigs })(Configs)
 export { ConnectedConfigs as Configs }
 export type ConfigProp = { tree_id: string, next: ConfigProp, last: string } & ConfigState

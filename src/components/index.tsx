@@ -6,13 +6,11 @@ import { Dashboard } from "./Dashboard"
 import { Profile } from "./Profile"
 
 
-export class App extends React.Component {
-  render() {
-    return (
-      <Router history={history}>
-        <Route path="/" exact component={Dashboard} />
-        <Route path="/profile/:id" component={Profile} />
-      </Router>
-    );
-  }
+export const App: React.FunctionComponent = () => {
+  return (
+    <Router history={history}>
+      <Route path="/" exact component={Dashboard} />
+      <Route path="/profile/:id" component={Profile} />
+    </Router>
+  )
 }
