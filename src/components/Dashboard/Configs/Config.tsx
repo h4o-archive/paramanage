@@ -10,15 +10,20 @@ import { _ } from "utils"
 import { CONFIG_STATUS } from "utils/const"
 import { ConfigVersion } from "./ConfigVersion"
 import * as Types from "utils/Types"
+import { State } from "reducers";
 
-type ConfigProps = Readonly<{
-  config: ConfigProp,
-  dispatchAction: typeof dispatchAction
-}>
+
+type ConfigMapActions = {
+  readonly dispatchAction: typeof dispatchAction
+}
+
+type ConfigOwnProps = {
+  readonly config: ConfigProp
+}
 /**
  * @description 1 line of config information
  */
-let Config: React.FunctionComponent<ConfigProps> = ({ config, ...props }) => {
+let Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ config, ...props }) => {
 
   let [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
 
@@ -77,11 +82,10 @@ let Config: React.FunctionComponent<ConfigProps> = ({ config, ...props }) => {
         <ProfileName to={config.profileId} profile={config.profile} />
         <ProfileName to={config.mutual_profileId} profile={config.mutual_profile} />
       </div>
-      // @ts-ignore ignore missing property dispatchAction, not worth breaking up the props in Config component
-      {!_.isEmpty(config.next) && expand_state[config.tree_id] && <Config config={config.next} />}
+      {!_.isEmpty(config.next) && expand_state[config.tree_id] && <ConnectedConfig config={config.next} />}
     </React.Fragment>
   )
 }
 
-Config = connect(null, { dispatchAction })(Config) as any
-export { Config }
+let ConnectedConfig = connect<{}, ConfigMapActions, ConfigOwnProps, State>(null, { dispatchAction })(Config)
+export { ConnectedConfig as Config }

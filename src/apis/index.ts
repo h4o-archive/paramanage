@@ -16,7 +16,7 @@ function createApiInstance(): Readonly<API> {
   }
 
   function parseUrlToSubAPI(url: string): string {
-    let result = url.match(/([^\/]+$)/)
+    let result = url.match(/([^/]+$)/)
     return result ? result[0] : "platform"
   }
 

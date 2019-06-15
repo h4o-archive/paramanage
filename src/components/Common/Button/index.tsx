@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 
-import { _ } from "utils"
 import { ButtonContext } from "./ButtonContext"
 
 import "./icon_spin.css"

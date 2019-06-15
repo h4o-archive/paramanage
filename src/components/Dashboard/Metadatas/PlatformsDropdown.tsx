@@ -33,6 +33,7 @@ let PlatformsDropdown: React.FunctionComponent<PlatformsDropdownMapProps & Platf
     return function cleanUp() {
       props.dispatchAction(SET.PREVIOUS_SELECTED)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function onChangePlatform(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {

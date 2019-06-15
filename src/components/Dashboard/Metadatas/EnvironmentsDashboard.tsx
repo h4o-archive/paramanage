@@ -11,15 +11,18 @@ import { State } from 'reducers';
 
 type EnvironmentProp = EnvironmentState & Readonly<{ value: string, text: string }>
 
-type EnvironmentsDashboardProps = Readonly<{
+type EnvironmentsDashboardMapProps = Readonly<{
   environments: EnvironmentProp[],
-  selected_environment: string,
-  dispatchAction: typeof dispatchAction
+  selected_environment: string
 }>
+
+type EnvironmentsDashboardMapActions = {
+  readonly dispatchAction: typeof dispatchAction
+}
 /**
  * @description React Component - Environment Menu on Home Page
  */
-let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardProps> = ({ environments, selected_environment, ...props }) => {
+let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardMapProps & EnvironmentsDashboardMapActions> = ({ environments, selected_environment, ...props }) => {
 
   function onClickEnvironment(event: React.SyntheticEvent<HTMLAnchorElement, MouseEvent>, { encodedvalue }: MenuItemProps): void {
     props.dispatchAction(SELECT.ENVIRONMENT, encodedvalue)
@@ -97,7 +100,7 @@ let EnvironmentsDashboard: React.FunctionComponent<EnvironmentsDashboardProps> =
   )
 }
 
-function mapStateToProps(state: State): Pick<EnvironmentsDashboardProps, "environments" | "selected_environment"> {
+function mapStateToProps(state: State): EnvironmentsDashboardMapProps {
   let { data, selected } = state.metadatas_reducer.environments
   return {
     environments: _.map(data, item => ({ ...item, value: item.id, text: item.key })).sort(_.compareObjectAscendinBaseOnKey("order")),
@@ -105,5 +108,5 @@ function mapStateToProps(state: State): Pick<EnvironmentsDashboardProps, "enviro
   }
 }
 
-EnvironmentsDashboard = connect(mapStateToProps, { dispatchAction })(EnvironmentsDashboard) as any
-export { EnvironmentsDashboard }
+let ConnectedEnvironmentsDashboard = connect<EnvironmentsDashboardMapProps, EnvironmentsDashboardMapActions, {}, State>(mapStateToProps, { dispatchAction })(EnvironmentsDashboard)
+export { ConnectedEnvironmentsDashboard as EnvironmentsDashboard }

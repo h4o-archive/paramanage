@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dispatch } from 'redux';
 import { connect } from "react-redux"
-import { Field, reduxForm, formValueSelector, getFormSyncErrors, reset, InjectedFormProps, FormErrors as ReduxFormErrors } from "redux-form"
+import { Field, reduxForm, formValueSelector, getFormSyncErrors, InjectedFormProps, FormErrors as ReduxFormErrors } from "redux-form"
 
 import { dispatchAction } from "components/actions"
 import { HIDE } from "actions/types"
@@ -22,20 +22,23 @@ type FormValues = {
 
 type FormErrors = ReduxFormErrors<FormValues, string>
 
-type DashboardAddModalProps = Readonly<{
+type DashboardAddModalMapProps = Readonly<{
   open: boolean,
   modal_state: ModalState,
   modal_info: Types.OverloadObject,
   form_value: string,
   errors: Readonly<FormErrors>,
-  selected_platform: string,
+  selected_platform: string
+}>
+
+type DashboardAddModalMapActions = Readonly<{
   add: typeof add,
   dispatchAction: typeof dispatchAction,
 }>
 /**
  * @description Modal when click on Add on Home Page
  */
-let DashboardAddModal: React.FunctionComponent<DashboardAddModalProps & InjectedFormProps<FormValues, DashboardAddModalProps>> = ({ open, modal_state, modal_info, form_value, errors, ...props }) => {
+let DashboardAddModal: React.FunctionComponent<DashboardAddModalMapProps & DashboardAddModalMapActions & InjectedFormProps<FormValues, DashboardAddModalMapProps & DashboardAddModalMapActions>> = ({ open, modal_state, modal_info, form_value, errors, ...props }) => {
 
   function onSubmit() {
     if (_.isEmpty(errors)) {
@@ -75,7 +78,7 @@ function validate(form_values: Readonly<FormValues>): Readonly<FormErrors> {
   return errors;
 }
 
-function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { modal_state, selected_platform }: Readonly<DashboardAddModalProps>): Promise<any> {
+function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { modal_state, selected_platform }: Readonly<DashboardAddModalMapProps>): Promise<any> {
   if (form_values) {
 
     let id = _.hashText(form_values[modal_state])
@@ -87,11 +90,10 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
     return (
       api.get({ url: `/${modal_state}s`, id })
         .then(() => {
-          throw { [modal_state]: `This ${modal_state} already exist` }
+          return Promise.reject({ [modal_state]: `This ${modal_state} already exist` })
         })
         .catch(e => {
-          if (e[modal_state]) throw e
-          if (e.response.status !== 404) throw { [modal_state]: "Something wrong happened, please try again later" }
+          if (e.response.status !== 404) Promise.reject({ [modal_state]: "Something wrong happened, please try again later" })
         })
     )
   }
@@ -99,7 +101,7 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 }
 
 
-function mapStateToProps(state: State): Types.OverloadOmit<DashboardAddModalProps, "add" | "dispatchAction"> {
+function mapStateToProps(state: State): DashboardAddModalMapProps {
   let { open, modal_state, data } = state.dashboard_add_modal_reducer
   return {
     open,
@@ -111,12 +113,12 @@ function mapStateToProps(state: State): Types.OverloadOmit<DashboardAddModalProp
   }
 }
 
-DashboardAddModal = connect(mapStateToProps, { dispatchAction, add })(
-  reduxForm<FormValues, DashboardAddModalProps>({
+let ConnectedDashboardAddModal = connect<DashboardAddModalMapProps, DashboardAddModalMapActions, {}, State>(mapStateToProps, { dispatchAction, add })(
+  reduxForm<FormValues, DashboardAddModalMapProps & DashboardAddModalMapActions>({
     form: FORM_NAME.DASHBOARD_ADD_MODAL,
     validate,
     asyncValidate,
     asyncBlurFields: Object.values(DASHBOARD_ADD_MODAL_STATE)
-  })(DashboardAddModal) as any
-) as any
-export { DashboardAddModal }
+  })(DashboardAddModal)
+)
+export { ConnectedDashboardAddModal as DashboardAddModal }

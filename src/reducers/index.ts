@@ -4,7 +4,6 @@ import { createStore, applyMiddleware } from "redux"
 import thunk from "redux-thunk"
 import { composeWithDevTools as composeEnhancer } from 'redux-devtools-extension';
 
-import { _ } from "utils"
 import { metadatas_reducer } from "components/Dashboard/Metadatas/metadatas_reducer"
 import { loader_reducer } from "components/Common/Loader/loader_reducer"
 import { dashboard_add_modal_reducer } from "components/Dashboard/Add/dashboard_add_modal_reducer"

@@ -1,8 +1,7 @@
 import React from 'react'
-import { Modal, ModalProps } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 
 import { Button } from "./Button"
-import { _ } from "utils"
 
 type FieldInputProps = Readonly<{
   input?: any,

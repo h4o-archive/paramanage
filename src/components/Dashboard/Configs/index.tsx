@@ -7,27 +7,30 @@ import { ConfigState } from "./configs_reducer";
 import { State } from "reducers";
 import { TableHeader } from "./TableHeader"
 import { Config } from "./Config"
-import * as Types from "utils/Types"
 
-type ConfigsProps = Readonly<{
+type ConfigsMapProps = Readonly<{
   selected: {
     platform: string,
     version: string,
     environment: string
   }
-  config_array: ConfigProp[],
-  fetchConfigs: typeof fetchConfigs,
+  config_array: ConfigProp[]
 }>
+
+type ConfigsMapActions = {
+  readonly fetchConfigs: typeof fetchConfigs
+}
 /**
  * @description table of configs
  */
-let Configs: React.FunctionComponent<ConfigsProps> = ({ config_array, selected, ...props }) => {
+let Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({ config_array, selected, ...props }) => {
 
   let { version: selected_version, platform: selected_platform, environment: selected_environment } = selected
   useEffect(() => {
     if (selected_version !== "0" && selected_platform !== "0" && selected_environment !== "0") {
       props.fetchConfigs(selected_platform, selected_version, selected_environment)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected_version, selected_platform, selected_environment])
 
   return (
@@ -38,7 +41,6 @@ let Configs: React.FunctionComponent<ConfigsProps> = ({ config_array, selected, 
 
       {config_array.map(config => {
         return (
-          // @ts-ignore ignore missing property dispatchAction, not worth breaking up the props in Config component
           <Config config={config} />
         )
       })}
@@ -48,7 +50,7 @@ let Configs: React.FunctionComponent<ConfigsProps> = ({ config_array, selected, 
 }
 
 
-function mapStateToProps(state: State): Types.OverloadOmit<ConfigsProps, "fetchConfigs"> {
+function mapStateToProps(state: State): ConfigsMapProps {
 
   function twoConfigsAreIdentical(config1: ConfigState, config2: ConfigState): boolean {
     if (config1.profileId === config2.profileId && config1.status === config2.status) return true
@@ -93,6 +95,6 @@ function mapStateToProps(state: State): Types.OverloadOmit<ConfigsProps, "fetchC
   }
 }
 
-Configs = connect(mapStateToProps, { fetchConfigs })(Configs) as any
-export { Configs }
+let ConnectedConfigs = connect<ConfigsMapProps, ConfigsMapActions, {}, State>(mapStateToProps, { fetchConfigs })(Configs)
+export { ConnectedConfigs as Configs }
 export type ConfigProp = { tree_id: string, next: ConfigProp, last: string } & ConfigState
