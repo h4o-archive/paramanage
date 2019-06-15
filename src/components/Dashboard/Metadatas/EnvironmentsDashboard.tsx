@@ -78,7 +78,7 @@ const EnvironmentMenu: React.FunctionComponent<EnvironmentMenuMapActions & Envir
 }
 
 function mapStateToProps(state: State): EnvironmentMenuMapProps {
-  let { data, selected } = state.metadatas_reducer.environments
+  const { data, selected } = state.metadatas_reducer.environments
   return {
     environments: _.map(data, item => ({ ...item, value: item.id, text: item.key })).sort(_.compareObjectAscendinBaseOnKey("order")),
     selected_environment: selected

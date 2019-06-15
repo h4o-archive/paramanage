@@ -29,7 +29,7 @@ function compareObjectAscendinBaseOnKey<T, K extends keyof T>(key: K): ((a: T, b
   }
 }
 
-let memoize = ((func: Types.Function, resolver: (...args: any[]) => string): Types.Function => {
+const memoize = ((func: Types.Function, resolver: (...args: any[]) => string): Types.Function => {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -71,12 +71,12 @@ type RGB = Readonly<{ r: number, g: number, b: number }>
 
 function __hexToRgb__(hex: string): RGB {
   // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-  let shorthandRegex: RegExp = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  const shorthandRegex: RegExp = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   hex = hex.replace(shorthandRegex, function (m: string, r: string, g: string, b: string): string {
     return r + r + g + g + b + b;
   });
 
-  let result: RegExpExecArray | null = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const result: RegExpExecArray | null = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ?
     {
       r: parseInt(result[1], 16),
@@ -91,10 +91,10 @@ function __hexToRgb__(hex: string): RGB {
 
 function contrastColorFontAndBackground(hex: string): { background: string, color: string } {
   if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)) {
-    let rgb: RGB = __hexToRgb__(hex)
+    const rgb: RGB = __hexToRgb__(hex)
 
     // Counting the perceptive luminance - human eye favors green color... 
-    let luminance: number = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+    const luminance: number = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
 
     if (luminance > 0.5)
       return { background: hex, color: "black" } // bright colors - black font

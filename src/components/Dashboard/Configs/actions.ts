@@ -11,7 +11,7 @@ export function fetchConfigs(selected_platform: string, selected_version: string
   return async (dispatch) => {
     try {
 
-      let { data: configs } = await api.get({
+      const { data: configs } = await api.get({
         url: `/configs`,
         params: {
           platformId: selected_platform,
@@ -22,8 +22,8 @@ export function fetchConfigs(selected_platform: string, selected_version: string
 
       let enhanced_configs = []
       for (let i = 0; i < configs.length; i++) {
-        let { data: profile } = await api.get({ url: `/profiles`, id: (configs as ConfigDB[])[i].profileId })
-        let { data: mutual_profile } = await api.get({ url: `/profiles`, id: (configs as ConfigDB[])[i].mutual_profileId })
+        const { data: profile } = await api.get({ url: `/profiles`, id: (configs as ConfigDB[])[i].profileId })
+        const { data: mutual_profile } = await api.get({ url: `/profiles`, id: (configs as ConfigDB[])[i].mutual_profileId })
         enhanced_configs.push({
           ...configs[i],
           profile: (profile as ProfileDB).key,

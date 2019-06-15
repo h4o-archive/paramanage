@@ -83,7 +83,7 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 
     let id = _.hashText(form_values[modal_state])
     if (form_values.version) {
-      let parsed = __parseStandarlizeVersionOrder__(form_values[modal_state])
+      const parsed = __parseStandarlizeVersionOrder__(form_values[modal_state])
       id = `${selected_platform}${parsed}`
     }
 
@@ -102,7 +102,7 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 
 
 function mapStateToProps(state: State): DashboardAddModalMapProps {
-  let { open, modal_state, data } = state.dashboard_add_modal_reducer
+  const { open, modal_state, data } = state.dashboard_add_modal_reducer
   return {
     open,
     modal_state,

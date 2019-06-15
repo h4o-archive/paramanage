@@ -25,7 +25,7 @@ type ConfigOwnProps = {
  */
 const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ config, ...props }) => {
 
-  let [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
+  const [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
 
   function useParentState(): { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> } {
     return { expand_state, setExpandState }
@@ -33,7 +33,7 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
 
   const EditButton: React.FunctionComponent = () => {
 
-    let action_payload = {
+    const action_payload = {
       label: (_.isEmpty(config.next) || config.last === "") ? config.version : `${config.version} -> ${config.last}`,
       config
     }
@@ -67,7 +67,7 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
   }
 
   const ProfileName: React.FunctionComponent<Readonly<{ to: string, profile: string }>> = (props) => {
-    let profile_style: React.CSSProperties = { textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", lineClamp: 2, lineHeight: "1em", maxHeight: "2em" }
+    const profile_style: React.CSSProperties = { textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", lineClamp: 2, lineHeight: "1em", maxHeight: "2em" }
     return (
       <Link className="middle aligned column" to={`/profile/${props.to}`} style={profile_style}>{props.profile}</Link>
     )

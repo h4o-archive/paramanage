@@ -54,7 +54,7 @@ const PlatformsDropdown: React.FunctionComponent<PlatformsDropdownMapProps & Pla
 }
 
 function mapStateToProps(state: State): PlatformsDropdownMapProps {
-  let { data, selected } = state.metadatas_reducer.platforms
+  const { data, selected } = state.metadatas_reducer.platforms
   return {
     platforms: _.map(data, item => ({ ...item, value: item.id, text: item.key }) as PlatformProp).sort(_.compareObjectAscendinBaseOnKey("order")),
     selected_platform: selected

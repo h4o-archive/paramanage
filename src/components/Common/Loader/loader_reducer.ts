@@ -14,9 +14,7 @@ const init = {
       api_call_id: string
     }>
   },
-  outdated_requests: {} as {
-    readonly [key: string]: string
-  }
+  outdated_requests: {} as Readonly<Types.OverloadObject<boolean>>
 } as const
 
 export function loader_reducer(state = init, action: Action): typeof init {

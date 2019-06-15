@@ -13,14 +13,14 @@ import * as Types from "utils/Types"
 export function fetchPlatforms(): ReduxThunk {
   return async (dispatch, getState): Promise<void> => {
     try {
-      let { data: platforms } = await api.get({ url: `/platforms` })
+      const { data: platforms } = await api.get({ url: `/platforms` })
       await dispatch(
         {
           type: FETCH.PLATFORMS,
           payload: _.keyBy(platforms, "id")
         }
       )
-      let selected_platform = __detectCurrentSelected__(getState().metadatas_reducer.platforms.previous_selected, platforms)
+      const selected_platform = __detectCurrentSelected__(getState().metadatas_reducer.platforms.previous_selected, platforms)
       await dispatch({
         type: SELECT.PLATFORM,
         payload: selected_platform
@@ -38,7 +38,7 @@ export function fetchPlatforms(): ReduxThunk {
  */
 export function fetchVersions(): ReduxThunk {
   return async (dispatch, getState): Promise<void> => {
-    let selected_platform = getState().metadatas_reducer.platforms.selected;
+    const selected_platform = getState().metadatas_reducer.platforms.selected;
     await __fetchVersions__(dispatch, getState, selected_platform)
   }
 }
@@ -49,7 +49,7 @@ export function fetchVersions(): ReduxThunk {
 export function fetchEnvironments(): ReduxThunk {
   return async (dispatch, getState): Promise<void> => {
     try {
-      let { data: environments } = await api.get({ url: `/environments` })
+      const { data: environments } = await api.get({ url: `/environments` })
       await dispatch(
         {
           type: FETCH.ENVIRONMENTS,
@@ -70,7 +70,7 @@ export function fetchEnvironments(): ReduxThunk {
  */
 async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>, getState: () => State, selected_platform: string): Promise<void> {
   try {
-    let { data: versions } = await api.get({ url: `/platforms/${selected_platform}/versions` })
+    const { data: versions } = await api.get({ url: `/platforms/${selected_platform}/versions` })
     await dispatch(
       {
         type: FETCH.VERSIONS,

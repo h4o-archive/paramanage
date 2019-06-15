@@ -39,7 +39,7 @@ type __addBulkConfigs__dependencies = Readonly<{
   environments: Readonly<Types.OverloadObject<EnvironmentState>>
 }>
 
-let __addBulkConfigs__dependency_injector = _.createDependencyInjector<__addBulkConfigs__dependencies>()
+const __addBulkConfigs__dependency_injector = _.createDependencyInjector<__addBulkConfigs__dependencies>()
 
 /**
  *
@@ -50,11 +50,11 @@ function addVersion(version_text: string): ReduxThunk {
 
   return async (dispatch, getState): Promise<void> => {
 
-    let selected_platform = getState().metadatas_reducer.platforms.selected
+    const selected_platform = getState().metadatas_reducer.platforms.selected
 
     try {
 
-      let { data: latest_versions } = await api.get({
+      const { data: latest_versions } = await api.get({
         url: `/versions`,
         params: { latest: true }
       })
@@ -119,9 +119,9 @@ function ____parseStandarlizeVersionText____(version_name: string): string {
 
   } else {
 
-    parts[2] = version_name.slice(-2);
-    parts[1] = version_name.slice(-4, -2);
-    parts[0] = version_name.slice(0, -4);
+    parts.push(version_name.slice(0, -4));
+    parts.push(version_name.slice(-4, -2));
+    parts.push(version_name.slice(-2));
 
     for (let i = 0; i < parts.length; i++) {
       if (parts[i].length === 2 && parts[i][0] === "0") {
@@ -177,9 +177,9 @@ async function __deprecateOldLatestVersion__(latest_versions: VersionDB[]): Prom
  */
 async function __addNewVersionToServer__(selected_platform: string, version_text: string): Promise<string> {
 
-  let standarlized_base_version_order = __parseStandarlizeVersionOrder__(version_text)
-  let id = `${selected_platform}${standarlized_base_version_order}`
-  let new_version: VersionDB = {
+  const standarlized_base_version_order = __parseStandarlizeVersionOrder__(version_text)
+  const id = `${selected_platform}${standarlized_base_version_order}`
+  const new_version: VersionDB = {
     "platformId": selected_platform,
     id,
     "order": standarlized_base_version_order,
@@ -242,7 +242,7 @@ async function __addBulkConfigs__(all_configs: ConfigDB[]): Promise<void> {
  */
 async function __addBulkConfigsIfExisted__(all_configs: ConfigDB[]): Promise<void> {
 
-  let { environments } = __addBulkConfigs__dependency_injector.inject()
+  const { environments } = __addBulkConfigs__dependency_injector.inject()
   let accepted_found = _.reduce(environments, (accepted_found, key) => { accepted_found[environments[key].id] = false }, {} as Types.OverloadObject<boolean>)
 
   for (let i = 0; i < all_configs.length; i++) {
@@ -264,7 +264,7 @@ async function __addBulkConfigsIfExisted__(all_configs: ConfigDB[]): Promise<voi
  */
 async function __addExistedBulkConfigsWithVersionReplace__(config: ConfigDB): Promise<void> {
 
-  let { new_version_id } = __addBulkConfigs__dependency_injector.inject()
+  const { new_version_id } = __addBulkConfigs__dependency_injector.inject()
   let new_config = {
     ...config,
     versionId: new_version_id
@@ -287,7 +287,7 @@ async function __addExistedBulkConfigsWithVersionReplace__(config: ConfigDB): Pr
  */
 async function __addNewBulkConfigs__(config: ConfigDB): Promise<void> {
 
-  let { range_version, new_version_id } = __addBulkConfigs__dependency_injector.inject()
+  const { range_version, new_version_id } = __addBulkConfigs__dependency_injector.inject()
 
   for (let i = 0; i < range_version.length; i++) {
 
@@ -316,16 +316,16 @@ async function __addNewBulkConfigs__(config: ConfigDB): Promise<void> {
  */
 async function __initBulkConfigs__(): Promise<void> {
 
-  let { range_version, selected_platform, new_version_id, environments } = __addBulkConfigs__dependency_injector.inject()
-  let hash_range_version = _.hashText(JSON.stringify(_.keyBy(range_version, "key")))
+  const { range_version, selected_platform, new_version_id, environments } = __addBulkConfigs__dependency_injector.inject()
+  const hash_range_version = _.hashText(JSON.stringify(_.keyBy(range_version, "key")))
 
   try {
 
-    let { data: mutual_profiles } = await api.get({ url: "/mutual_profiles" })
+    const { data: mutual_profiles } = await api.get({ url: "/mutual_profiles" })
 
-    let new_mutual_profile = await __addNewMutualProfileToServerIfNecessary__(hash_range_version, mutual_profiles as MutualProfileDB[])
+    const new_mutual_profile = await __addNewMutualProfileToServerIfNecessary__(hash_range_version, mutual_profiles as MutualProfileDB[])
 
-    let new_profile = await __addNewProfile__(hash_range_version, selected_platform)
+    const new_profile = await __addNewProfile__(hash_range_version, selected_platform)
 
     await __initNewBulkConfigs__({ range_version, selected_platform, new_version_id, environments, new_mutual_profile, new_profile })
 
@@ -344,7 +344,7 @@ async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: st
 
   if (_.isEmpty(mutual_profiles)) {
 
-    let new_mutual_profile: MutualProfileDB = {
+    const new_mutual_profile: MutualProfileDB = {
       id: _.hashText(`__MUTUAL PROFILE INIT__${hash_range_version}`),
       key: `__MUTUAL PROFILE INIT__${hash_range_version}`
     }
@@ -370,7 +370,7 @@ async function __addNewMutualProfileToServerIfNecessary__(hash_range_version: st
  * @returns new profile
  */
 async function __addNewProfile__(hash_range_version: string, selected_platform: string): Promise<ProfileDB> {
-  let new_profile = await __checkIfProfileExisted__(_.hashText(`${hash_range_version}${selected_platform}`))
+  const new_profile = await __checkIfProfileExisted__(_.hashText(`${hash_range_version}${selected_platform}`))
   try {
     await api.post({ url: "/profiles", json: new_profile })
   } catch (e) {
@@ -457,7 +457,7 @@ async function __initNewBulkConfigs__({ range_version, selected_platform, new_ve
  */
 function addPlatform(platform: string): ReduxThunk {
 
-  let hash_platform = _.hashText(platform)
+  const hash_platform = _.hashText(platform)
 
   return async (dispatch) => {
 
@@ -493,7 +493,7 @@ function addEnvironment(environment: string): ReduxThunk {
 
       await __addNewEnvironmentToServer__(environment)
 
-      let { data: configs } = await api.get({
+      const { data: configs } = await api.get({
         url: `/configs`,
         params: {
           environmentId: _.hashText("Production")
@@ -516,7 +516,7 @@ function addEnvironment(environment: string): ReduxThunk {
  */
 async function __addNewEnvironmentToServer__(environment: string): Promise<void> {
 
-  let new_environment = {
+  const new_environment = {
     id: _.hashText(environment),
     order: environment.toLowerCase(),
     key: environment

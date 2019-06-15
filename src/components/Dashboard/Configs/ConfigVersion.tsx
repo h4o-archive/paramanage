@@ -13,7 +13,7 @@ type ConfigVersionProps = Readonly<{
  */
 export const ConfigVersion: React.FunctionComponent<ConfigVersionProps> = ({ config, ...props }) => {
 
-  let { expand_state, setExpandState } = props.useParentState()
+  const { expand_state, setExpandState } = props.useParentState()
 
   function onPlageClick(tree_id: string) {
     return () => {

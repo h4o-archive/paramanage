@@ -47,8 +47,8 @@ const DashboardAddDropdownButton: React.FunctionComponent<DashboardAddDropdownBu
 }
 
 function mapStateToProps(state: State): Pick<DashboardAddDropdownButtonMapProps, "button_items" | "platforms_is_empty"> {
-  let __button_items_in_state__ = state.dashboard_add_modal_reducer.data
-  let button_items = _.map(__button_items_in_state__, button_item => (
+  const __button_items_in_state__ = state.dashboard_add_modal_reducer.data
+  const button_items = _.map(__button_items_in_state__, button_item => (
     {
       text: button_item.key.charAt(0).toUpperCase() + button_item.key.slice(1),
       value: button_item.key,

@@ -25,7 +25,7 @@ type ConfigsMapActions = {
  */
 const Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({ config_array, selected, ...props }) => {
 
-  let { version: selected_version, platform: selected_platform, environment: selected_environment } = selected
+  const { version: selected_version, platform: selected_platform, environment: selected_environment } = selected
   useEffect(() => {
     if (selected_version !== "0" && selected_platform !== "0" && selected_environment !== "0") {
       props.fetchConfigs(selected_platform, selected_version, selected_environment)
@@ -60,7 +60,7 @@ function mapStateToProps(state: State): ConfigsMapProps {
   let tree_id = `${_.createUniqueID()}`
   let previous = {} as ConfigProp
   let node = {} as ConfigProp
-  let config_array = Object.values(state.configs_reducer.configs).sort(_.compareObjectDescendinBaseOnKey("order")).reduce((config_array, config, index, raw_config_array) => {
+  const config_array = Object.values(state.configs_reducer.configs).sort(_.compareObjectDescendinBaseOnKey("order")).reduce((config_array, config, index, raw_config_array) => {
 
     if (raw_config_array[index + 1] && twoConfigsAreIdentical(config, raw_config_array[index + 1])) {
       if (_.isEmpty(previous)) {
