@@ -4,7 +4,7 @@ import { _ } from "utils"
 import * as Types from "utils/Types"
 
 const init = {
-  profile: {} as ProfileDB,
+  profile: {} as ProfileDB & { editable_key: string },
   categorys: {} as Readonly<Types.OverloadObject<CategoryDB>>,
   parametres: {} as Readonly<Types.OverloadObject<ParametreDB>>,
   selected: {} as Readonly<Types.OverloadObject<boolean>>,
@@ -26,8 +26,8 @@ export function parametres_reducer(state = init, action: Action): typeof init {
       return { ...state, select_mode: true }
     case DEACTIVE.SELECT_MODE:
       return { ...state, select_mode: false, selected: {} }
-    case SET.TEMPO_PROFILE_NAME:
-      return { ...state, tempo_profile_name: action.payload }
+    case SET.PROFILE_NAME:
+      return { ...state, profile: { ...state.profile, editable_key: action.payload } }
     default:
       return state;
   }

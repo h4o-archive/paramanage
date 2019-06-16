@@ -16,7 +16,7 @@ export const ConfigVersion: React.FunctionComponent<ConfigVersionOwnProps> = ({ 
   const { expand_state, setExpandState } = props.useParentState()
 
   function onPlageClick(tree_id: string): (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void {
-    return (): void => {
+    return () => {
       setExpandState({ [tree_id]: !expand_state[tree_id] })
     }
   }

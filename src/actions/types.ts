@@ -77,7 +77,7 @@ export const REJECT = {
 } as const
 
 export const SET = {
-  TEMPO_PROFILE_NAME: "SET_TEMPO_PROFILE_NAME",
+  PROFILE_NAME: "SET_PROFILE_NAME",
   PREVIOUS_SELECTED: "SET_PREVIOUS_SELECTED",
   COLOR: "SET_COLOR"
 } as const
@@ -93,7 +93,7 @@ export const QUEUE = {
 
 export type Action = Readonly<{
   type: string,
-  payload: any
+  payload?: any
 }>
 
 export type ReduxThunk = ThunkAction<any, State, any, AnyAction>
