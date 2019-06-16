@@ -19,7 +19,7 @@ type VersionsDropdownMapActions = Readonly<{ dispatchAction: typeof dispatchActi
 /**
  * @description React Component - Version Dropdown Selection Field on Home Page
  */
-const VersionsDropdown: React.FunctionComponent<VersionsDropdownMapProps & VersionsDropdownMapActions> = (props) => {
+const VersionsDropdown: React.FunctionComponent<VersionsDropdownMapProps & VersionsDropdownMapActions> = ({ versions, selected_version, ...props }) => {
 
   function onChangeVersion(event: React.SyntheticEvent<HTMLElement, Event>, { value }: DropdownProps): void {
     props.dispatchAction(SELECT.VERSION, value);
@@ -30,9 +30,9 @@ const VersionsDropdown: React.FunctionComponent<VersionsDropdownMapProps & Versi
       fluid
       search
       selection
-      options={props.versions}
+      options={versions}
       onChange={onChangeVersion}
-      value={props.selected_version}
+      value={selected_version}
     />
   )
 }

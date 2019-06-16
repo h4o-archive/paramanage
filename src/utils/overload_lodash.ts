@@ -113,15 +113,15 @@ function map<O, T>(object: O, func: (item: O[keyof O]) => T): T[] {
 }
 
 // Only use for array or object
-function reduce<O, T>(object: O, func: (o: T, key: keyof O) => void, init: T): T {
+function reduce<O, T>(object: O, func: (o: T, key: keyof O, object: O) => void, init: T): T {
   for (let key in object) {
-    func(init, key)
+    func(init, key, object)
   }
   return init
 }
 
 function omit<T, K extends keyof T>(object: T, keys: K[]) {
-  return reduce(object, (new_object, key) => {
+  return reduce(object, (new_object, key, object) => {
     if (!keys.includes(key as K)) (new_object as Types.OverloadObject)[key as string] = object[key]
   }, {} as Pick<T, Exclude<keyof T, K>>)
 }

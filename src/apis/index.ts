@@ -111,14 +111,14 @@ function createApiInstance(): Readonly<API> {
         // console.log("TCL: constructed_url", constructed_url)
         // console.log("TCL: sub_api_key", parseUrlToSubAPI(url))
         // @ts-ignore
-        const result = sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
+        const result = await sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
         // console.log("TCL: result", result)
         notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {
         console.error(error)
         notifyRejectRequest(api_call_id)
-        return { data: [] }
+        return { data: id ? {} as DataAPI : [] as DataAPI[] }
       }
     }
   }, {} as API)
