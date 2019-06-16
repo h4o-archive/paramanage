@@ -163,7 +163,22 @@ export type ProfileDB = Readonly<{
 
 export type MutualProfileDB = ProfileDB
 
-type DataAPI = PlatformDB | VersionDB | EnvironmentDB | ConfigDB | ProfileDB | MutualProfileDB
+export type CategoryDB = Readonly<{
+  id: string,
+  order: string,
+  key: string,
+  color: string
+}>
+
+export type ParametreDB = Readonly<{
+  id: string,
+  key: string,
+  value: string,
+  categoryId: string,
+  profileId: string
+}>
+
+type DataAPI = PlatformDB | VersionDB | EnvironmentDB | ConfigDB | ProfileDB | MutualProfileDB | CategoryDB | ParametreDB
 
 export type ResponseAPI<I = null> = Readonly<{
   data: I extends string ? DataAPI : DataAPI[],

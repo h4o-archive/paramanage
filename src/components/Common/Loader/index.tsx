@@ -19,7 +19,7 @@ const Loader: React.FunctionComponent<LoaderMapProps> = ({ active }) => {
   useEffect(() => {
     clearTimeout(timeout_id)
     if (state_active && !active) {
-      let new_timeout_id = setTimeout(() => {
+      const new_timeout_id = setTimeout(() => {
         if (_.isEmpty(store.getState().loader_reducer.requests)) setActive(false)
       }, 300)
       setTimeoutID(new_timeout_id)
