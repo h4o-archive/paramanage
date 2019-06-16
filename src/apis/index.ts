@@ -28,13 +28,15 @@ function createApiInstance(): Readonly<API> {
       })
     } else {
       const outdated_requests = store.getState().loader_reducer.outdated_requests
-      for (let key in outdated_requests) {
-        // @ts-ignore
-        sub_api[key].get.clearCache()
+      if (!_.isEmpty(outdated_requests)) {
+        for (let key in outdated_requests) {
+          // @ts-ignore
+          sub_api[key].get.clearCache()
+        }
+        store.dispatch({
+          type: RESET.OUTDATED_REQUEST
+        })
       }
-      store.dispatch({
-        type: RESET.OUTDATED_REQUEST
-      })
     }
   }
 
@@ -80,28 +82,38 @@ function createApiInstance(): Readonly<API> {
     return constructed_url
   }
 
-  const sub_api: { readonly [key: string]: AxiosInstance } = {
-    platform: createAxiosInstance(),
-    version: createAxiosInstance(),
-    environment: createAxiosInstance(),
-    config: createAxiosInstance(),
-    profile: createAxiosInstance(),
-    category: createAxiosInstance(),
-    parametre: createAxiosInstance()
-  }
+  const sub_api = {
+    platforms: createAxiosInstance(),
+    versions: createAxiosInstance(),
+    environments: createAxiosInstance(),
+    configs: createAxiosInstance(),
+    profiles: createAxiosInstance(),
+    categorys: createAxiosInstance(),
+    parametres: createAxiosInstance()
+  } as const
 
-  const api: Readonly<API> = _.reduce(sub_api.platform, (unfinish_api, method) => {
+  const api: Readonly<API> = _.reduce(sub_api.platforms, (unfinish_api, method) => {
     unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : Types.OverloadObject> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id })
+      console.log("TCL: method", method)
+      console.log("TCL: url", url)
+      console.log("TCL: id", id)
+      console.log("TCL: params", params)
+      console.log("TCL: json", json)
+      console.log("TCL: api_call_id", api_call_id)
 
       try {
         const constructed_url = constructURL({ method, url, id, params })
+        console.log("TCL: constructed_url", constructed_url)
+        console.log("TCL: parseUrlToSubAPI(url)", parseUrlToSubAPI(url))
         // @ts-ignore
         const result = sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
+        console.log("TCL: result", result)
         notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {
+        console.error(error)
         notifyRejectRequest(api_call_id)
         return { data: [] }
       }

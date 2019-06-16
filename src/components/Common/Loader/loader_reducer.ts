@@ -29,8 +29,6 @@ export function loader_reducer(state = init, action: Action): typeof init {
       return { ...state, outdated_requests: { ...state.outdated_requests, [action.payload]: true } }
     case RESET.OUTDATED_REQUEST:
       return { ...state, outdated_requests: {} }
-    case RESET.REQUEST_STATUS:
-      return init
     default:
       return state
   }

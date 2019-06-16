@@ -84,7 +84,6 @@ export const SET = {
 
 export const RESET = {
   COLOR: "RESET_COLOR",
-  REQUEST_STATUS: "RESET_REQUEST_STATUS",
   OUTDATED_REQUEST: "RESET_OUTDATED_REQUEST"
 } as const
 
