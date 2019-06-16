@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 
 import { _ } from "utils"
@@ -7,6 +7,7 @@ import { ConfigState } from "./configs_reducer";
 import { State } from "reducers";
 import { TableHeader } from "./TableHeader"
 import { Config } from "./Config"
+import * as Types from "utils/Types"
 
 type ConfigsMapProps = Readonly<{
   selected: {
@@ -33,6 +34,12 @@ const Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected_version, selected_platform, selected_environment])
 
+  const [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
+
+  function useParentState(): { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> } {
+    return { expand_state, setExpandState }
+  }
+
   return (
     <div className="ui centered equal width grid" style={{ height: "80%" }}>
 
@@ -41,7 +48,7 @@ const Configs: React.FunctionComponent<ConfigsMapProps & ConfigsMapActions> = ({
 
       {config_array.map(config => {
         return (
-          <Config config={config} />
+          <Config key={config.id} config={config} useParentState={useParentState} />
         )
       })}
 
@@ -57,33 +64,38 @@ function mapStateToProps(state: State): ConfigsMapProps {
     return false
   }
 
-  let tree_id = `${_.createUniqueID()}`
-  let previous = {} as ConfigProp
-  let node = {} as ConfigProp
-  const config_array = Object.values(state.configs_reducer.configs).sort(_.compareObjectDescendinBaseOnKey("order")).reduce((config_array, config, index, raw_config_array) => {
+  let config_array = [] as ConfigProp[]
+  if (!_.isEmpty(state.configs_reducer.configs)) {
 
-    if (raw_config_array[index + 1] && twoConfigsAreIdentical(config, raw_config_array[index + 1])) {
-      if (_.isEmpty(previous)) {
-        config_array.push({ ...config, tree_id, next: { ...config, tree_id, next: previous, last: "" }, last: "" })
-        previous = config_array[config_array.length - 1].next
-        node = config_array[config_array.length - 1]
-      } else {
-        previous.next = { ...config, tree_id, next: {} as ConfigProp, last: "" }
-        previous = previous.next
-      }
-    } else {
-      if (_.isEmpty(previous)) {
-        config_array.push({ ...config, tree_id: "0", next: previous, last: "" })
-      } else {
-        previous.next = { ...config, tree_id, next: {} as ConfigProp, last: "" }
-        previous = {} as ConfigProp
-        node.last = config.version
-        tree_id = `${_.createUniqueID()}`
-      }
-    }
+    let tree_id = `${_.createUniqueID()}`
+    let previous = {} as ConfigProp
+    let node = {} as ConfigProp
+    config_array = Object.values(state.configs_reducer.configs).sort(_.compareObjectDescendinBaseOnKey("order")).reduce((config_array, config, index, raw_config_array) => {
 
-    return config_array
-  }, [] as ConfigProp[])
+      if (raw_config_array[index + 1] && twoConfigsAreIdentical(config, raw_config_array[index + 1])) {
+        if (_.isEmpty(previous)) {
+          config_array.push({ ...config, tree_id, next: { ...config, tree_id, next: previous, last: "" }, last: "" })
+          previous = config_array[config_array.length - 1].next
+          node = config_array[config_array.length - 1]
+        } else {
+          previous.next = { ...config, tree_id, next: {} as ConfigProp, last: "" }
+          previous = previous.next
+        }
+      } else {
+        if (_.isEmpty(previous)) {
+          config_array.push({ ...config, tree_id: "0", next: previous, last: "" })
+        } else {
+          previous.next = { ...config, tree_id, next: {} as ConfigProp, last: "" }
+          previous = {} as ConfigProp
+          node.last = config.version
+          tree_id = `${_.createUniqueID()}`
+        }
+      }
+
+      return config_array
+    }, [] as ConfigProp[])
+
+  }
 
   return {
     selected: {

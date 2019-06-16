@@ -4,14 +4,14 @@ import { ConfigProp } from ".";
 import { Button } from "components/Common/Button"
 import * as Types from "utils/Types"
 
-type ConfigVersionProps = Readonly<{
+type ConfigVersionOwnProps = Readonly<{
   config: ConfigProp,
   useParentState: () => { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> }
 }>
 /**
  * @description React Component - the version information of config
  */
-export const ConfigVersion: React.FunctionComponent<ConfigVersionProps> = ({ config, ...props }) => {
+export const ConfigVersion: React.FunctionComponent<ConfigVersionOwnProps> = ({ config, ...props }) => {
 
   const { expand_state, setExpandState } = props.useParentState()
 
@@ -33,10 +33,10 @@ export const ConfigVersion: React.FunctionComponent<ConfigVersionProps> = ({ con
     return (
       <React.Fragment>
 
-        <VersionIndicator text={config.version} />
-        <i className="arrow right black icon" style={{ float: "left", marginTop: "0.5em", marginBottom: "0.5em" }}></i>
         <VersionIndicator text={config.last} />
-        <Button icon={`angle ${expand_state[config.tree_id] ? "down" : "up"} grey icon`} style={{ float: "left" }} onClick={onPlageClick(config.tree_id)} transparent />
+        <i className="arrow right black icon" style={{ float: "left", marginTop: "0.5em", marginBottom: "0.5em" }}></i>
+        <VersionIndicator text={config.version} />
+        <Button icon={`angle ${!expand_state[config.tree_id] ? "down" : "up"} grey icon`} style={{ float: "left" }} onClick={onPlageClick(config.tree_id)} transparent />
 
       </React.Fragment>
     )

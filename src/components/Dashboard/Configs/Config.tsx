@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import { Dropdown } from "semantic-ui-react"
@@ -18,18 +18,15 @@ type ConfigMapActions = {
 }
 
 type ConfigOwnProps = {
-  readonly config: ConfigProp
+  readonly config: ConfigProp,
+  useParentState: () => { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> }
 }
 /**
  * @description 1 line of config information
  */
 const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ config, ...props }) => {
 
-  const [expand_state, setExpandState] = useState({} as Types.OverloadObject<boolean>)
-
-  function useParentState(): { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> } {
-    return { expand_state, setExpandState }
-  }
+  const { expand_state } = props.useParentState()
 
   const EditButton: React.FunctionComponent = () => {
 
@@ -53,7 +50,7 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
   const Version: React.FunctionComponent = () => {
     return (
       <div className="middle aligned column" style={{ color: "white" }}>
-        <ConfigVersion config={config} useParentState={useParentState} />
+        <ConfigVersion config={config} useParentState={props.useParentState} />
       </div>
     )
   }
@@ -72,7 +69,8 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
       <Link className="middle aligned column" to={`/profile/${props.to}`} style={profile_style}>{props.profile}</Link>
     )
   }
-
+  console.log("TCL: expand_state[config.tree_id]", expand_state[config.tree_id])
+  console.log("TCL: config.next", config.next)
   return (
     <React.Fragment>
       <div className="row">
@@ -82,7 +80,7 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
         <ProfileName to={config.profileId} profile={config.profile} />
         <ProfileName to={config.mutual_profileId} profile={config.mutual_profile} />
       </div>
-      {!_.isEmpty(config.next) && expand_state[config.tree_id] && <ConnectedConfig config={config.next} />}
+      {!_.isEmpty(config.next) && expand_state[config.tree_id] && <ConnectedConfig config={config.next} useParentState={props.useParentState} />}
     </React.Fragment>
   )
 }
