@@ -35,7 +35,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "config-paramanage": "mkdir app && cp init_database.json app/db.json && cd app && npm init -y && npm install --save json-server && cp ../db-package.json package.json",
+    "config-paramanage-window": "mkdir app && copy init_database.json \"app\\db.json\" && cd app && npm init -y && npm install --save json-server && copy \"..\\db-package.json\" package.json",
+    "paramanage": "cd app && npm start"
   },
   "eslintConfig": {
     "extends": "react-app"
