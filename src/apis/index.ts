@@ -88,6 +88,7 @@ function createApiInstance(): Readonly<API> {
     environments: createAxiosInstance(),
     configs: createAxiosInstance(),
     profiles: createAxiosInstance(),
+    mutual_profiles: createAxiosInstance(),
     categorys: createAxiosInstance(),
     parametres: createAxiosInstance()
   } as const
@@ -96,6 +97,8 @@ function createApiInstance(): Readonly<API> {
     unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : Types.OverloadObject> => {
       handleCache(method, url)
       api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id })
+
+      console.log("TCL: Logging", new Date())
       console.log("TCL: method", method)
       console.log("TCL: url", url)
       console.log("TCL: id", id)
@@ -106,7 +109,7 @@ function createApiInstance(): Readonly<API> {
       try {
         const constructed_url = constructURL({ method, url, id, params })
         console.log("TCL: constructed_url", constructed_url)
-        console.log("TCL: parseUrlToSubAPI(url)", parseUrlToSubAPI(url))
+        console.log("TCL: sub_api_key", parseUrlToSubAPI(url))
         // @ts-ignore
         const result = sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
         console.log("TCL: result", result)
