@@ -9,14 +9,14 @@ type ConfigVersionOwnProps = Readonly<{
   useParentState: () => { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> }
 }>
 /**
- * @description React Component - the version information of config
+ * @description the version information of config
  */
 export const ConfigVersion: React.FunctionComponent<ConfigVersionOwnProps> = ({ config, ...props }) => {
 
   const { expand_state, setExpandState } = props.useParentState()
 
-  function onPlageClick(tree_id: string) {
-    return () => {
+  function onPlageClick(tree_id: string): (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void {
+    return (): void => {
       setExpandState({ [tree_id]: !expand_state[tree_id] })
     }
   }

@@ -17,10 +17,10 @@ type ConfigMapActions = {
   readonly dispatchAction: typeof dispatchAction
 }
 
-type ConfigOwnProps = {
-  readonly config: ConfigProp,
+type ConfigOwnProps = Readonly<{
+  config: ConfigProp,
   useParentState: () => { expand_state: Types.OverloadObject<boolean>, setExpandState: React.Dispatch<React.SetStateAction<Types.OverloadObject<boolean>>> }
-}
+}>
 /**
  * @description 1 line of config information
  */
@@ -34,7 +34,7 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
       label: (_.isEmpty(config.next) || config.last === "") ? config.version : `${config.version} -> ${config.last}`,
       config
     }
-    function onEditClick() {
+    function onEditClick(): void {
       props.dispatchAction(SHOW.MODAL.EDIT_CONFIG, action_payload)
     }
 
