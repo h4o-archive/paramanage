@@ -69,8 +69,6 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
       <Link className="middle aligned column" to={`/profile/${props.to}`} style={profile_style}>{props.profile}</Link>
     )
   }
-  console.log("TCL: expand_state[config.tree_id]", expand_state[config.tree_id])
-  console.log("TCL: config.next", config.next)
   return (
     <React.Fragment>
       <div className="row">
