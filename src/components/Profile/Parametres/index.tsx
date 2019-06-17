@@ -33,6 +33,7 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
   useEffect(() => {
     props.fetchProfile(props.id)
     if (_.isEmpty(selected)) props.toggleSelectMode(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
 
   return (
