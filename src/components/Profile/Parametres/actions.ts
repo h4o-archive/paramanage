@@ -20,7 +20,8 @@ export function fetchProfile(id: string): ReduxThunk {
       {
         type: FETCH.PROFILE,
         payload: {
-          profile, parametres: _.reduce(_.keyBy(parametres, "id") as Readonly<Types.OverloadObject<ProfileDB>>, (parametres, key, raw_parametres) => {
+          profile,
+          parametres: _.reduce(_.keyBy(parametres, "id") as Readonly<Types.OverloadObject<ProfileDB>>, (parametres, key, raw_parametres) => {
             parametres[key] = { ...raw_parametres[key], editable_key: raw_parametres[key].key }
           }, {} as Types.OverloadObject<ProfileDB & { editable_key: string }>)
         }

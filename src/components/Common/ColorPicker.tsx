@@ -4,10 +4,15 @@ import { Responsive } from "semantic-ui-react"
 
 import { COLOR } from "utils/const"
 
+type Color = {
+  hex: string,
+  [keys: string]: any
+}
+
 type ColorPickerOwnProps = {
-  default_color: string,
-  onChange: (color: any) => void,
-  style: React.CSSProperties
+  default_color?: string,
+  onChange?: (color: Color) => void,
+  style?: React.CSSProperties
 }
 
 export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onChange, style, default_color }) => {
@@ -24,11 +29,11 @@ export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onCh
   };
 
   // TODO review type of data color passing
-  function handleChange({ hex }: { hex: string }) {
+  function handleChange({ hex }: Color) {
     setStateColor(hex)
   };
 
-  const handleChange_overload = onChange ? (color: any) => { onChange(color); handleChange(color) } : handleChange
+  const handleChange_overload = onChange ? (color: Color) => { onChange(color); handleChange(color) } : handleChange
 
 
   const STYLES = {

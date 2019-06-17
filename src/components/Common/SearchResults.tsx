@@ -1,17 +1,14 @@
 import React, { useEffect } from "react"
-import { connect } from "react-redux"
-import * as Types from "utils/Types"
 
 type SearchResultsOwnProps = {
-  params: Types.OverloadObject,
-  getData: (params: Types.OverloadObject) => string,
+  getData: () => string,
   source: string[],
   onClick: (result: string) => () => void
 }
 
-export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ params, getData, source, onClick }) => {
+export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ getData, source, onClick }) => {
 
-  const search_term = getData(params) || ""
+  const search_term = getData() || ""
   let results = [] as string[]
 
   useEffect(() => {

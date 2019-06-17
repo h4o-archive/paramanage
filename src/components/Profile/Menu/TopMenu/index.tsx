@@ -22,15 +22,15 @@ type TopMenuMapActions = {
 
 const TopMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
 
-  function onClickAdd() {
+  function onClickAdd(): void {
     props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.ADD)
   }
 
-  function onClickEdit() {
+  function onClickEdit(): void {
     props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.EDIT)
   }
 
-  function onClickDelete() {
+  function onClickDelete(): void {
     props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.DELETE)
   }
 
