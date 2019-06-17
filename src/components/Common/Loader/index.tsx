@@ -20,7 +20,7 @@ const Loader: React.FunctionComponent<LoaderMapProps> = ({ active }) => {
     clearTimeout(timeout_id)
     if (state_active && !active) {
       const new_timeout_id = setTimeout(() => {
-        if (_.isEmpty(store.getState().loader_reducer.requests)) setActive(false)
+        if (!workAroundCheck(store.getState().loader_reducer.requests)) setActive(false)
       }, 300)
       setTimeoutID(new_timeout_id)
     } else if (state_active !== active) setActive(active)
@@ -37,10 +37,18 @@ const Loader: React.FunctionComponent<LoaderMapProps> = ({ active }) => {
 
 }
 
+// TODO WORK-AROUND WAITING FOR REJECT TREATMENT
+
+function workAroundCheck(requests: any) {
+  for (let key in requests) {
+    if (requests[key].status === "START") return true
+  }
+  return false
+}
+
 function mapStateToProps(state: State): LoaderMapProps {
-  const { requests } = state.loader_reducer
   return {
-    active: !_.isEmpty(requests)
+    active: workAroundCheck(state.loader_reducer.requests)
   }
 }
 

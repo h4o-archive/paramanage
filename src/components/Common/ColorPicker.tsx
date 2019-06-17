@@ -4,20 +4,15 @@ import { Responsive } from "semantic-ui-react"
 
 import { COLOR } from "utils/const"
 
-type Color = {
-  hex: string,
-  [keys: string]: any
-}
-
 type ColorPickerOwnProps = {
-  default_color?: string,
+  default_color?: Color,
   onChange?: (color: Color) => void,
   style?: React.CSSProperties
 }
 
 export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onChange, style, default_color }) => {
 
-  const [state_color, setStateColor] = useState(default_color || (COLOR.GREY as string))
+  const [state_color, setStateColor] = useState(default_color || ({ hex: COLOR.GREY } as Color))
   const [state_display, setStateDisplay] = useState(false)
 
   function handleClick() {
@@ -29,8 +24,8 @@ export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onCh
   };
 
   // TODO review type of data color passing
-  function handleChange({ hex }: Color) {
-    setStateColor(hex)
+  function handleChange(color: Color) {
+    setStateColor(color)
   };
 
   const handleChange_overload = onChange ? (color: Color) => { onChange(color); handleChange(color) } : handleChange
@@ -41,7 +36,7 @@ export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onCh
       width: '14px',
       height: '14px',
       borderRadius: '2px',
-      background: state_color,
+      background: state_color.hex,
       cursor: 'pointer',
     },
     SWATCH: {
@@ -85,9 +80,14 @@ export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onCh
 
       <div style={STYLES.POPOVER as React.CSSProperties}>
         <div style={STYLES.COVER as React.CSSProperties} onClick={handleClose} />
-        <CompactPicker color={state_color} onChange={handleChange_overload} />
+        <CompactPicker color={state_color.hex} onChange={handleChange_overload} />
       </div>
 
     </div>
   )
+}
+
+export type Color = {
+  hex: string,
+  [keys: string]: any
 }

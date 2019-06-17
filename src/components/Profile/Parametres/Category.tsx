@@ -14,7 +14,7 @@ const Category: React.FunctionComponent<CategoryMapProps> = ({ categorys, ...pro
   return (
     <React.Fragment>
       {categorys.map((category) => {
-        const font_and_background_color = _.contrastColorFontAndBackground(category.color)
+        const font_and_background_color = _.contrastColorFontAndBackground({ hex: category.color })
         return (
           <React.Fragment key={category.id}>
             <p className={`ui ribbon label`} style={{ ...font_and_background_color, position: "relative", marginLeft: "1em" }}>{category.key} </p>

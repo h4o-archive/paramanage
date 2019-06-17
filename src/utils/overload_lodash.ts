@@ -1,5 +1,6 @@
 import lodash, { LoDashStatic } from "lodash"
 import * as Types from "./Types"
+import { Color } from "components/Common/ColorPicker";
 
 function insertItem<T>(array: T[], index: number, item: T): T[] {
   return [
@@ -89,7 +90,7 @@ function __hexToRgb__(hex: string): RGB {
     };
 }
 
-function contrastColorFontAndBackground(hex: string): { background: string, color: string } {
+function contrastColorFontAndBackground({ hex }: Color): { background: string, color: string } {
   if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex)) {
     const rgb: RGB = __hexToRgb__(hex)
 
@@ -104,10 +105,10 @@ function contrastColorFontAndBackground(hex: string): { background: string, colo
   return { background: hex, color: "black" }
 }
 
-function map<O, T>(object: O, func: (item: O[keyof O]) => T): T[] {
+function map<O, T>(object: O, func: (item: O[keyof O], key: keyof O) => T): T[] {
   let array = []
   for (let key in object) {
-    array.push(func(object[key]))
+    array.push(func(object[key], key))
   }
   return array
 }

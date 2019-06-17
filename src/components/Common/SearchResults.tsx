@@ -3,7 +3,7 @@ import React, { useEffect } from "react"
 type SearchResultsOwnProps = {
   getData: () => string,
   source: string[],
-  onClick: (result: string) => () => void
+  onClick: (result: string) => void
 }
 
 export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ getData, source, onClick }) => {

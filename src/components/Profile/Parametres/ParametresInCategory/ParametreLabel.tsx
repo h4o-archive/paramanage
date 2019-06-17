@@ -28,7 +28,7 @@ const ParametreLabel: React.FunctionComponent<ParametreLabelMapProps & Parametre
 
   const [hover_id, setHoverID] = useState("0")
 
-  function onEnterParametre(id: string): () => void {
+  function onEnterParametre(id: string): (event: React.MouseEvent<HTMLParagraphElement, MouseEvent>) => void {
     return () => {
       setHoverID(id)
     }
@@ -38,14 +38,14 @@ const ParametreLabel: React.FunctionComponent<ParametreLabelMapProps & Parametre
     setHoverID("0")
   }
 
-  function onSelectParametre(id: string): () => void {
+  function onSelectParametre(id: string): (event: React.MouseEvent<HTMLElement, MouseEvent>) => void {
     return function () {
       onLeaveParametre();
       props.dispatchAction(SELECT.PARAMETRE, id);
     }
   }
 
-  function onDeSelectParametre(id: string): () => void {
+  function onDeSelectParametre(id: string): (event: React.MouseEvent<HTMLElement, MouseEvent>) => void {
     return function () {
       props.dispatchAction(DESELECT.PARAMETRE, id);
     }

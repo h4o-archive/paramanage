@@ -22,7 +22,7 @@ const ParametresInCategory: React.FunctionComponent<ParametresInCategoryMapProps
           return (
             <div className="field" key={parametre.id}>
               <ParametreLabel parametre={parametre} />
-              <input placeholder={parametre.value} type="text" readOnly />
+              <input value={parametre.value} type="text" readOnly />
             </div>
           )
         } else return null

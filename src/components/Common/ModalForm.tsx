@@ -9,23 +9,25 @@ type FieldInputProps = Readonly<{
   meta: Readonly<{
     error?: any,
     touched?: boolean
-  }>
+  }>,
+  color?: string
+  readonly?: boolean,
 }>
 /**
  *
  * @description input for Redux Field
  */
-export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched } }) => {
+export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readonly }) => {
   return (
-    <React.Fragment>
-      <label>{label}</label>
-      <input {...input} />
+    <div className="field">
+      <label style={{ color }}>{label}</label>
+      <input readonly={readonly || false} {...input} />
       {touched && error &&
         <div className="ui error message" >
           <p>{error}</p>
         </div>
       }
-    </React.Fragment>
+    </div>
   )
 }
 

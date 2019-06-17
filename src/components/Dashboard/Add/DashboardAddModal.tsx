@@ -89,14 +89,13 @@ function asyncValidate(form_values: Readonly<FormValues>, dispatch: Dispatch, { 
 
     return (
       api.get({ url: `/${modal_state}s`, id })
-        .then(() => {
+        .then((response) => {
           // eslint-disable-next-line no-throw-literal
-          throw { [modal_state]: `This ${modal_state} already exist` }
+          if (response.error && response.error.response.status !== 404) throw { [modal_state]: "Something wrong happened, please try again later" }
+          else if (!_.isEmpty(response.data)) throw { [modal_state]: `This ${modal_state} already exist` }
         })
         .catch(error => {
-          if (error[modal_state]) throw error
-          // eslint-disable-next-line no-throw-literal
-          if (error.response.status !== 404) throw { [modal_state]: "Something wrong happened, please try again later" }
+          throw error
         })
     )
   }

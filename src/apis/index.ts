@@ -118,7 +118,7 @@ function createApiInstance(): Readonly<API> {
       } catch (error) {
         console.error(error)
         notifyRejectRequest(api_call_id)
-        return { data: id ? {} as DataAPI : [] as DataAPI[] }
+        return { data: id ? {} as DataAPI : [] as DataAPI[], error }
       }
     }
   }, {} as API)
