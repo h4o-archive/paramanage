@@ -1,7 +1,6 @@
 import { FETCH, ReduxThunk } from "actions/types"
 import { _ } from "utils"
 import { api, ProfileDB } from "apis"
-import * as Types from "utils/Types"
 
 export function fetchProfile(id: string): ReduxThunk {
   return async (dispatch) => {
@@ -20,10 +19,8 @@ export function fetchProfile(id: string): ReduxThunk {
       {
         type: FETCH.PROFILE,
         payload: {
-          profile,
-          parametres: _.reduce(_.keyBy(parametres, "id") as Readonly<Types.OverloadObject<ProfileDB>>, (parametres, key, raw_parametres) => {
-            parametres[key] = { ...raw_parametres[key], editable_key: raw_parametres[key].key }
-          }, {} as Types.OverloadObject<ProfileDB & { editable_key: string }>)
+          profile: { ...profile, editable_key: (profile as ProfileDB).key },
+          parametres: _.keyBy(parametres, "id")
         }
       }
     )

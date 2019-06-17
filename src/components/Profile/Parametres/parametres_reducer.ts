@@ -4,12 +4,11 @@ import { _ } from "utils"
 import * as Types from "utils/Types"
 
 const init = {
-  profile: {} as ProfileDB & { editable_key: string },
-  categorys: {} as Readonly<Types.OverloadObject<CategoryDB>>,
-  parametres: {} as Readonly<Types.OverloadObject<ParametreDB>>,
-  selected: {} as Readonly<Types.OverloadObject<boolean>>,
+  profile: {} as ProfileState,
+  categorys: {} as CategorysState,
+  parametres: {} as ParametresState,
+  selected: {} as SelectedParametresState,
   select_mode: false as boolean,
-  tempo_profile_name: "" as string
 } as const
 
 export function parametres_reducer(state = init, action: Action): typeof init {
@@ -31,4 +30,9 @@ export function parametres_reducer(state = init, action: Action): typeof init {
     default:
       return state;
   }
-} 
+}
+
+export type ProfileState = ProfileDB & { editable_key: string }
+export type CategorysState = Readonly<Types.OverloadObject<CategoryDB>>
+export type ParametresState = Readonly<Types.OverloadObject<ParametreDB>>
+export type SelectedParametresState = Readonly<Types.OverloadObject<boolean>>

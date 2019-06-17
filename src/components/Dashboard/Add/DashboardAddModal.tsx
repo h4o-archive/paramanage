@@ -9,7 +9,7 @@ import { __parseStandarlizeVersionOrder__ } from "components/Dashboard/Add/actio
 import { add } from "./actions"
 import { api } from 'apis';
 import { FieldInput, ModalForm } from "components/Common/ModalForm"
-import { ModalState } from './dashboard_add_modal_reducer';
+import { DashboardAddModalState } from './dashboard_add_modal_reducer';
 import { State } from 'reducers';
 import { _ } from "utils"
 import { DASHBOARD_ADD_MODAL_STATE, FORM_NAME } from "utils/const"
@@ -17,14 +17,14 @@ import * as Types from "utils/Types"
 
 // NOT READ-ONLY because of modification errors object in validate function
 type FormValues = {
-  [keys in ModalState]: string
+  [keys in DashboardAddModalState]: string
 }
 
 type FormErrors = ReduxFormErrors<FormValues, string>
 
 type DashboardAddModalMapProps = Readonly<{
   open: boolean,
-  modal_state: ModalState,
+  modal_state: DashboardAddModalState,
   modal_info: Types.OverloadObject,
   form_value: string,
   errors: Readonly<FormErrors>,

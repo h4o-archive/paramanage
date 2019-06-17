@@ -7,10 +7,10 @@ import { _ } from "utils"
 import { State } from "reducers";
 import { ParametreDB } from "apis";
 import { CategoryContext } from "../CategoryContext"
-import * as Types from "utils/Types"
+import { SelectedParametresState } from "../parametres_reducer";
 
 type ParametreLabelMapProps = Readonly<{
-  selected_parametres: Readonly<Types.OverloadObject<boolean>>,
+  selected_parametres: SelectedParametresState,
   select_mode: boolean
 }>
 

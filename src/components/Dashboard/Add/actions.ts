@@ -3,7 +3,7 @@ import { api, VersionDB, ConfigDB, MutualProfileDB, ProfileDB, PlatformDB } from
 import { fetchVersions, fetchPlatforms, fetchEnvironments } from "components/Dashboard/Metadatas/actions"
 import { SLEEP_TIME } from "utils/const"
 import { ReduxThunk } from "actions/types";
-import { ModalState } from "./dashboard_add_modal_reducer";
+import { DashboardAddModalState } from "./dashboard_add_modal_reducer";
 import { EnvironmentState } from "../Metadatas/metadatas_reducer";
 import * as Types from "utils/Types"
 
@@ -21,7 +21,7 @@ import * as Types from "utils/Types"
  *
  * @description call internal action base on type
  */
-export function add(type: ModalState, data: string): ReduxThunk {
+export function add(type: DashboardAddModalState, data: string): ReduxThunk {
   switch (type) {
     case "version":
       return addVersion(data)

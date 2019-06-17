@@ -22,7 +22,7 @@ const init = {
       shouldDisplay: undefined
     }
   },
-  modal_state: "version" as ModalState
+  modal_state: "version" as DashboardAddModalState
 } as const
 
 export function dashboard_add_modal_reducer(state = init, action: Action): typeof init {
@@ -36,4 +36,4 @@ export function dashboard_add_modal_reducer(state = init, action: Action): typeo
   }
 }
 
-export type ModalState = "version" | "environment" | "platform"
+export type DashboardAddModalState = "version" | "environment" | "platform"

@@ -11,10 +11,10 @@ import { _ } from "utils"
 import { State } from "reducers";
 import { Category } from "./Category"
 import { ParametresInCategory } from "./ParametresInCategory"
-import * as Types from "utils/Types"
+import { SelectedParametresState } from "./parametres_reducer";
 
 type ParametresMapProps = Readonly<{
-  selected: Readonly<Types.OverloadObject<boolean>>,
+  selected: SelectedParametresState,
   profile_name: string
 }>
 

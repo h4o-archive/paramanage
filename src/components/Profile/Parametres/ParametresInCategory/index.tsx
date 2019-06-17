@@ -3,13 +3,12 @@ import { connect } from "react-redux"
 
 import { _ } from "utils"
 import { State } from "reducers";
-import { ParametreDB } from "apis";
 import { CategoryContext } from "../CategoryContext"
 import { ParametreLabel } from "./ParametreLabel"
-import * as Types from "utils/Types"
+import { ParametresState } from "../parametres_reducer";
 
 type ParametresInCategoryMapProps = {
-  readonly parametres: Readonly<Types.OverloadObject<ParametreDB>>
+  readonly parametres: ParametresState
 }
 
 const ParametresInCategory: React.FunctionComponent<ParametresInCategoryMapProps> = ({ parametres }) => {
