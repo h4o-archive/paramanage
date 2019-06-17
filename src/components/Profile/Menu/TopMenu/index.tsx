@@ -22,11 +22,6 @@ type TopMenuMapActions = {
 
 const TopMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
 
-  function onUpdateProfile() {
-    props.updateProfile();
-  }
-
-
   function onClickAdd() {
     props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.ADD)
   }
@@ -46,7 +41,7 @@ const TopMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({
         <div className="ui basic segment" style={{ width: "100%" }}>
           <div className="ui grid">
             <div className="two wide column">
-              <Button onClick={onUpdateProfile} icon="large blue hand peace outline" transparent />
+              <Button onClick={props.updateProfile} icon="large blue hand peace outline" transparent />
             </div>
             <div className="fourteen wide right aligned column">
               <SelectMode />

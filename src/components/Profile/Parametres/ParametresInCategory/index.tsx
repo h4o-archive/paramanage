@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { _ } from "utils"
 import { State } from "reducers";
 import { ParametreDB } from "apis";
-import { CategoryContext } from "./CategoryContext"
+import { CategoryContext } from "../CategoryContext"
 import { ParametreLabel } from "./ParametreLabel"
 import * as Types from "utils/Types"
 

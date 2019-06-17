@@ -6,7 +6,7 @@ import { SELECT, DESELECT } from "actions/types"
 import { _ } from "utils"
 import { State } from "reducers";
 import { ParametreDB } from "apis";
-import { CategoryContext } from "./CategoryContext"
+import { CategoryContext } from "../CategoryContext"
 import * as Types from "utils/Types"
 
 type ParametreLabelMapProps = Readonly<{
