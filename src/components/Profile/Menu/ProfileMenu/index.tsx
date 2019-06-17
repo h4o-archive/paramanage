@@ -20,7 +20,7 @@ type TopMenuMapActions = {
   dispatchAction: typeof dispatchAction
 }
 
-const TopMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
+const ProfileMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
 
   function onClickAdd(): void {
     props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.ADD)
@@ -62,5 +62,5 @@ function mapStateToProps(state: State): TopMenuMapProps {
   }
 }
 
-const ConnectedTopMenu = connect(mapStateToProps, { updateProfile, toggleSelectMode, dispatchAction })(TopMenu);
-export { ConnectedTopMenu as TopMenu }
+const ConnectedProfileMenu = connect(mapStateToProps, { updateProfile, toggleSelectMode, dispatchAction })(ProfileMenu);
+export { ConnectedProfileMenu as ProfileMenu }
