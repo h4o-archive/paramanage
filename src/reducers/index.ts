@@ -9,7 +9,7 @@ import { loader_reducer } from "components/Common/Loader/loader_reducer"
 import { dashboard_add_modal_reducer } from "components/Dashboard/Add/dashboard_add_modal_reducer"
 import { configs_reducer } from "components/Dashboard/Configs/configs_reducer"
 import { parametres_reducer } from "components/Profile/Parametres/parametres_reducer"
-import { profile_menu_modal_reducer } from "components/Profile/Menu/ProfileMenuModal/profile_menu_modal_reducer"
+import { edit_add_modal_reducer } from "components/Profile/Menu/ProfileMenuModal/EditAddModal/edit_add_modal_reducer"
 import { delete_modal_reducer } from "components/Profile/Menu/ProfileMenuModal/DeleteModal/delete_modal_reducer"
 // import { edit_config_modal_reducer } from "components/Dashboard/Configs/EditConfigModal/edit_config_modal_reducer"
 
@@ -20,7 +20,7 @@ const combinedReducer = combineReducers({
   dashboard_add_modal_reducer,
   configs_reducer,
   parametres_reducer,
-  profile_menu_modal_reducer,
+  edit_add_modal_reducer,
   delete_modal_reducer
   // edit_config_modal_reducer
 })

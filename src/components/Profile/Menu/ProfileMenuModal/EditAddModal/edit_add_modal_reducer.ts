@@ -15,7 +15,7 @@ const init = {
   modal_state: "add" as ProfileMenuModalState
 }
 
-export function profile_menu_modal_reducer(state = init, action: Action): typeof init {
+export function edit_add_modal_reducer(state = init, action: Action): typeof init {
   switch (action.type) {
     case SHOW.MODAL.PARAMETRES:
       if (action.payload !== "delete") {

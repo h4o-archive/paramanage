@@ -1,55 +1,50 @@
 import React from 'react'
-=import { connect } from "react-redux"
-import { reduxForm, FieldArray, InjectedFormProps } from "redux-form"
+import { connect } from "react-redux"
 
 import { FORM_NAME } from "utils/const"
-import { _ } from "utils"
 import { ModalForm } from "components/Common/ModalForm"
 import * as Types from "utils/Types"
 import { State } from 'reducers'
 import { EditAddFieldArray } from "./EditAddFieldArray"
-import { ParametreDB } from 'apis';
+import { HIDE } from 'actions/types';
+import { reset } from "redux-form"
+import { dispatchAction } from "components/actions"
 
-type EditAddModalMapProps = {
-  readonly modal_info: Types.OverloadObject<string>,
-}
+type EditAddModalMapProps = Readonly<{
+  open: boolean,
+  modal_info: Types.OverloadObject<string>,
+}>
 
-const EditAddModal: React.FunctionComponent<EditAddModalMapProps & InjectedFormProps<any, EditAddModalMapProps>> = ({ open, modal_info, initialValues, ...props }) => {
+type EditAddModalMapActions = Readonly<{
+  reset: typeof reset,
+  dispatchAction: typeof dispatchAction
+}>
+
+const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions> = ({ open, modal_info, ...props }) => {
+
+  function onClickDiscard() {
+    props.dispatchAction(HIDE.MODAL.PARAMETRES)
+    props.reset(FORM_NAME.EDIT_ADD_MODAL)
+  }
+
   return (
-    <ModalForm open={open}
-      onClickDiscard={props.onClose}
-      onSubmit={props.onSubmit}
-      handleSubmit={props.handleSubmit(props.onSubmit)}
+    <ModalForm
+      open={open}
+      form_name={FORM_NAME.EDIT_ADD_MODAL}
+      onClickDiscard={onClickDiscard}
       header={modal_info.header}
     >
-      <FieldArray name={modal_info.key} component={EditAddFieldArray} props={{ initialValues, changeForm: props.change }} />
+      <EditAddFieldArray />
     </ModalForm>
   )
 }
 
 function mapStateToProps(state: State) {
-
-  const { parametres, categorys } = state.parametres_reducer
-
-  let initialValues = { edit: [] as FormData[] }
-  initialValues.edit = _.map(state.parametres_reducer.selected, (parametre, key) => {
-    return {
-      ...parametres[key],
-      category: categorys[parametres[key].categoryId].key,
-      category_color: categorys[parametres[key].categoryId].color
-    }
-  })
-
   return {
-    initialValues,
-    modal_info: state.profile_menu_modal_reducer.data[state.profile_menu_modal_reducer.modal_state],
+    open: state.edit_add_modal_reducer.open,
+    modal_info: state.edit_add_modal_reducer.data[state.edit_add_modal_reducer.modal_state],
   }
 }
 
-connect<EditAddModalMapProps, {}, {}, State>(mapStateToProps)(
-  reduxForm<any, EditAddModalMapProps>({
-    form: FORM_NAME.DASHBOARD_ADD_MODAL
-  })(EditAddModal)
-)
-
-export type FormData = ParametreDB & Readonly<{ category: string, category_color: string }>
+const ConnectedEditAddModal = connect<EditAddModalMapProps, EditAddModalMapActions, {}, State>(mapStateToProps, { reset, dispatchAction })(EditAddModal)
+export { ConnectedEditAddModal as EditAddModal }

@@ -12,7 +12,7 @@ export const DASHBOARD_ADD_MODAL_STATE = {
 
 export const FORM_NAME = {
   DASHBOARD_ADD_MODAL: "DASBOARD_ADD",
-  PROFILE_MENU_MODAL: "PROFILE_MENU"
+  EDIT_ADD_MODAL: "EDIT_ADD"
 } as const
 
 export const COLOR = {

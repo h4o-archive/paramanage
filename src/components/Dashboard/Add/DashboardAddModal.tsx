@@ -38,12 +38,12 @@ type DashboardAddModalMapActions = Readonly<{
  */
 const DashboardAddModal: React.FunctionComponent<DashboardAddModalMapProps & DashboardAddModalMapActions & InjectedFormProps<Readonly<FormValues>, DashboardAddModalMapProps & DashboardAddModalMapActions>> = ({ open, modal_state, modal_info, ...props }) => {
 
-  function onSubmit(form_values: Readonly<FormValues>, dispatch: Dispatch, ownProps: DashboardAddModalMapProps) {
+  function onSubmit(form_values: Readonly<FormValues>, dispatch: Dispatch, ownProps: DashboardAddModalMapProps): void {
     props.add(ownProps.modal_state, form_values[ownProps.modal_state])
     onClickDiscard()
   }
 
-  function onClickDiscard() {
+  function onClickDiscard(): void {
     props.dispatchAction(HIDE.MODAL.DASHBOARD_ADDING)
     props.reset()
   }

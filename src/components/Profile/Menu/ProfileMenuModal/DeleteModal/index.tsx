@@ -5,20 +5,27 @@ import { Modal, Header } from 'semantic-ui-react'
 import { Button } from "components/Common/Button"
 import { State } from 'reducers';
 import * as Types from "utils/Types"
+import { dispatchAction } from "components/actions"
+import { HIDE } from 'actions/types';
+
 
 type DeleteModalMapProps = Readonly<{
   open: boolean,
   modal_delete_info: Types.OverloadObject<string>
 }>
 
-type DeleteModalOwnProps = Readonly<{
-  onClose: ((event: React.MouseEvent<HTMLButtonElement | HTMLElement, MouseEvent>) => void)
-  onDelete: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void)
-}>
+type DeleteModalMapActions = {
+  readonly dispatchAction: typeof dispatchAction
+}
 
-const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalOwnProps> = ({ open, modal_delete_info, ...props }) => {
+const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapActions> = ({ open, modal_delete_info, ...props }) => {
+
+  function onClickDiscard() {
+    props.dispatchAction(HIDE.MODAL.PARAMETRES)
+  }
+
   return (
-    <Modal open={open} onClose={props.onClose} basic size='small'>
+    <Modal open={open} onClose={onClickDiscard} basic size='small'>
       <Header icon='trash' content={modal_delete_info.header} />
       <Modal.Content>
         <p>
@@ -26,8 +33,8 @@ const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalOwnP
         </p>
       </Modal.Content>
       <Modal.Actions>
-        <Button onClick={props.onClose} label="Discard" />
-        <Button onClick={props.onDelete} btn="negative" label="Delete" />
+        <Button onClick={onClickDiscard} label="Discard" />
+        <Button onClick={() => console.log("Delete")} btn="negative" label="Delete" />
       </Modal.Actions>
     </Modal>
   )
@@ -40,6 +47,6 @@ function mapStateToProps(state: State): DeleteModalMapProps {
   }
 }
 
-const ConnectedDeleteModal = connect<DeleteModalMapProps, {}, DeleteModalOwnProps, State>(mapStateToProps)(DeleteModal)
+const ConnectedDeleteModal = connect<DeleteModalMapProps, DeleteModalMapActions, {}, State>(mapStateToProps, { dispatchAction })(DeleteModal)
 
 export { ConnectedDeleteModal as DeleteModal }

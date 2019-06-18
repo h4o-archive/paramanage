@@ -15,10 +15,10 @@ type TopMenuMapProps = {
   readonly nothing_selected: boolean
 }
 
-type TopMenuMapActions = {
+type TopMenuMapActions = Readonly<{
   updateProfile: typeof updateProfile,
   dispatchAction: typeof dispatchAction
-}
+}>
 
 const ProfileMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
 

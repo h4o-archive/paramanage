@@ -11,10 +11,9 @@ import { _ } from "utils"
 import { State } from "reducers";
 import { Category } from "./Category"
 import { ParametresInCategory } from "./ParametresInCategory"
-import { SelectedParametresState } from "./parametres_reducer";
 
 type ParametresMapProps = Readonly<{
-  selected: SelectedParametresState,
+  no_selected: boolean,
   profile_name: string
 }>
 
@@ -28,13 +27,14 @@ type ParametresOwnProps = {
   readonly id: string
 }
 
-const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActions & ParametresOwnProps> = ({ selected, profile_name, ...props }) => {
+const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActions & ParametresOwnProps> = ({ no_selected, profile_name, ...props }) => {
 
   useEffect(() => {
+    console.log("use effect in Parametres")
     props.fetchProfile(props.id)
-    if (_.isEmpty(selected)) props.toggleSelectMode(false)
+    if (no_selected) props.toggleSelectMode(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected])
+  }, [no_selected])
 
   return (
     <div className="ui text container">
@@ -66,7 +66,7 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
 
 function mapStateToProps(state: State): ParametresMapProps {
   return {
-    selected: state.parametres_reducer.selected,
+    no_selected: _.isEmpty(state.parametres_reducer.selected),
     profile_name: state.parametres_reducer.profile.editable_key
   }
 }
