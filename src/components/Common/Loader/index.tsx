@@ -5,7 +5,6 @@ import { Dimmer, Loader as SemanticLoader, Segment } from 'semantic-ui-react'
 import { State } from "reducers"
 import { dispatchAction } from "components/actions"
 import { store } from "reducers"
-import { _ } from "utils"
 
 type LoaderMapProps = {
   readonly active: boolean

@@ -1,5 +1,7 @@
 import React from 'react'
 import { Modal } from 'semantic-ui-react'
+import { connect } from "react-redux"
+import { submit } from "redux-form"
 
 import { Button } from "./Button"
 
@@ -11,17 +13,17 @@ type FieldInputProps = Readonly<{
     touched?: boolean
   }>,
   color?: string
-  readonly?: boolean,
+  readOnly?: boolean,
 }>
 /**
  *
  * @description input for Redux Field
  */
-export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readonly }) => {
+export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readOnly }) => {
   return (
     <div className="field">
       <label style={{ color }}>{label}</label>
-      <input readonly={readonly || false} {...input} />
+      <input readOnly={readOnly || false} {...input} />
       {touched && error &&
         <div className="ui error message" >
           <p>{error}</p>
@@ -31,32 +33,36 @@ export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, la
   )
 }
 
-type ModalFormProps = Readonly<{
+type ModalFormMapActions = {
+  readonly submit: typeof submit
+}
+
+type ModalFormOwnProps = Readonly<{
   open: boolean,
   header?: string,
+  form_name: string,
   onClickDiscard?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-  onSubmit?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
-  handleSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
 }>
 /**
  *
- * @description modal with Form
+ * @description modal with Redux-Form
  */
-export const ModalForm: React.FunctionComponent<ModalFormProps> = ({ open = false, header, children: Form, onClickDiscard, onSubmit, handleSubmit }) => {
+const ModalForm: React.FunctionComponent<ModalFormMapActions & ModalFormOwnProps> = ({ open = false, form_name, header, children: Form, onClickDiscard, ...props }) => {
   return (
     <Modal open={open} onClose={onClickDiscard}>
       <Modal.Header>{header}</Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          <form className="ui form error" onSubmit={handleSubmit} >
-            {Form}
-          </form>
+          {Form}
         </Modal.Description>
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClickDiscard} label="Discard" />
-        <Button onClick={onSubmit} btn="primary" label="Save" />
+        <Button onClick={() => props.submit(form_name)} btn="primary" label="Save" />
       </Modal.Actions>
     </Modal>
   )
 }
+
+const ConnectedModalForm = connect<{}, ModalFormMapActions, ModalFormOwnProps, {}>(null, { submit })(ModalForm)
+export { ConnectedModalForm as ModalForm }
