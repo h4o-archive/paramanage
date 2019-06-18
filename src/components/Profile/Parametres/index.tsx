@@ -30,7 +30,6 @@ type ParametresOwnProps = {
 const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActions & ParametresOwnProps> = ({ no_selected, profile_name, ...props }) => {
 
   useEffect(() => {
-    console.log("use effect in Parametres")
     props.fetchProfile(props.id)
     if (no_selected) props.toggleSelectMode(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
