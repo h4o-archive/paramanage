@@ -27,25 +27,13 @@ type EditAddFieldArrayMapProps = {
 const EditAddFieldArray: React.FunctionComponent<EditAddFieldArrayMapProps & InjectedFormProps<Readonly<Types.OverloadObject<string>>, EditAddFieldArrayMapProps>> = ({ modal_state, search_source, workaround_init_values, ...props }) => {
 
   function onSubmit(form_values: any): void {
-    console.log("TCL: onSubmit -> form_values", form_values)
   }
 
   const FieldArray: React.FunctionComponent<WrappedFieldArrayProps<FormData>> = ({ fields }) => {
 
-    const [categorys_color, setCategorysColor] = useState({} as Readonly<Types.OverloadObject<Color>>)
-
-    useEffect(() => {
-      if (workaround_init_values.edit) {
-        fields.map((parametre, index) => {
-          setCategorysColor({ [parametre]: { hex: (workaround_init_values.edit as FormData[])[index].category_color } })
-          return null
-        })
-      }
-    }, [])
-
     function handleChangeColor(parametre: string) {
       return (color: Color) => {
-        setCategorysColor({ [parametre]: color })
+        props.change(`${parametre}.category_color`, color.hex)
       }
     }
 
@@ -57,11 +45,10 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldArrayMapProps & Inj
 
     return (
       <React.Fragment>
-        {modal_state === "add" && <Button onClick={(e) => { e.preventDefault(); fields.push({} as FormData) }} btn="primary" label="Add parameter" />}
+        {modal_state === "add" && <Button onClick={(e) => { e.preventDefault(); fields.push({ category_color: COLOR.GREY } as FormData) }} btn="primary" label="Add parameter" />}
         {fields.map((parametre, index) => {
 
-          const category_color = categorys_color[parametre] || { hex: COLOR.GREY }
-          props.change(`${parametre}.category_color`, category_color.hex)
+          const category_color = { hex: fields.get(index).category_color || COLOR.GREY }
           let font_and_background_color = _.contrastColorFontAndBackground(category_color)
 
           return (
