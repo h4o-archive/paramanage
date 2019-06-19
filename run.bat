@@ -1,2 +1,2 @@
-START /B "" npm run pazam
+START /B "" npm run paramanage
 START /B "" npm start

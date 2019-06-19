@@ -1,2 +1,2 @@
-npm run config-pazam-window
+npm run config-paramanage-window
 exit

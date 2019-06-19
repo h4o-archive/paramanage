@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { submit } from "redux-form"
 
 import { Button } from "./Button"
+import { ColorPicker } from './ColorPicker';
 
 type FieldInputProps = Readonly<{
   input?: any,
@@ -14,15 +15,16 @@ type FieldInputProps = Readonly<{
   }>,
   color?: string
   readOnly?: boolean,
+  ColorPicker?: React.ReactNode
 }>
 /**
  *
  * @description input for Redux Field
  */
-export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readOnly }) => {
+export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readOnly, ColorPicker }) => {
   return (
     <div className="field">
-      <label style={{ color }}>{label}</label>
+      <label style={{ color }}>{label} {ColorPicker}</label>
       <input readOnly={readOnly || false} {...input} />
       {touched && error &&
         <div className="ui error message" >
