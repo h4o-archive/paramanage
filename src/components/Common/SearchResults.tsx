@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from "react"
+import { connect } from "react-redux"
+
+import { State } from "reducers";
+
+type SearchResultsMapProps = {
+  readonly search_term: string
+}
 
 type SearchResultsOwnProps = {
   getData: () => string,
   source: string[],
-  onClick: (result: string) => void
+  onClick: (result: string) => void,
+  style?: React.CSSProperties
 }
 
-export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ getData, source, onClick }) => {
+const SearchResults: React.FunctionComponent<SearchResultsMapProps & SearchResultsOwnProps> = ({ search_term, style, source, onClick }) => {
 
-  const search_term = getData() || ""
   const [results, setResults] = useState([] as string[])
 
   useEffect(() => {
@@ -22,12 +29,16 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
       }, [] as string[])
       setResults(temp)
     }
+
+    return function cleanup() {
+      setResults([])
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search_term])
 
   if (results.length > 0) {
     return (
-      <div className="ui search">
+      <div className="ui search" style={style}>
         <div className="results transition visible">
           {results.map(result => {
             return (
@@ -43,3 +54,12 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
   }
   return null
 }
+
+function mapStateToProps(state: State, ownProps: SearchResultsOwnProps) {
+  return {
+    search_term: ownProps.getData() || ""
+  }
+}
+
+const ConnectedSearchResults = connect<SearchResultsMapProps, {}, SearchResultsOwnProps, State>(mapStateToProps)(SearchResults)
+export { ConnectedSearchResults as SearchResults }

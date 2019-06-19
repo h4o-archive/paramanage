@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Dropdown as SemanticDropdown } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import { Form, Field, reduxForm, InjectedFormProps, formValueSelector, FormErrors } from "redux-form"
+import { Form, Field, reduxForm, InjectedFormProps, formValueSelector, FormErrors, getFormMeta } from "redux-form"
 
 import { dispatchAction } from "components/actions"
 import { HIDE } from "actions/types"
@@ -29,6 +29,7 @@ const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditCon
 
   const [source_mutual_profiles, setSourceMutualProfiles] = useState([] as string[])
   const [source_profiles, setSourceProfiles] = useState([] as string[])
+  const [focus, setFocus] = useState("")
 
   async function fetchSearchSources(): Promise<void> {
     const { data: profiles } = await api.get({ url: "/profiles" })
@@ -47,7 +48,6 @@ const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditCon
   }, [])
 
   function onSubmit(form_values: FormValues): void {
-    console.log("TCL: form_values", form_values)
     // props.updateConfig(this.state, this.props.config_or_plage)
     onClickDiscard()
   }
@@ -79,10 +79,10 @@ const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditCon
           value={getField("status")}
         />
         <Field name={"status"} style={{ display: "none" }} component={FieldInput} label={`Status`} />
-        <Field name={"profile"} component={FieldInput} label={`Profile`} />
-        <SearchResults getData={() => { return getField("profile") }} source={source_profiles} onClick={(data) => props.change("profile", data)} />
-        <Field name={"mutual_profile"} component={FieldInput} label={`Mutual Profile`} />
-        <SearchResults getData={() => { return getField("mutual_profile") }} source={source_mutual_profiles} onClick={(data) => props.change("mutual_profile", data)} />
+        <Field onFocus={() => setFocus("profile")} autoComplete="off" name={"profile"} component={FieldInput} label={`Profile`} />
+        {focus === "profile" && <SearchResults style={{ position: "relative", top: "-1em" }} getData={() => { return getField("profile") }} source={source_profiles} onClick={(data) => props.change("profile", data)} />}
+        <Field onFocus={() => setFocus("mutual_profile")} autoComplete="off" name={"mutual_profile"} component={FieldInput} label={`Mutual Profile`} />
+        {focus === "mutual_profile" && <SearchResults style={{ position: "relative", top: "-1em" }} getData={() => { return getField("mutual_profile") }} source={source_mutual_profiles} onClick={(data) => props.change("mutual_profile", data)} />}
       </Form>
     </ModalForm>
   )

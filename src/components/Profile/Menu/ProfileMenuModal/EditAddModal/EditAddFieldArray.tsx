@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from "react-redux"
 import { Field, WrappedFieldArrayProps } from "redux-form"
 
@@ -27,6 +27,8 @@ type EditAddFieldOwnProps = {
 
 const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, default_category, categorys, ...props }) => {
 
+  const [category_focus, setCategoryFocus] = useState(false)
+
   function handleChangeColor(parametre: string): (color: Color) => void {
     return (color) => {
       props.changeForm(`${parametre}.category_color`, color.hex)
@@ -53,7 +55,8 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
 
             <Field name={`${parametre}.key`} readOnly={!(modal_state === "add")} component={FieldInput} label="key" color={font_and_background_color.color} />
             <Field name={`${parametre}.value`} component={FieldInput} label="value" color={font_and_background_color.color} />
-            <Field name={`${parametre}.category`}
+            <Field onFocus={() => setCategoryFocus(true)} onBlur={() => setCategoryFocus(false)}
+              autoComplete="off" name={`${parametre}.category`}
               component={FieldInput}
               label="category"
               color={font_and_background_color.color}
@@ -62,11 +65,12 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
               }}
             />
 
-            <SearchResults
+            {category_focus && <SearchResults
+              style={{ position: "relative", top: "-1em" }}
               getData={() => { return fields.get(index).category }}
               onClick={onClickOfSearchResult(parametre)}
               source={search_source}
-            />
+            />}
           </div>
         )
       })}
