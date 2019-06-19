@@ -21,6 +21,7 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
       }, [] as string[])
       setResults(temp)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search_term])
 
   console.log("TCL: results", results)

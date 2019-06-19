@@ -7,21 +7,29 @@ import { State } from 'reducers';
 import * as Types from "utils/Types"
 import { dispatchAction } from "components/actions"
 import { HIDE } from 'actions/types';
+import { deleteParametres } from '../actions';
+import { SelectedParametresState } from 'components/Profile/Parametres/parametres_reducer';
 
 
 type DeleteModalMapProps = Readonly<{
   open: boolean,
-  modal_delete_info: Types.OverloadObject<string>
+  modal_delete_info: Types.OverloadObject<string>,
+  selected: SelectedParametresState
 }>
 
-type DeleteModalMapActions = {
-  readonly dispatchAction: typeof dispatchAction
-}
+type DeleteModalMapActions = Readonly<{
+  dispatchAction: typeof dispatchAction,
+  deleteParametres: typeof deleteParametres
+}>
 
-const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapActions> = ({ open, modal_delete_info, ...props }) => {
+const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapActions> = ({ open, modal_delete_info, selected, ...props }) => {
 
   function onClickDiscard() {
     props.dispatchAction(HIDE.MODAL.PARAMETRES)
+  }
+
+  function onDelete() {
+    props.deleteParametres(selected)
   }
 
   return (
@@ -34,7 +42,7 @@ const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapA
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={onClickDiscard} label="Discard" />
-        <Button onClick={() => console.log("Delete")} btn="negative" label="Delete" />
+        <Button onClick={onDelete} btn="negative" label="Delete" />
       </Modal.Actions>
     </Modal>
   )
@@ -43,10 +51,11 @@ const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapA
 function mapStateToProps(state: State): DeleteModalMapProps {
   return {
     open: state.delete_modal_reducer.open,
-    modal_delete_info: state.delete_modal_reducer.data.delete
+    modal_delete_info: state.delete_modal_reducer.data.delete,
+    selected: state.parametres_reducer.selected
   }
 }
 
-const ConnectedDeleteModal = connect<DeleteModalMapProps, DeleteModalMapActions, {}, State>(mapStateToProps, { dispatchAction })(DeleteModal)
+const ConnectedDeleteModal = connect<DeleteModalMapProps, DeleteModalMapActions, {}, State>(mapStateToProps, { dispatchAction, deleteParametres })(DeleteModal)
 
 export { ConnectedDeleteModal as DeleteModal }

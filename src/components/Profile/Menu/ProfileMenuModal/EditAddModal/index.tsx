@@ -11,21 +11,20 @@ import { HIDE } from 'actions/types'
 import { dispatchAction } from "components/actions"
 import { EditAddFieldArray } from "./EditAddFieldArray"
 import { ProfileMenuModalState } from './edit_add_modal_reducer';
+import { updateParametres } from '../actions';
 
 type EditAddModalMapProps = Readonly<{
   open: boolean,
   modal_info: Types.OverloadObject<string>,
+  profileId: string
 }>
 
 type EditAddModalMapActions = Readonly<{
-  dispatchAction: typeof dispatchAction
+  dispatchAction: typeof dispatchAction,
+  updateParametres: typeof updateParametres
 }>
 
-type FormValues = {
-  readonly [key in ProfileMenuModalState]?: Readonly<FormFields>[]
-}
-
-const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions & InjectedFormProps<FormValues, EditAddModalMapProps & EditAddModalMapActions>> = ({ open, modal_info, ...props }) => {
+const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions & InjectedFormProps<FormValues, EditAddModalMapProps & EditAddModalMapActions>> = ({ open, modal_info, profileId, ...props }) => {
 
   function onClickDiscard() {
     props.dispatchAction(HIDE.MODAL.PARAMETRES)
@@ -33,7 +32,7 @@ const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalM
   }
 
   function onSubmit(form_values: FormValues): void {
-    console.log("TCL: form_values", form_values)
+    props.updateParametres((form_values[modal_info.key as ProfileMenuModalState] as FormFields[]), profileId)
   }
 
   return (
@@ -68,6 +67,7 @@ function mapStateToProps(state: State) {
     initialValues,
     open: state.edit_add_modal_reducer.open,
     modal_info: state.edit_add_modal_reducer.data[state.edit_add_modal_reducer.modal_state],
+    profileId: state.parametres_reducer.profile.id
   }
 }
 
@@ -75,6 +75,7 @@ type Errors = {
   [key in ProfileMenuModalState]?: FormFields[]
 }
 
+// return any to be compatible with reduxForm. Current version of FormErrors Redux do not support FieldArray form values
 function validate(form_values: FormValues): any {
   let errors = {} as Errors
 
@@ -97,7 +98,7 @@ function validate(form_values: FormValues): any {
   return errors
 }
 
-const ConnectedEditAddModal = connect<EditAddModalMapProps, EditAddModalMapActions, {}, State>(mapStateToProps, { dispatchAction })(
+const ConnectedEditAddModal = connect<EditAddModalMapProps, EditAddModalMapActions, {}, State>(mapStateToProps, { dispatchAction, updateParametres })(
   reduxForm<FormValues, EditAddModalMapProps & EditAddModalMapActions>({
     form: FORM_NAME.EDIT_ADD_MODAL,
     validate
@@ -111,4 +112,8 @@ export type FormFields = {
   value: string
   category: string,
   category_color: string
+}
+
+export type FormValues = {
+  readonly [key in ProfileMenuModalState]?: Readonly<FormFields>[]
 }
