@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { connect } from "react-redux"
 
 import { State } from "reducers";
@@ -17,21 +17,25 @@ type SearchResultsOwnProps = {
 const SearchResults: React.FunctionComponent<SearchResultsMapProps & SearchResultsOwnProps> = ({ search_term, style, source, onClick }) => {
 
   const [results, setResults] = useState([] as string[])
+  const [clicked, setClicked] = useState(false)
+  const prev_search_tem = useRef("")
 
   useEffect(() => {
     if (search_term.length > 0) {
       const temp = source.reduce((results, item) => {
         if (item.search(search_term) !== -1) {
           if (item.length !== search_term.length) results.push(item)
-          else onClick(item)
+          else if (prev_search_tem.current !== "" && !clicked) onClick(item)
         }
         return results
       }, [] as string[])
       setResults(temp)
-    }
 
-    return function cleanup() {
-      setResults([])
+      prev_search_tem.current = search_term
+      return function cleanup() {
+        setClicked(false)
+        setResults([])
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search_term])
@@ -43,7 +47,7 @@ const SearchResults: React.FunctionComponent<SearchResultsMapProps & SearchResul
           {results.map(result => {
             return (
               // TODO passing child result element
-              <div key={result} className="result" onClick={() => onClick(result)}>
+              <div key={result} className="result" onClick={() => { onClick(result); setClicked(true) }}>
                 {result}
               </div>
             )

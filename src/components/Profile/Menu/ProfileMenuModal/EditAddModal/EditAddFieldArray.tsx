@@ -53,9 +53,9 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
         return (
           <div className={`ui tertiary inverted segment`} style={{ ...font_and_background_color }} key={index} >
 
-            <Field name={`${parametre}.key`} readOnly={!(modal_state === "add")} component={FieldInput} label="key" color={font_and_background_color.color} />
-            <Field name={`${parametre}.value`} component={FieldInput} label="value" color={font_and_background_color.color} />
-            <Field onFocus={() => setCategoryFocus(true)} onBlur={() => setCategoryFocus(false)}
+            <Field onFocus={() => setCategoryFocus(false)} name={`${parametre}.key`} readOnly={!(modal_state === "add")} component={FieldInput} label="key" color={font_and_background_color.color} />
+            <Field onFocus={() => setCategoryFocus(false)} name={`${parametre}.value`} component={FieldInput} label="value" color={font_and_background_color.color} />
+            <Field onFocus={() => setCategoryFocus(true)}
               autoComplete="off" name={`${parametre}.category`}
               component={FieldInput}
               label="category"
