@@ -21,9 +21,9 @@ type FieldInputProps = Readonly<{
  *
  * @description input for Redux Field
  */
-export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readOnly, ColorPicker }) => {
+export const FieldInput: React.FunctionComponent<FieldInputProps> = ({ input, label, meta: { error, touched }, color, readOnly, ColorPicker, ...props }) => {
   return (
-    <div className="field">
+    <div className="field" {...props}>
       <label style={{ color }}>{label} {ColorPicker}</label>
       <input readOnly={readOnly || false} {...input} />
       {touched && error &&

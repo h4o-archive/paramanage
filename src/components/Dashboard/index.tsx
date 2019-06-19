@@ -4,6 +4,7 @@ import { Button } from "components/Common/Button";
 import { PlatformsDropdown, VersionsDropdown, EnvironmentsDashboard } from "components/Dashboard/Metadatas";
 import { DashboardAddDropdownButton, DashboardAddModal } from "components/Dashboard/Add"
 import { Configs } from "components/Dashboard/Configs";
+import { EditConfigModal } from "./Configs/EditConfigModal";
 
 export const Dashboard: React.FunctionComponent = () => {
 
@@ -38,6 +39,7 @@ export const Dashboard: React.FunctionComponent = () => {
             </EnvironmentsDashboard>
           </div>
         </div>
+        <EditConfigModal />
 
         <div className="row">
           <div className="right aligned column">

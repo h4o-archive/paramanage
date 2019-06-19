@@ -12,7 +12,8 @@ export const DASHBOARD_ADD_MODAL_STATE = {
 
 export const FORM_NAME = {
   DASHBOARD_ADD_MODAL: "DASBOARD_ADD",
-  EDIT_ADD_MODAL: "EDIT_ADD"
+  EDIT_ADD_MODAL: "EDIT_ADD",
+  EDIT_CONFIG_MODAL: "EDIT_CONFIG"
 } as const
 
 export const COLOR = {

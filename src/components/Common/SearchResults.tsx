@@ -25,7 +25,6 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search_term])
 
-  console.log("TCL: results", results)
   if (results.length > 0) {
     return (
       <div className="ui search">
