@@ -1,4 +1,4 @@
-import lodash, { LoDashStatic } from "lodash"
+import lodash, { LoDashStatic, MemoizedFunction } from "lodash"
 import * as Types from "./Types"
 import { Color } from "components/Common/ColorPicker";
 
@@ -30,7 +30,7 @@ function compareObjectAscendinBaseOnKey<T, K extends keyof T>(key: K): ((a: T, b
   }
 }
 
-const memoize = ((func: Types.Function, resolver: (...args: any[]) => string): Types.Function => {
+const memoize: LoDashStatic["memoize"] = function (func, resolver) {
   if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
     throw new TypeError('Expected a function')
   }
@@ -46,12 +46,11 @@ const memoize = ((func: Types.Function, resolver: (...args: any[]) => string): T
     return result
   }
   memoized.clearCache = () => {
-    // @ts-ignore
-    memoized.cache.clear()
+    if (memoized.cache.clear) memoized.cache.clear()
   }
   memoized.cache = new (memoize.Cache || Map)()
   return memoized
-}) as LoDashStatic["memoize"]
+} as LoDashStatic["memoize"]
 
 function hashText(text: string): string {
   let hash = 0, chr: number;

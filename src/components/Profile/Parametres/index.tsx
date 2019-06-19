@@ -39,7 +39,6 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [no_selected])
 
-  console.log("TCL: profile_name", profile_name)
   return (
     <div className="ui text container">
 

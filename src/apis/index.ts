@@ -4,20 +4,53 @@ import { _ } from "utils"
 import { store } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE, RESET } from "actions/types"
 import * as Types from "utils/Types"
+import { MemoizedFunction } from "lodash";
 
 function createApiInstance(): Readonly<API> {
+
+  type MemoizedFunctionWithDispatchActionIntegrated = MemoizedFunction & { request: { method: string } & APIparams<string> }
+
+  type MemoizeWithDispatchActionIntegrated = <T extends (...args: any) => any>(func: T, resolver?: (...args: any[]) => any) => T & MemoizedFunctionWithDispatchActionIntegrated
 
   function createAxiosInstance(): AxiosInstance {
     let axios_instance = axios.create({
       baseURL: `${process.env.REACT_APP_LOCAL_HOST || "http://localhost"}:3003`
     })
-    axios_instance.get = _.memoize(axios_instance.get)
+
+    axios_instance.get = (function (func, resolver) {
+      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
+        throw new TypeError('Expected a function')
+      }
+      const memoized: MemoizedFunctionWithDispatchActionIntegrated = function (this: any, ...args: any[]): any {
+        const key = resolver ? resolver.apply(this, args) : args[0]
+        const cache = memoized.cache
+
+        if (cache.has(key)) {
+          return { result: cache.get(key), api_call_id: null }
+        }
+        const api_call_id = notifyStartRequest(memoized.request)
+        try {
+          const result = func.apply(this, args)
+          memoized.cache = cache.set(key, result) || cache
+          return { result, api_call_id }
+        } catch (error) {
+          return { result: { error }, api_call_id }
+        }
+      }
+      memoized.request = { method: "", url: "" } as { method: string } & APIparams<string>
+      memoized.clearCache = () => {
+        if (memoized.cache.clear) memoized.cache.clear()
+      }
+      memoized.cache = new Map()
+      return memoized
+    } as MemoizeWithDispatchActionIntegrated)(axios_instance.get)
+
     return axios_instance
   }
 
-  function parseUrlToSubAPI(url: string): string {
+  function parseUrlToSubAPI(url: string): keyof typeof sub_api {
     const result = url.match(/([^/]+$)/)
-    return result ? result[0] : "platform"
+    return (result ? result[0] : "platform") as keyof typeof sub_api
   }
 
   function handleCache(method: string, url: string): void {
@@ -95,29 +128,39 @@ function createApiInstance(): Readonly<API> {
 
   const api: Readonly<API> = _.reduce(sub_api.platforms, (unfinish_api, method) => {
     unfinish_api[method] = async <I>({ url, id, params, json, api_call_id }: APIparams<I>): Promise<typeof method extends "get" ? ResponseAPI<I> : Types.OverloadObject> => {
-      api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id })
-      handleCache(method, url)
-
-      // console.log("TCL: Logging", new Date())
-      // console.log("TCL: method", method)
-      // console.log("TCL: url", url)
-      // console.log("TCL: id", id)
-      // console.log("TCL: params", params)
-      // console.log("TCL: json", json)
-      // console.log("TCL: api_call_id", api_call_id)
-
       try {
+        handleCache(method, url)
         const constructed_url = constructURL({ method, url, id, params })
+
+        let result: any = {}
+        if (method !== "get") {
+          api_call_id = notifyStartRequest({ method, url, id, params, json, api_call_id });
+          // @ts-ignore
+          ({ result } = await sub_api[parseUrlToSubAPI(url)][method](constructed_url, json))
+        } else {
+          // @ts-ignore
+          sub_api[parseUrlToSubAPI(url)][method].request = { method, url, id, params, json, api_call_id };
+          // @ts-ignore
+          ({ result, api_call_id } = await sub_api[parseUrlToSubAPI(url)][method](constructed_url, json))
+          if (result.error) throw result.error
+        }
+
+        // console.log("TCL: Logging", new Date())
+        // console.log("TCL: method", method)
+        // console.log("TCL: url", url)
+        // console.log("TCL: id", id)
+        // console.log("TCL: params", params)
+        // console.log("TCL: json", json)
+        // console.log("TCL: api_call_id", api_call_id)
+
         // console.log("TCL: constructed_url", constructed_url)
         // console.log("TCL: sub_api_key", parseUrlToSubAPI(url))
-        // @ts-ignore
-        const result = await sub_api[parseUrlToSubAPI(url)][method](constructed_url, json)
         // console.log("TCL: result", result)
-        notifyFullfillRequest(api_call_id)
+        if (api_call_id) notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {
         console.error(error)
-        notifyRejectRequest(api_call_id)
+        if (api_call_id) notifyRejectRequest(api_call_id)
         return { data: id ? {} as DataAPI : [] as DataAPI[], error }
       }
     }
