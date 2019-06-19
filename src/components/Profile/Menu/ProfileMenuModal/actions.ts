@@ -25,7 +25,7 @@ export function updateParametres(values: FormFields[]): ReduxThunk {
   }
 }
 
-async function __addOrModifyCategoryIfNecessary__(categorys: CategorysState, { category, category_color }: { category: string, category_color: string }) {
+async function __addOrModifyCategoryIfNecessary__(categorys: CategorysState, { category, category_color }: { category: string, category_color: string }): Promise<void> {
   if (!categorys[_.hashText(category)]) {
     await api.post({
       url: `/categorys`, json: {
@@ -43,14 +43,14 @@ async function __addOrModifyCategoryIfNecessary__(categorys: CategorysState, { c
 export function deleteParametres(selected: SelectedParametresState): ReduxThunk {
   return async (dispatch, getState) => {
     for (let key in selected) {
-      let parametre = getState().parametres_reducer.parametres[key]
+      const parametre = getState().parametres_reducer.parametres[key]
       await api.delete({ url: `/parametres`, id: parametre.id })
       await dispatch({
         type: DESELECT.PARAMETRE,
         payload: parametre.id
       })
       if (parametre.categoryId !== getState().parametres_reducer.default_category_id) {
-        let { data: parametres_of_category } = await api.get({ url: `/categorys/${parametre.categoryId}/parametres` })
+        const { data: parametres_of_category } = await api.get({ url: `/categorys/${parametre.categoryId}/parametres` })
         if (_.isEmpty(parametres_of_category)) await api.delete({ url: `categorys`, id: parametre.categoryId })
       }
     }

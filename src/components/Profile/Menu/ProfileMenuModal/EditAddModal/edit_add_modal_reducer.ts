@@ -13,7 +13,7 @@ const init = {
     }
   },
   modal_state: "add" as ProfileMenuModalState
-}
+} as const
 
 export function edit_add_modal_reducer(state = init, action: Action): typeof init {
   switch (action.type) {

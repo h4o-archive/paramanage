@@ -24,11 +24,11 @@ type DeleteModalMapActions = Readonly<{
 
 const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapActions> = ({ open, modal_delete_info, selected, ...props }) => {
 
-  function onClickDiscard() {
+  function onClickDiscard(): void {
     props.dispatchAction(HIDE.MODAL.PARAMETRES)
   }
 
-  function onDelete() {
+  function onDelete(): void {
     onClickDiscard()
     props.deleteParametres(selected)
   }

@@ -14,27 +14,27 @@ import { FormFields } from '.';
 import { CategoryDB } from 'apis';
 import { CategorysState } from 'components/Profile/Parametres/parametres_reducer';
 
-type EditAddFieldMapProps = {
+type EditAddFieldMapProps = Readonly<{
   modal_state: ProfileMenuModalState,
   search_source: string[],
   default_category: CategoryDB,
   categorys: CategorysState
-}
+}>
 
 type EditAddFieldOwnProps = {
-  changeForm: (field: string, data: string) => void
+  readonly changeForm: (field: string, data: string) => void
 }
 
 const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, default_category, categorys, ...props }) => {
 
-  function handleChangeColor(parametre: string) {
-    return (color: Color) => {
+  function handleChangeColor(parametre: string): (color: Color) => void {
+    return (color) => {
       props.changeForm(`${parametre}.category_color`, color.hex)
     }
   }
 
-  function onClickOfSearchResult(parametre: string) {
-    return (category: string) => {
+  function onClickOfSearchResult(parametre: string): (category: string) => void {
+    return (category) => {
       props.changeForm(`${parametre}.category`, category)
       props.changeForm(`${parametre}.category_color`, categorys[_.hashText(category)].color)
     }
@@ -46,7 +46,7 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
       {fields.map((parametre, index) => {
 
         const category_color = { hex: fields.get(index).category_color || COLOR.GREY }
-        let font_and_background_color = _.contrastColorFontAndBackground(category_color)
+        const font_and_background_color = _.contrastColorFontAndBackground(category_color)
 
         return (
           <div className={`ui tertiary inverted segment`} style={{ ...font_and_background_color }} key={index} >

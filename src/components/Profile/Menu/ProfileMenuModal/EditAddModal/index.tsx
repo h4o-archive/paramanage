@@ -23,9 +23,13 @@ type EditAddModalMapActions = Readonly<{
   updateParametres: typeof updateParametres
 }>
 
+/**
+ * 
+ * @description Edit or Add modal of parameters in Profile page 
+ */
 const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions & InjectedFormProps<FormValues, EditAddModalMapProps & EditAddModalMapActions>> = ({ open, modal_info, ...props }) => {
 
-  function onClickDiscard() {
+  function onClickDiscard(): void {
     props.dispatchAction(HIDE.MODAL.PARAMETRES)
     props.reset()
   }
@@ -45,6 +49,7 @@ const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalM
   )
 }
 
+// no return type because of not well supported redux-form Typescript
 function mapStateToProps(state: State) {
 
   const modal_info = state.edit_add_modal_reducer.data[state.edit_add_modal_reducer.modal_state]
