@@ -15,8 +15,7 @@ import { updateParametres } from '../actions';
 
 type EditAddModalMapProps = Readonly<{
   open: boolean,
-  modal_info: Types.OverloadObject<string>,
-  profileId: string
+  modal_info: Types.OverloadObject<string>
 }>
 
 type EditAddModalMapActions = Readonly<{
@@ -24,7 +23,7 @@ type EditAddModalMapActions = Readonly<{
   updateParametres: typeof updateParametres
 }>
 
-const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions & InjectedFormProps<FormValues, EditAddModalMapProps & EditAddModalMapActions>> = ({ open, modal_info, profileId, ...props }) => {
+const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalMapActions & InjectedFormProps<FormValues, EditAddModalMapProps & EditAddModalMapActions>> = ({ open, modal_info, ...props }) => {
 
   function onClickDiscard() {
     props.dispatchAction(HIDE.MODAL.PARAMETRES)
@@ -32,7 +31,7 @@ const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalM
   }
 
   function onSubmit(form_values: FormValues): void {
-    props.updateParametres((form_values[modal_info.key as ProfileMenuModalState] as FormFields[]), profileId)
+    props.updateParametres((form_values[modal_info.key as ProfileMenuModalState] as FormFields[]))
     onClickDiscard()
   }
 
@@ -67,7 +66,6 @@ function mapStateToProps(state: State) {
   return {
     open: state.edit_add_modal_reducer.open,
     modal_info: state.edit_add_modal_reducer.data[state.edit_add_modal_reducer.modal_state],
-    profileId: state.parametres_reducer.profile.id,
     initialValues,
     enableReinitialize: SVGComponentTransferFunctionElement
   }

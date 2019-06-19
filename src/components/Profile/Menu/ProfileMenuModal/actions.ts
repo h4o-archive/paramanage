@@ -5,12 +5,12 @@ import { FormFields } from "./EditAddModal";
 import { ReduxThunk, DESELECT } from "actions/types";
 import { CategorysState, SelectedParametresState } from "components/Profile/Parametres/parametres_reducer";
 
-export function updateParametres(values: FormFields[], profileId: string): ReduxThunk {
+export function updateParametres(values: FormFields[]): ReduxThunk {
   return async (dispatch, getState) => {
     for (let i = 0; i < values.length; i++) {
       if (getState().parametres_reducer.parametres[_.hashText(values[i].key)]) var modify = true
       await __addOrModifyCategoryIfNecessary__(getState().parametres_reducer.categorys, { category: values[i].category, category_color: values[i].category_color })
-      let parametre_from_form = { id: _.hashText(values[i].key), key: values[i].key, value: values[i].value, categoryId: _.hashText(values[i].category), profileId }
+      let parametre_from_form = { id: _.hashText(values[i].key), key: values[i].key, value: values[i].value, categoryId: _.hashText(values[i].category), profileId: getState().parametres_reducer.profile.id }
       // ignore ts because it doesn't allow check a variable which might be undefined, which destroy beauty of JS
       // @ts-ignore
       if (modify) await api.put({ url: `/parametres`, id: parametre_from_form.id, json: parametre_from_form })

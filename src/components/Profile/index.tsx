@@ -5,13 +5,13 @@ import { DeleteModal } from "components/Profile/Menu/ProfileMenuModal/DeleteModa
 import { EditAddModal } from "components/Profile/Menu/ProfileMenuModal/EditAddModal"
 import { Parametres } from "./Parametres"
 
-export const Profile: React.FunctionComponent<{ readonly id: string }> = ({ id }) => {
+export const Profile: React.FunctionComponent<any> = ({ match }) => {
   return (
     <React.Fragment>
       <ProfileMenu />
       <DeleteModal />
       <EditAddModal />
-      <Parametres id={id} />
+      <Parametres id={match.params.id} />
     </React.Fragment>
   )
 }

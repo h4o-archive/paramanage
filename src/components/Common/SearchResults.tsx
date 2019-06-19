@@ -14,8 +14,9 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
   useEffect(() => {
     if (search_term.length > 0) {
       const temp = source.reduce((results, item) => {
-        if (item.search(search_term) !== -1 && item.length !== search_term.length) {
-          results.push(item)
+        if (item.search(search_term) !== -1) {
+          if (item.length !== search_term.length) results.push(item)
+          else onClick(item)
         }
         return results
       }, [] as string[])

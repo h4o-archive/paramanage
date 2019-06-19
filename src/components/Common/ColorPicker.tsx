@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CompactPicker } from 'react-color'
 import { Responsive } from "semantic-ui-react"
 
@@ -6,14 +6,19 @@ import { COLOR } from "utils/const"
 
 type ColorPickerOwnProps = {
   default_color?: Color,
+  color?: Color,
   onChange?: (color: Color) => void,
   style?: React.CSSProperties
 }
 
-export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onChange, style, default_color }) => {
+export const ColorPicker: React.FunctionComponent<ColorPickerOwnProps> = ({ onChange, style, default_color, color }) => {
 
   const [state_color, setStateColor] = useState(default_color || ({ hex: COLOR.GREY } as Color))
   const [state_display, setStateDisplay] = useState(false)
+
+  useEffect(() => {
+    if (color) setStateColor(color)
+  }, [color])
 
   function handleClick() {
     setStateDisplay(!state_display)

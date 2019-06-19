@@ -12,18 +12,20 @@ import { State } from 'reducers'
 import { ProfileMenuModalState } from './edit_add_modal_reducer'
 import { FormFields } from '.';
 import { CategoryDB } from 'apis';
+import { CategorysState } from 'components/Profile/Parametres/parametres_reducer';
 
 type EditAddFieldMapProps = {
   modal_state: ProfileMenuModalState,
   search_source: string[],
-  default_category: CategoryDB
+  default_category: CategoryDB,
+  categorys: CategorysState
 }
 
 type EditAddFieldOwnProps = {
   changeForm: (field: string, data: string) => void
 }
 
-const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, default_category, ...props }) => {
+const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, default_category, categorys, ...props }) => {
 
   function handleChangeColor(parametre: string) {
     return (color: Color) => {
@@ -34,6 +36,7 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
   function onClickOfSearchResult(parametre: string) {
     return (category: string) => {
       props.changeForm(`${parametre}.category`, category)
+      props.changeForm(`${parametre}.category_color`, categorys[_.hashText(category)].color)
     }
   }
 
@@ -55,7 +58,7 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
               label="category"
               color={font_and_background_color.color}
               props={{
-                ColorPicker: <ColorPicker default_color={category_color} onChange={handleChangeColor(parametre)} style={{ display: "inline", position: "relative", left: "0.3em" }} />
+                ColorPicker: <ColorPicker color={category_color} default_color={category_color} onChange={handleChangeColor(parametre)} style={{ display: "inline", position: "relative", left: "0.3em" }} />
               }}
             />
 
@@ -75,7 +78,8 @@ function mapStateToProps(state: State): EditAddFieldMapProps {
   return {
     modal_state: state.edit_add_modal_reducer.modal_state,
     search_source: Object.values(state.parametres_reducer.categorys).map(category => category.key),
-    default_category: state.parametres_reducer.categorys[state.parametres_reducer.default_category_id]
+    default_category: state.parametres_reducer.categorys[state.parametres_reducer.default_category_id],
+    categorys: state.parametres_reducer.categorys
   }
 }
 

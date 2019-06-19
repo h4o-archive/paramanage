@@ -39,6 +39,7 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [no_selected])
 
+  console.log("TCL: profile_name", profile_name)
   return (
     <div className="ui text container">
 
@@ -67,7 +68,7 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
   )
 }
 
-function mapStateToProps(state: State): ParametresMapProps {
+function mapStateToProps(state: State, ownProps: ParametresOwnProps): ParametresMapProps {
   return {
     no_selected: _.isEmpty(state.parametres_reducer.selected),
     profile_name: state.parametres_reducer.profile.editable_key
