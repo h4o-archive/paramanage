@@ -221,7 +221,7 @@ async function __getAllConfigs__(latest_versions: VersionDB[], selected_platform
     if (!_.isEmpty(configs)) all_configs = [...all_configs, ...(configs as ConfigDB[])]
   }
 
-  return all_configs
+  return all_configs.sort(_.compareObjectDescendinBaseOnKey("order"))
 }
 
 /**

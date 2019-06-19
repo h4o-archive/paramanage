@@ -74,7 +74,7 @@ async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>
     await dispatch(
       {
         type: FETCH.VERSIONS,
-        payload: _.keyBy((versions as VersionDB[]).map(item => _.omit(item, ["platformId"]), "id"))
+        payload: _.keyBy((versions as VersionDB[]).map(item => _.omit(item, ["platformId"])), "id")
       }
     )
     dispatch({
@@ -93,9 +93,16 @@ function __detectCurrentSelected__(current_selected: string, data: (Types.Overlo
   if (data.length === 0) {
     return "0"
   }
-  for (let i = 0; i < data.length; i++) {
-    if (current_selected === data[i].id) {
-      return current_selected
+  if (isNaN(data[0].order)) {
+    data.sort(_.compareObjectAscendinBaseOnKey("order"))
+  } else {
+    data.sort(_.compareObjectDescendinBaseOnKey("order"))
+  }
+  if (current_selected !== "0") {
+    for (let i = 0; i < data.length; i++) {
+      if (current_selected === data[i].id) {
+        return current_selected
+      }
     }
   }
   return data[0].id
