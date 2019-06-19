@@ -39,7 +39,7 @@ const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalM
   return (
     <ModalForm open={open} form_name={FORM_NAME.EDIT_ADD_MODAL} onClickDiscard={onClickDiscard} header={modal_info.header}>
       <Form className="ui form error" onSubmit={props.handleSubmit(onSubmit)} >
-        // TODO make pull request change type definition for FieldArray
+        {/* TODO make pull request change type definition for FieldArray */}
         <FieldArray name={modal_info.key} component={EditAddFieldArray} props={{ changeForm: props.change }} />
       </Form>
     </ModalForm>

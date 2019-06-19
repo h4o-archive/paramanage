@@ -11,17 +11,19 @@ import { FieldInput } from "components/Common/ModalForm"
 import { State } from 'reducers'
 import { ProfileMenuModalState } from './edit_add_modal_reducer'
 import { FormFields } from '.';
+import { CategoryDB } from 'apis';
 
 type EditAddFieldMapProps = {
   modal_state: ProfileMenuModalState,
-  search_source: string[]
+  search_source: string[],
+  default_category: CategoryDB
 }
 
 type EditAddFieldOwnProps = {
   changeForm: (field: string, data: string) => void
 }
 
-const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, ...props }) => {
+const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddFieldOwnProps & WrappedFieldArrayProps<Readonly<FormFields>>> = ({ fields, modal_state, search_source, default_category, ...props }) => {
 
   function handleChangeColor(parametre: string) {
     return (color: Color) => {
@@ -37,7 +39,7 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
 
   return (
     <React.Fragment>
-      {modal_state === "add" && <Button onClick={(e) => { e.preventDefault(); fields.push({ category_color: COLOR.GREY } as FormFields) }} btn="primary" label="Add parameter" />}
+      {modal_state === "add" && <Button onClick={(e) => { e.preventDefault(); fields.push({ category: default_category.key, category_color: default_category.color } as FormFields) }} btn="primary" label="Add parameter" />}
       {fields.map((parametre, index) => {
 
         const category_color = { hex: fields.get(index).category_color || COLOR.GREY }
@@ -72,7 +74,8 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
 function mapStateToProps(state: State): EditAddFieldMapProps {
   return {
     modal_state: state.edit_add_modal_reducer.modal_state,
-    search_source: Object.values(state.parametres_reducer.categorys).map(category => category.key)
+    search_source: Object.values(state.parametres_reducer.categorys).map(category => category.key),
+    default_category: state.parametres_reducer.categorys["-1807037973"]
   }
 }
 

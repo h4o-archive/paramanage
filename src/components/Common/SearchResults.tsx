@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
 type SearchResultsOwnProps = {
   getData: () => string,
@@ -9,19 +9,21 @@ type SearchResultsOwnProps = {
 export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ getData, source, onClick }) => {
 
   const search_term = getData() || ""
-  let results = [] as string[]
+  const [results, setResults] = useState([] as string[])
 
   useEffect(() => {
     if (search_term.length > 0) {
-      results = source.reduce((results, item) => {
+      const temp = source.reduce((results, item) => {
         if (item.search(search_term) !== -1 && item.length !== search_term.length) {
           results.push(item)
         }
         return results
       }, [] as string[])
+      setResults(temp)
     }
   }, [search_term])
 
+  console.log("TCL: results", results)
   if (results.length > 0) {
     return (
       <div className="ui search">
@@ -40,21 +42,3 @@ export const SearchResults: React.FunctionComponent<SearchResultsOwnProps> = ({ 
   }
   return null
 }
-
-// function mapStateToProps(state, { params = {}, ...ownProps }) {
-//   let search_term = ownProps.getData(params) || ""
-
-//   let results = []
-//   ownProps.source.map(item => {
-//     if (search_term.length > 0 && item.search(search_term) !== -1 && item.length !== search_term.length) {
-//       results.push(item)
-//     }
-//     return null
-//   })
-
-//   return {
-//     results
-//   }
-// }
-
-// export default connect(mapStateToProps)(SearchResults)
