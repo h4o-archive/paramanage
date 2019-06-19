@@ -9,6 +9,8 @@ export function fetchProfile(id: string): ReduxThunk {
     const { data: parametres } = await api.get({ url: `/profiles/${id}/parametres` })
     const { data: categorys } = await api.get({ url: `/categorys` })
 
+    // hold all categorys in state because in the current backend architecture there is no way to fetch only using category
+    // without fetching all the categorys, so we hold all in state also for async validating
     await dispatch(
       {
         type: FETCH.CATEGORYS,

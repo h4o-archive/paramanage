@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Dropdown as SemanticDropdown, Modal, Header } from 'semantic-ui-react'
+import { Dropdown as SemanticDropdown } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import { Form, Field, reduxForm, InjectedFormProps, formValueSelector } from "redux-form"
+import { Form, Field, reduxForm, InjectedFormProps, formValueSelector, FormErrors } from "redux-form"
 
 import { dispatchAction } from "components/actions"
 import { HIDE } from "actions/types"
-import { Button } from "components/Common/Button"
 import { SearchResults } from "components/Common/SearchResults"
 import { api, ProfileDB, MutualProfileDB } from "apis"
 import { State } from 'reducers';
@@ -24,12 +23,6 @@ type EditConfigModalMapProps = {
 
 type EditConfigModalMapActions = {
   dispatchAction: typeof dispatchAction
-}
-
-type FormValues = {
-  status: string,
-  profile: string,
-  mutual_profile: string
 }
 
 const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditConfigModalMapActions & InjectedFormProps<FormValues, EditConfigModalMapProps & EditConfigModalMapActions>> = ({ open, header, config, ...props }) => {
@@ -95,6 +88,17 @@ const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditCon
   )
 }
 
+function validate(form_values: FormValues): FormErrors<FormValues, string> {
+  let errors = {} as FormErrors<FormValues, string>
+
+  if (form_values) {
+    if (form_values.status === "") errors.status = "REQUIRED"
+    if (form_values.profile === "") errors.profile = "REQUIRED"
+    if (form_values.mutual_profile === "") errors.mutual_profile = "REQUIRED"
+  }
+  return errors
+}
+
 function mapStateToProps(state: State) {
   const { open, header, config } = state.edit_config_modal_reducer
   return {
@@ -112,8 +116,15 @@ function mapStateToProps(state: State) {
 
 const ConnectEditConfigModal = connect<EditConfigModalMapProps, EditConfigModalMapActions, {}, State>(mapStateToProps, { dispatchAction })(
   reduxForm<FormValues, EditConfigModalMapProps & EditConfigModalMapActions>({
-    form: FORM_NAME.EDIT_CONFIG_MODAL
+    form: FORM_NAME.EDIT_CONFIG_MODAL,
+    validate
   })(EditConfigModal)
 )
 
 export { ConnectEditConfigModal as EditConfigModal }
+
+export type FormValues = {
+  status: string,
+  profile: string,
+  mutual_profile: string
+}
