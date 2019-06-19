@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Dropdown as SemanticDropdown } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import { Form, Field, reduxForm, InjectedFormProps, formValueSelector, FormErrors, getFormMeta } from "redux-form"
+import { Form, Field, reduxForm, InjectedFormProps, formValueSelector, FormErrors } from "redux-form"
 
 import { dispatchAction } from "components/actions"
 import { HIDE } from "actions/types"
@@ -13,7 +13,7 @@ import { ModalForm, FieldInput } from 'components/Common/ModalForm';
 import { FORM_NAME, CONFIG_STATUS } from 'utils/const';
 import { _ } from "utils"
 import { store } from "reducers"
-// import { updateConfig } from "./actions"
+import { updateConfig } from "./actions"
 
 type EditConfigModalMapProps = {
   open: boolean,
@@ -22,7 +22,8 @@ type EditConfigModalMapProps = {
 }
 
 type EditConfigModalMapActions = {
-  dispatchAction: typeof dispatchAction
+  dispatchAction: typeof dispatchAction,
+  updateConfig: typeof updateConfig
 }
 
 const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditConfigModalMapActions & InjectedFormProps<FormValues, EditConfigModalMapProps & EditConfigModalMapActions>> = ({ open, header, config, ...props }) => {
@@ -48,7 +49,7 @@ const EditConfigModal: React.FunctionComponent<EditConfigModalMapProps & EditCon
   }, [])
 
   function onSubmit(form_values: FormValues): void {
-    // props.updateConfig(this.state, this.props.config_or_plage)
+    props.updateConfig(form_values)
     onClickDiscard()
   }
 
@@ -114,7 +115,7 @@ function mapStateToProps(state: State) {
   }
 }
 
-const ConnectEditConfigModal = connect<EditConfigModalMapProps, EditConfigModalMapActions, {}, State>(mapStateToProps, { dispatchAction })(
+const ConnectEditConfigModal = connect<EditConfigModalMapProps, EditConfigModalMapActions, {}, State>(mapStateToProps, { dispatchAction, updateConfig })(
   reduxForm<FormValues, EditConfigModalMapProps & EditConfigModalMapActions>({
     form: FORM_NAME.EDIT_CONFIG_MODAL,
     validate

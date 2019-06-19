@@ -30,10 +30,13 @@ const Config: React.FunctionComponent<ConfigMapActions & ConfigOwnProps> = ({ co
 
   const EditButton: React.FunctionComponent = () => {
 
-    const action_payload = {
-      label: (_.isEmpty(config.next) || config.last === "") ? config.version : `${config.version} -> ${config.last}`,
-      config
-    }
+    const action_payload = (_.isEmpty(config.next) || config.last === "") ? {
+      label: config.version,
+      config: { ...config, next: {} }
+    } : {
+        label: `${config.version} -> ${config.last}`,
+        config: config
+      }
     function onEditClick(): void {
       props.dispatchAction(SHOW.MODAL.EDIT_CONFIG, action_payload)
     }

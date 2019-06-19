@@ -1,4 +1,4 @@
-import lodash, { LoDashStatic, MemoizedFunction } from "lodash"
+import lodash, { LoDashStatic } from "lodash"
 import * as Types from "./Types"
 import { Color } from "components/Common/ColorPicker";
 

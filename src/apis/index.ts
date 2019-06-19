@@ -21,7 +21,7 @@ function createApiInstance(): Readonly<API> {
       if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
         throw new TypeError('Expected a function')
       }
-      const memoized: MemoizedFunctionWithDispatchActionIntegrated = function (this: any, ...args: any[]): any {
+      const memoized: MemoizedFunctionWithDispatchActionIntegrated = async function (this: any, ...args: any[]): Promise<any> {
         const key = resolver ? resolver.apply(this, args) : args[0]
         const cache = memoized.cache
 
@@ -30,7 +30,7 @@ function createApiInstance(): Readonly<API> {
         }
         const api_call_id = notifyStartRequest(memoized.request)
         try {
-          const result = func.apply(this, args)
+          const result = await func.apply(this, args)
           memoized.cache = cache.set(key, result) || cache
           return { result, api_call_id }
         } catch (error) {

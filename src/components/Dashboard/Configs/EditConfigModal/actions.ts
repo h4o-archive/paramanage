@@ -6,7 +6,6 @@ import { FormValues } from "."
 
 export function updateConfig({ status, profile, mutual_profile }: FormValues): ReduxThunk {
   return async (dispatch, getState) => {
-    // let profileId = _.hashText(profile)
     const { data: db_profile } = await api.get({ url: "/profiles", id: _.hashText(profile) })
     if (_.isEmpty(db_profile)) await api.post({ url: "/profiles", json: { id: _.hashText(profile), key: profile } })
 
