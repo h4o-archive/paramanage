@@ -48,7 +48,7 @@ const EditAddFieldArray: React.FunctionComponent<EditAddFieldMapProps & EditAddF
         return (
           <div className={`ui tertiary inverted segment`} style={{ ...font_and_background_color }} key={index} >
 
-            <Field name={`${parametre}.key`} readonly={!(modal_state === "add")} component={FieldInput} label="key" color={font_and_background_color.color} />
+            <Field name={`${parametre}.key`} readOnly={!(modal_state === "add")} component={FieldInput} label="key" color={font_and_background_color.color} />
             <Field name={`${parametre}.value`} component={FieldInput} label="value" color={font_and_background_color.color} />
             <Field name={`${parametre}.category`}
               component={FieldInput}
@@ -75,7 +75,7 @@ function mapStateToProps(state: State): EditAddFieldMapProps {
   return {
     modal_state: state.edit_add_modal_reducer.modal_state,
     search_source: Object.values(state.parametres_reducer.categorys).map(category => category.key),
-    default_category: state.parametres_reducer.categorys["-1807037973"]
+    default_category: state.parametres_reducer.categorys[state.parametres_reducer.default_category_id]
   }
 }
 

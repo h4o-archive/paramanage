@@ -29,6 +29,7 @@ const DeleteModal: React.FunctionComponent<DeleteModalMapProps & DeleteModalMapA
   }
 
   function onDelete() {
+    onClickDiscard()
     props.deleteParametres(selected)
   }
 

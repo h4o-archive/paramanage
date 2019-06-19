@@ -9,6 +9,7 @@ const init = {
   parametres: {} as ParametresState,
   selected: {} as SelectedParametresState,
   select_mode: false as boolean,
+  default_category_id: "-1807037973"
 } as const
 
 export function parametres_reducer(state = init, action: Action): typeof init {

@@ -33,6 +33,7 @@ const EditAddModal: React.FunctionComponent<EditAddModalMapProps & EditAddModalM
 
   function onSubmit(form_values: FormValues): void {
     props.updateParametres((form_values[modal_info.key as ProfileMenuModalState] as FormFields[]), profileId)
+    onClickDiscard()
   }
 
   return (
@@ -64,10 +65,11 @@ function mapStateToProps(state: State) {
   }
 
   return {
-    initialValues,
     open: state.edit_add_modal_reducer.open,
     modal_info: state.edit_add_modal_reducer.data[state.edit_add_modal_reducer.modal_state],
-    profileId: state.parametres_reducer.profile.id
+    profileId: state.parametres_reducer.profile.id,
+    initialValues,
+    enableReinitialize: SVGComponentTransferFunctionElement
   }
 }
 

@@ -2,7 +2,7 @@ import { api } from "apis"
 import { fetchProfile } from "components/Profile/Parametres/actions"
 import { _ } from "utils"
 import { FormFields } from "./EditAddModal";
-import { ReduxThunk } from "actions/types";
+import { ReduxThunk, DESELECT } from "actions/types";
 import { CategorysState, SelectedParametresState } from "components/Profile/Parametres/parametres_reducer";
 
 export function updateParametres(values: FormFields[], profileId: string): ReduxThunk {
@@ -15,6 +15,10 @@ export function updateParametres(values: FormFields[], profileId: string): Redux
       // @ts-ignore
       if (modify) await api.put({ url: `/parametres`, id: parametre_from_form.id, json: parametre_from_form })
       else await api.post({ url: `/parametres`, json: parametre_from_form })
+      await dispatch({
+        type: DESELECT.PARAMETRE,
+        payload: parametre_from_form.id
+      })
       _.sleep(100)
     }
     dispatch(fetchProfile(getState().parametres_reducer.profile.id))
@@ -41,8 +45,14 @@ export function deleteParametres(selected: SelectedParametresState): ReduxThunk 
     for (let key in selected) {
       let parametre = getState().parametres_reducer.parametres[key]
       await api.delete({ url: `/parametres`, id: parametre.id })
-      let { data: parametres_of_category } = await api.get({ url: `/categorys/${parametre.categoryId}/parametres` })
-      if (_.isEmpty(parametres_of_category)) await api.delete({ url: `categorys`, id: parametre.categoryId })
+      await dispatch({
+        type: DESELECT.PARAMETRE,
+        payload: parametre.id
+      })
+      if (parametre.categoryId !== getState().parametres_reducer.default_category_id) {
+        let { data: parametres_of_category } = await api.get({ url: `/categorys/${parametre.categoryId}/parametres` })
+        if (_.isEmpty(parametres_of_category)) await api.delete({ url: `categorys`, id: parametre.categoryId })
+      }
     }
     dispatch(fetchProfile(getState().parametres_reducer.profile.id))
   }
