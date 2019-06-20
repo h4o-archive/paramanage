@@ -1,4 +1,4 @@
-import { FETCH, SELECT, DESELECT, ACTIVE, DEACTIVE, SET, Action } from "actions/types"
+import { FETCH, SELECT, DESELECT, ACTIVE, DEACTIVE, SET, Action, RESET } from "actions/types"
 import { ProfileDB, CategoryDB, ParametreDB } from "apis";
 import { _, Types } from "utils"
 
@@ -25,6 +25,8 @@ export function parametres_reducer(state = init, action: Action): typeof init {
       return { ...state, select_mode: false, selected: {} }
     case SET.PROFILE_NAME:
       return { ...state, profile: { ...state.profile, editable_key: action.payload } }
+    case RESET.SELECTED_PARAMETRES:
+      return { ...state, selected: {} }
     default:
       return state;
   }

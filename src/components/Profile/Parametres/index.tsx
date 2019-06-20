@@ -6,7 +6,7 @@ import TextareaAutosize from "react-textarea-autosize"
 import { fetchProfile } from "./actions"
 import { toggleSelectMode } from "components/Profile/actions"
 import { dispatchAction } from "components/actions"
-import { SET } from "actions/types"
+import { SET, RESET } from "actions/types"
 import { _ } from "utils"
 import { State } from "reducers";
 import { Category } from "./Category"
@@ -33,6 +33,10 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
 
   useEffect(() => {
     props.fetchProfile(props.id)
+
+    return function cleanUp() {
+      props.dispatchAction(RESET.SELECTED_PARAMETRES)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
