@@ -11,14 +11,18 @@ type ParametresInCategoryMapProps = {
   readonly parametres: ParametresState
 }
 
-const ParametresInCategory: React.FunctionComponent<ParametresInCategoryMapProps> = ({ parametres }) => {
+type ParametresInCategoryOwnProps = {
+  readonly search_term: string
+}
+
+const ParametresInCategory: React.FunctionComponent<ParametresInCategoryMapProps & ParametresInCategoryOwnProps> = ({ parametres, search_term }) => {
 
   const { categoryId } = useContext(CategoryContext)
 
   return (
     <React.Fragment>
       {_.map(parametres, (parametre) => {
-        if (parametre.categoryId === categoryId) {
+        if (parametre.categoryId === categoryId && parametre.key.search(search_term) !== -1) {
           return (
             <div className="field" key={parametre.id}>
               <ParametreLabel parametre={parametre} />
@@ -35,6 +39,6 @@ function mapStateToProps(state: State): ParametresInCategoryMapProps {
   return { parametres: state.parametres_reducer.parametres }
 }
 
-const ConnectedParametresInCategory = connect<ParametresInCategoryMapProps, {}, {}, State>(mapStateToProps)(ParametresInCategory)
+const ConnectedParametresInCategory = connect<ParametresInCategoryMapProps, {}, ParametresInCategoryOwnProps, State>(mapStateToProps)(ParametresInCategory)
 
 export { ConnectedParametresInCategory as ParametresInCategory }

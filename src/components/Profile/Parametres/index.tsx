@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
 import { Form } from "semantic-ui-react"
 import TextareaAutosize from "react-textarea-autosize"
@@ -29,6 +29,8 @@ type ParametresOwnProps = {
 
 const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActions & ParametresOwnProps> = ({ no_selected, profile_name, ...props }) => {
 
+  const [search_term, setSearchTerm] = useState("")
+
   useEffect(() => {
     props.fetchProfile(props.id)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,14 +55,14 @@ const Parametres: React.FunctionComponent<ParametresMapProps & ParametresMapActi
 
       <div className="ui centered search header" style={{ fontSize: "1em" }}>
         <div className="ui icon input" style={{ width: "100vw" }}>
-          <input className="prompt" type="text" placeholder="Search..." style={{ width: "100%" }} />
+          <input className="prompt" type="text" placeholder="Search..." style={{ width: "100%" }} onChange={(e) => setSearchTerm(e.target.value)} value={search_term} />
           <i className="search icon"></i>
         </div>
         <div className="results"></div>
       </div>
 
       <Category>
-        <ParametresInCategory />
+        <ParametresInCategory search_term={search_term} />
       </Category>
 
     </div>
