@@ -2,7 +2,7 @@ import React from "react"
 
 import { ConfigProp } from ".";
 import { Button } from "components/Common/Button"
-import * as Types from "utils/Types"
+import { Types } from "utils"
 
 type ConfigVersionOwnProps = Readonly<{
   config: ConfigProp,

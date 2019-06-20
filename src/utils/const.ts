@@ -1,4 +1,4 @@
-export const PARAMETRES_MODAL_STATE = {
+export const PROFILE_MENU_MODAL_STATE = {
   ADD: "add",
   EDIT: "edit",
   DELETE: "delete"

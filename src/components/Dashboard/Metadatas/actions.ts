@@ -3,9 +3,8 @@ import { AnyAction } from "redux";
 
 import { FETCH, SELECT, ReduxThunk } from "actions/types"
 import { api, VersionDB } from "apis"
-import { _ } from "utils";
+import { _, Types } from "utils";
 import { State } from "reducers"
-import * as Types from "utils/Types"
 
 /**
  * @description fetch platforms => select one platform to display => trigger fetch versions of selected platform

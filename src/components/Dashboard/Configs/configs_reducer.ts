@@ -1,6 +1,6 @@
 import { FETCH, ADD, Action } from "actions/types"
 import { ConfigDB } from "apis";
-import * as Types from "utils/Types";
+import { Types } from "utils";
 
 const init = {
   configs: {} as Readonly<Types.OverloadObject<ConfigState>>

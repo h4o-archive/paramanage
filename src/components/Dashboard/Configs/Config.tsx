@@ -6,10 +6,9 @@ import { Dropdown } from "semantic-ui-react"
 import { ConfigProp } from ".";
 import { dispatchAction } from "components/actions";
 import { SHOW } from "actions/types"
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { CONFIG_STATUS } from "utils/const"
 import { ConfigVersion } from "./ConfigVersion"
-import * as Types from "utils/Types"
 import { State } from "reducers";
 
 

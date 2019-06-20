@@ -11,9 +11,8 @@ import { api } from 'apis';
 import { FieldInput, ModalForm } from "components/Common/ModalForm"
 import { DashboardAddModalState } from './dashboard_add_modal_reducer';
 import { State } from 'reducers';
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { DASHBOARD_ADD_MODAL_STATE, FORM_NAME } from "utils/const"
-import * as Types from "utils/Types"
 
 // NOT READ-ONLY because of modification errors object in validate function
 type FormValues = {

@@ -4,7 +4,7 @@ import { Modal, Header } from 'semantic-ui-react'
 
 import { Button } from "components/Common/Button"
 import { State } from 'reducers';
-import * as Types from "utils/Types"
+import { Types } from "utils"
 import { dispatchAction } from "components/actions"
 import { HIDE } from 'actions/types';
 import { deleteParametres } from '../actions';

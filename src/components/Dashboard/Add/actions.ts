@@ -1,11 +1,10 @@
-import { _ } from "utils";
+import { _, Types } from "utils";
 import { api, VersionDB, ConfigDB, MutualProfileDB, ProfileDB, PlatformDB } from "apis"
 import { fetchVersions, fetchPlatforms, fetchEnvironments } from "components/Dashboard/Metadatas/actions"
 import { SLEEP_TIME } from "utils/const"
 import { ReduxThunk } from "actions/types";
 import { DashboardAddModalState } from "./dashboard_add_modal_reducer";
 import { EnvironmentState } from "../Metadatas/metadatas_reducer";
-import * as Types from "utils/Types"
 
 /**
  * NAME CONVENTION

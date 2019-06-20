@@ -1,6 +1,5 @@
 import { START, FULLFILL, REJECT, RESET, QUEUE, Action } from "actions/types"
-import { _ } from "utils"
-import * as Types from "utils/Types"
+import { _, Types } from "utils"
 
 const init = {
   requests: {} as {

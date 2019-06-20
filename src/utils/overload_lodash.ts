@@ -1,5 +1,5 @@
 import lodash, { LoDashStatic } from "lodash"
-import * as Types from "./Types"
+import { Types } from "."
 import { Color } from "components/Common/ColorPicker";
 
 function insertItem<T>(array: T[], index: number, item: T): T[] {

@@ -1,6 +1,6 @@
 import { FETCH, SELECT, SET, Action } from "actions/types"
 import { PlatformDB, VersionDB, EnvironmentDB } from "apis";
-import * as Types from "utils/Types"
+import { Types } from "utils"
 
 const init = {
   platforms: {

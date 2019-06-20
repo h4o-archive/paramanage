@@ -2,10 +2,9 @@ import React from 'react'
 import { connect } from "react-redux"
 import { Form, FieldArray, InjectedFormProps, reduxForm } from "redux-form"
 
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { FORM_NAME } from "utils/const"
 import { ModalForm } from "components/Common/ModalForm"
-import * as Types from "utils/Types"
 import { State } from 'reducers'
 import { HIDE } from 'actions/types'
 import { dispatchAction } from "components/actions"

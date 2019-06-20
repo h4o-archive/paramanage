@@ -1,7 +1,6 @@
 import { FETCH, SELECT, DESELECT, ACTIVE, DEACTIVE, SET, Action } from "actions/types"
 import { ProfileDB, CategoryDB, ParametreDB } from "apis";
-import { _ } from "utils"
-import * as Types from "utils/Types"
+import { _, Types } from "utils"
 
 const init = {
   profile: {} as ProfileState,

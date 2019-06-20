@@ -1,9 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { store } from "reducers"
 import { START, FULLFILL, REJECT, QUEUE, RESET } from "actions/types"
-import * as Types from "utils/Types"
 import { MemoizedFunction } from "lodash";
 
 function createApiInstance(): Readonly<API> {

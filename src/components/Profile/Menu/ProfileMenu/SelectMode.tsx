@@ -3,10 +3,9 @@ import { connect } from "react-redux"
 import { Responsive } from "semantic-ui-react"
 
 import { Button } from "components/Common/Button"
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { toggleSelectMode } from "components/Profile/actions"
 import { State } from "reducers";
-import * as Types from "utils/Types"
 
 type MobileSelectModeMapProps = Readonly<{
   selected_parametres: Readonly<Types.OverloadObject<boolean>>,

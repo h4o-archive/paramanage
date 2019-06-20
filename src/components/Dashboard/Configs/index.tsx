@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { connect } from "react-redux"
 
-import { _ } from "utils"
+import { _, Types } from "utils"
 import { fetchConfigs } from "./actions"
 import { ConfigState } from "./configs_reducer";
 import { State } from "reducers";
 import { TableHeader } from "./TableHeader"
 import { Config } from "./Config"
-import * as Types from "utils/Types"
 
 type ConfigsMapProps = Readonly<{
   selected: {

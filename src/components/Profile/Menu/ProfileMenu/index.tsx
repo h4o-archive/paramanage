@@ -9,7 +9,7 @@ import { toggleSelectMode } from "components/Profile/actions"
 import { SHOW } from "actions/types"
 import { SelectMode } from "./SelectMode"
 import { State } from "reducers";
-import { PARAMETRES_MODAL_STATE } from "utils/const"
+import { PROFILE_MENU_MODAL_STATE } from "utils/const"
 
 type TopMenuMapProps = {
   readonly nothing_selected: boolean
@@ -23,15 +23,15 @@ type TopMenuMapActions = Readonly<{
 const ProfileMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> = ({ nothing_selected, ...props }) => {
 
   function onClickAdd(): void {
-    props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.ADD)
+    props.dispatchAction(SHOW.MODAL.PARAMETRES, PROFILE_MENU_MODAL_STATE.ADD)
   }
 
   function onClickEdit(): void {
-    props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.EDIT)
+    props.dispatchAction(SHOW.MODAL.PARAMETRES, PROFILE_MENU_MODAL_STATE.EDIT)
   }
 
   function onClickDelete(): void {
-    props.dispatchAction(SHOW.MODAL.PARAMETRES, PARAMETRES_MODAL_STATE.DELETE)
+    props.dispatchAction(SHOW.MODAL.PARAMETRES, PROFILE_MENU_MODAL_STATE.DELETE)
   }
 
   let disabled = nothing_selected ? "disabled" : "";
