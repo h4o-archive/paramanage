@@ -2,11 +2,11 @@ import { api } from "apis"
 import { history } from "utils/history"
 import { ReduxThunk } from "actions/types"
 import { _ } from "utils"
-import { SLEEP_TIME } from "utils/const"
+import { SLEEP_TIME, COLOR } from "utils/const"
+import { updateParametres } from "./ProfileMenuModal/actions"
 
 export function updateProfile(): ReduxThunk {
   return async (dispatch, getState) => {
-    // FLAW, becasue key is tightly coupled to id, changing only key might result in 2 profile with the same name
     const profile = getState().parametres_reducer.profile;
     if (profile.editable_key !== "" && profile.editable_key !== profile.key) {
       const { data: db_configs } = await api.get({ url: `profiles/${profile.id}/configs` })
@@ -34,5 +34,29 @@ export function updateProfile(): ReduxThunk {
       }
     }
     history.push("/")
+  }
+}
+
+type SuitableType = {
+  key: string,
+  value: string,
+  [keys: string]: string
+}
+
+export function importParametres({ target: { files: [file] } }: { target: any }): ReduxThunk {
+  return (dispatch) => {
+    const reader = new FileReader()
+    reader.readAsText(file, "UTF-8")
+    reader.onload = ({ target: { result } }: { target: any }) => {
+      dispatch(updateParametres((JSON.parse(result) as SuitableType[]).map(parametre => {
+        return {
+          id: _.hashText(parametre.key),
+          key: parametre.key,
+          value: parametre.value,
+          category: parametre.category || "SANS CATEGORY",
+          category_color: parametre.category ? parametre.category_color : COLOR.GREY
+        }
+      })))
+    }
   }
 }

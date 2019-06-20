@@ -94,7 +94,7 @@ function validate(form_values: FormValues): any {
         if (!(form_values[key] as FormFields[])[i][property] || (form_values[key] as FormFields[])[i][property] === "") {
           parametre_error[property] = "Required"
         }
-        if (property === "key" && (form_values[key] as FormFields[])[i][property]) {
+        if (store.getState().edit_add_modal_reducer.modal_state === "add" && property === "key" && (form_values[key] as FormFields[])[i][property]) {
           if (store.getState().parametres_reducer.parametres[_.hashText((form_values[key] as FormFields[])[i][property])]) parametre_error[property] = "Parametre already exist in this profile. Please chose another name or modify existence"
         }
       }
