@@ -159,8 +159,12 @@ function createApiInstance(): Readonly<API> {
         if (api_call_id) notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {
-        console.error(error)
-        if (api_call_id) notifyRejectRequest(api_call_id)
+        if (method === "get" && id && error.response.status === 404) {
+          if (api_call_id) notifyFullfillRequest(api_call_id)
+        } else {
+          console.error(error)
+          if (api_call_id) notifyRejectRequest(api_call_id)
+        }
         return { data: id ? {} as DataAPI : [] as DataAPI[], error }
       }
     }
