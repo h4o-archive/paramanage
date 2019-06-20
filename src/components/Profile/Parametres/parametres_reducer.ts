@@ -15,8 +15,6 @@ export function parametres_reducer(state = init, action: Action): typeof init {
   switch (action.type) {
     case FETCH.PROFILE:
       return { ...state, ...action.payload };
-    case FETCH.CATEGORYS:
-      return { ...state, categorys: action.payload };
     case SELECT.PARAMETRE:
       return { ...state, selected: { ...state.selected, [action.payload]: true } }
     case DESELECT.PARAMETRE:

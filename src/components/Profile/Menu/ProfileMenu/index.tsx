@@ -52,7 +52,7 @@ const ProfileMenu: React.FunctionComponent<TopMenuMapProps & TopMenuMapActions> 
               <Button onClick={onClickEdit} icon="large black edit" transparent btn={`${disabled}`} />
               <Button onClick={onClickAdd} icon="large green plus" transparent />
               <Button onClick={() => (file_explorer.current as any).click()} icon="large blue cloud upload" transparent />
-              <input type="file" onChange={props.importParametres} ref={file_explorer} accept=".json" style={{ display: "none" }} />
+              <input type="file" onChange={props.importParametres} ref={file_explorer} accept=".csv,.json" style={{ display: "none" }} />
             </div>
           </div>
         </div>

@@ -4,6 +4,8 @@ import { ReduxThunk } from "actions/types"
 import { _ } from "utils"
 import { SLEEP_TIME, COLOR } from "utils/const"
 import { updateParametres } from "./ProfileMenuModal/actions"
+// @ts-ignore
+import csv from "csv"
 
 export function updateProfile(): ReduxThunk {
   return async (dispatch, getState) => {
@@ -48,15 +50,21 @@ export function importParametres({ target: { files: [file] } }: { target: any })
     const reader = new FileReader()
     reader.readAsText(file, "UTF-8")
     reader.onload = ({ target: { result } }: { target: any }) => {
-      dispatch(updateParametres((JSON.parse(result) as SuitableType[]).map(parametre => {
-        return {
-          id: _.hashText(parametre.key),
-          key: parametre.key,
-          value: parametre.value,
-          category: parametre.category || "SANS CATEGORY",
-          category_color: parametre.category ? parametre.category_color : COLOR.GREY
-        }
-      })))
+      if (file.name.split(".").pop() === "json") {
+        dispatch(updateParametres((JSON.parse(result) as SuitableType[]).map(parametre => {
+          return {
+            id: _.hashText(parametre.key),
+            key: parametre.key,
+            value: parametre.value,
+            category: parametre.category || "SANS CATEGORY",
+            category_color: parametre.category ? parametre.category_color : COLOR.GREY
+          }
+        })))
+      } else {
+        csv.parse(result, (err: any, data: any) => {
+          console.log(data);
+        })
+      }
     }
   }
 }
