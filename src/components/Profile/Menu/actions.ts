@@ -10,7 +10,8 @@ import csv from "csv"
 export function updateProfile(): ReduxThunk {
   return async (dispatch, getState) => {
     const profile = getState().parametres_reducer.profile;
-    if (profile.editable_key !== "" && profile.editable_key !== profile.key) {
+    const { data: db_profile } = await api.get({ url: "/profiles", id: _.hashText(profile.editable_key) })
+    if (profile.editable_key !== "" && _.isEmpty(db_profile)) {
       const { data: db_configs } = await api.get({ url: `profiles/${profile.id}/configs` })
       const { data: db_configs_with_mutual_profile } = await api.get({ url: `mutual_profiles/${profile.id}/configs` })
       const { data: db_parametres } = await api.get({ url: `profiles/${profile.id}/parametres` })
@@ -35,7 +36,7 @@ export function updateProfile(): ReduxThunk {
         await api.delete({ url: "/mutual_profiles", id: profile.id })
       }
     }
-    history.push("/")
+    if (!(profile.editable_key !== profile.key && !_.isEmpty(db_profile))) history.push("/")
   }
 }
 
