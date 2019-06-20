@@ -50,7 +50,7 @@ function createApiInstance(): Readonly<API> {
 
   function parseUrlToSubAPI(url: string): keyof typeof sub_api {
     const result = url.match(/([^/]+$)/)
-    return (result ? result[0] : "platform") as keyof typeof sub_api
+    return (result ? (result[0] === "db" ? "platforms" : result[0]) : "platforms") as keyof typeof sub_api
   }
 
   function handleCache(method: string, url: string): void {
