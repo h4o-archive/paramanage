@@ -12,24 +12,21 @@ import * as Types from "utils/Types"
  */
 export function fetchPlatforms(): ReduxThunk {
   return async (dispatch, getState): Promise<void> => {
-    try {
-      const { data: platforms } = await api.get({ url: `/platforms` })
-      await dispatch(
-        {
-          type: FETCH.PLATFORMS,
-          payload: _.keyBy(platforms, "id")
-        }
-      )
-      const selected_platform = __detectCurrentSelected__(getState().metadatas_reducer.platforms.previous_selected, platforms)
-      await dispatch({
-        type: SELECT.PLATFORM,
-        payload: selected_platform
-      })
-      await __fetchVersions__(dispatch, getState, selected_platform);
-      dispatch(fetchEnvironments())
-    } catch (e) {
-      console.error(e)
-    }
+
+    const { data: platforms } = await api.get({ url: `/platforms` })
+    await dispatch(
+      {
+        type: FETCH.PLATFORMS,
+        payload: _.keyBy(platforms, "id")
+      }
+    )
+    const selected_platform = __detectCurrentSelected__(getState().metadatas_reducer.platforms.previous_selected, platforms)
+    await dispatch({
+      type: SELECT.PLATFORM,
+      payload: selected_platform
+    })
+    await __fetchVersions__(dispatch, getState, selected_platform);
+    dispatch(fetchEnvironments())
   }
 }
 
@@ -48,42 +45,34 @@ export function fetchVersions(): ReduxThunk {
  */
 export function fetchEnvironments(): ReduxThunk {
   return async (dispatch, getState): Promise<void> => {
-    try {
-      const { data: environments } = await api.get({ url: `/environments` })
-      await dispatch(
-        {
-          type: FETCH.ENVIRONMENTS,
-          payload: _.keyBy(environments, "id")
-        }
-      )
-      dispatch({
-        type: SELECT.ENVIRONMENT,
-        payload: __detectCurrentSelected__(getState().metadatas_reducer.environments.previous_selected, environments)
-      })
-    } catch (e) {
-      console.error(e)
-    }
+    const { data: environments } = await api.get({ url: `/environments` })
+    await dispatch(
+      {
+        type: FETCH.ENVIRONMENTS,
+        payload: _.keyBy(environments, "id")
+      }
+    )
+    dispatch({
+      type: SELECT.ENVIRONMENT,
+      payload: __detectCurrentSelected__(getState().metadatas_reducer.environments.previous_selected, environments)
+    })
   }
 }
 /**
  * @description fetch versions => select one version to display
  */
 async function __fetchVersions__(dispatch: ThunkDispatch<State, void, AnyAction>, getState: () => State, selected_platform: string): Promise<void> {
-  try {
-    const { data: versions } = await api.get({ url: `/platforms/${selected_platform}/versions` })
-    await dispatch(
-      {
-        type: FETCH.VERSIONS,
-        payload: _.keyBy((versions as VersionDB[]).map(item => _.omit(item, ["platformId"])), "id")
-      }
-    )
-    dispatch({
-      type: SELECT.VERSION,
-      payload: __detectCurrentSelected__(getState().metadatas_reducer.versions.previous_selected, versions)
-    })
-  } catch (e) {
-    console.error(e)
-  }
+  const { data: versions } = await api.get({ url: `/platforms/${selected_platform}/versions` })
+  await dispatch(
+    {
+      type: FETCH.VERSIONS,
+      payload: _.keyBy((versions as VersionDB[]).map(item => _.omit(item, ["platformId"])), "id")
+    }
+  )
+  dispatch({
+    type: SELECT.VERSION,
+    payload: __detectCurrentSelected__(getState().metadatas_reducer.versions.previous_selected, versions)
+  })
 }
 
 /**
