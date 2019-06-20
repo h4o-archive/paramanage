@@ -158,7 +158,7 @@ function createApiInstance(): Readonly<API> {
         if (api_call_id) notifyFullfillRequest(api_call_id)
         return result
       } catch (error) {
-        if (method === "get" && id && error.response.status === 404) {
+        if (method === "get" && (id || (params && params.id)) && error.response.status === 404) {
           if (api_call_id) notifyFullfillRequest(api_call_id)
         } else {
           console.error(error)

@@ -1,4 +1,4 @@
-import { api } from "apis"
+import { api, CategoryDB } from "apis"
 import { fetchProfile } from "components/Profile/Parametres/actions"
 import { _ } from "utils"
 import { FormFields } from "./EditAddModal";
@@ -8,7 +8,8 @@ import { CategorysState, SelectedParametresState } from "components/Profile/Para
 export function updateParametres(values: FormFields[]): ReduxThunk {
   return async (dispatch, getState) => {
     for (let i = 0; i < values.length; i++) {
-      if (getState().parametres_reducer.parametres[_.hashText(values[i].key)]) var modify = true
+      const { data: db_parametre } = await api.get({ url: `/profiles/${getState().parametres_reducer.profile.id}/parametres`, params: { id: _.hashText(values[i].key) } })
+      if (!_.isEmpty(db_parametre)) var modify = true
       await __addOrModifyCategoryIfNecessary__(getState().parametres_reducer.categorys, { category: values[i].category, category_color: values[i].category_color })
       let parametre_from_form = { id: _.hashText(values[i].key), key: values[i].key, value: values[i].value, categoryId: _.hashText(values[i].category), profileId: getState().parametres_reducer.profile.id }
       // ignore ts because it doesn't allow check a variable which might be undefined, which destroy beauty of JS
@@ -26,7 +27,8 @@ export function updateParametres(values: FormFields[]): ReduxThunk {
 }
 
 async function __addOrModifyCategoryIfNecessary__(categorys: CategorysState, { category, category_color }: { category: string, category_color: string }): Promise<void> {
-  if (!categorys[_.hashText(category)]) {
+  const { data: db_category } = await api.get({ url: "/categorys", id: _.hashText(category) })
+  if (_.isEmpty(db_category)) {
     await api.post({
       url: `/categorys`, json: {
         id: _.hashText(category),
@@ -35,7 +37,7 @@ async function __addOrModifyCategoryIfNecessary__(categorys: CategorysState, { c
         color: category_color
       }
     })
-  } else if (category_color !== categorys[_.hashText(category)].color) {
+  } else if (category_color !== (db_category as CategoryDB).color) {
     await api.patch({ url: `/categorys`, id: _.hashText(category), json: { color: category_color } })
   }
 }
