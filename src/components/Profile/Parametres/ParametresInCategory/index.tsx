@@ -22,7 +22,7 @@ const ParametresInCategory: React.FunctionComponent<ParametresInCategoryMapProps
   return (
     <React.Fragment>
       {_.map(parametres, (parametre) => {
-        if (parametre.categoryId === categoryId && parametre.key.search(search_term) !== -1) {
+        if (parametre.categoryId === categoryId && parametre.key.toLowerCase().search(search_term.toLowerCase()) !== -1) {
           return (
             <div className="field" key={parametre.id}>
               <ParametreLabel parametre={parametre} />

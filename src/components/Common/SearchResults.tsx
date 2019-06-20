@@ -23,7 +23,7 @@ const SearchResults: React.FunctionComponent<SearchResultsMapProps & SearchResul
   useEffect(() => {
     if (search_term.length > 0) {
       const temp = source.reduce((results, item) => {
-        if (item.search(search_term) !== -1) {
+        if (item.toLowerCase().search(search_term.toLowerCase()) !== -1) {
           if (item.length !== search_term.length) results.push(item)
           else if (prev_search_tem.current !== "" && !clicked) onClick(item)
         }
