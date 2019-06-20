@@ -40,7 +40,7 @@ const VersionsDropdown: React.FunctionComponent<VersionsDropdownMapProps & Versi
 function mapStateToProps(state: State): VersionsDropdownMapProps {
   const { data, selected } = state.metadatas_reducer.versions
   return {
-    versions: _.map(data, item => _.pick({ ...item, value: item.id, text: item.key }, ["id", "key", "order", "value", "text"])).sort(_.compareObjectAscendinBaseOnKey("order")),
+    versions: _.map(data, item => _.pick({ ...item, value: item.id, text: item.key }, ["id", "key", "order", "value", "text"])).sort(_.compareObjectDescendinBaseOnKey("order")),
     selected_version: selected
   }
 }
