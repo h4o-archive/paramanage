@@ -11,6 +11,7 @@ import { dispatchAction } from "components/actions"
 import { EditAddFieldArray } from "./EditAddFieldArray"
 import { ProfileMenuModalState } from './edit_add_modal_reducer';
 import { updateParametres } from '../actions';
+import { store } from "reducers"
 
 type EditAddModalMapProps = Readonly<{
   open: boolean,
@@ -92,6 +93,9 @@ function validate(form_values: FormValues): any {
       for (property in { key: null, value: null, category: null, category_color: null }) {
         if (!(form_values[key] as FormFields[])[i][property] || (form_values[key] as FormFields[])[i][property] === "") {
           parametre_error[property] = "Required"
+        }
+        if (property === "key" && (form_values[key] as FormFields[])[i][property]) {
+          if (store.getState().parametres_reducer.parametres[_.hashText((form_values[key] as FormFields[])[i][property])]) parametre_error[property] = "Parametre already exist in this profile. Please chose another name or modify existence"
         }
       }
       modal_state_error[i] = parametre_error
