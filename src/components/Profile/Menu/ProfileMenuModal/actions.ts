@@ -20,7 +20,7 @@ export function updateParametres(values: FormFields[]): ReduxThunk {
         type: DESELECT.PARAMETRE,
         payload: parametre_from_form.id
       })
-      _.sleep(100)
+      await _.sleep(100)
     }
     dispatch(fetchProfile(getState().parametres_reducer.profile.id))
   }
