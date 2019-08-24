@@ -7,7 +7,7 @@ import { MemoizedFunction } from "lodash";
 
 function createApiInstance(): Readonly<API> {
 
-  type MemoizedFunctionWithDispatchActionIntegrated = MemoizedFunction & { request: { method: string } & APIparams<string> }
+  type MemoizedFunctionWithDispatchActionIntegrated = MemoizedFunction & { request: { method: string } & APIparams<string>, clearCache: () => void }
 
   type MemoizeWithDispatchActionIntegrated = <T extends (...args: any) => any>(func: T, resolver?: (...args: any[]) => any) => T & MemoizedFunctionWithDispatchActionIntegrated
 

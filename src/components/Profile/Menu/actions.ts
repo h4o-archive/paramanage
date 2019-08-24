@@ -4,7 +4,6 @@ import { ReduxThunk } from "actions/types"
 import { _ } from "utils"
 import { SLEEP_TIME, COLOR } from "utils/const"
 import { updateParametres } from "./ProfileMenuModal/actions"
-// @ts-ignore
 import csv from "csv"
 
 export function updateProfile(): ReduxThunk {
@@ -62,6 +61,7 @@ export function importParametres({ target: { files: [file] } }: { target: any })
           }
         })))
       } else {
+        // @ts-ignore
         csv.parse(result, (err: any, data: any) => {
           console.log(data);
         })
